@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">Tencocoa</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_first_setting">初回起動時の設定</string>
+    <string name="text_activity_first_setting">
+        Tencocoaでは、基本的にユーザーがそれぞれTwitterのAPIキーを取得し、それを設定することが推奨されています。 \n
+        特別な事情がない限り、APIキーは手動で設定してください。 \n
+        デフォルトのAPIキーを使用することも出来ますが、一部の操作に制限が生じます(キーの変更は後からでも出来ます)。
+    </string>
+    <string name="text_activity_first_setting_newapp_link">https://apps.twitter.com/</string>
+
+    <string name="label_activity_first_setting_consumer_key">Consumer Key</string>
+    <string name="label_activity_first_setting_consumer_secret">Consumer Secret</string>
+    <string name="label_activity_first_setting_consumer_ok">このCK/CSを使用する</string>
+    <string name="label_activity_first_setting_consumer_use_default">デフォルトを使用する</string>
+
+    <string name="title_dialog_default_keys">
+        本当にデフォルトのキーを使用してよろしいですか?\n
+        後からでも変更できますがすでに持っているなら予め設定しておいたほうが便利です。
+    </string>
+    <string name="label_dialog_default_keys_ok">いいよ</string>
+    <string name="label_dialog_default_keys_cancel">やっぱやめた</string>
+
+    <!-- SharedPreference キー-->
+    <string name="preference_name">TencocoaPreference</string>
+    <string name="preference_twitter_consumer_key">TWITTER_CONSUMER_KEY</string>
+    <string name="preference_twitter_consumer_secret">TWITTER_CONSUMER_SECRET</string>
+    <string name="preference_twitter_access_token">TWITTER_ACCESS_TOKEN</string>
+    <string name="preference_twitter_access_token_secret">TWITTER_ACCESS_TOKEN_SECRET</string>
+    <string name="preference_twitter_consumer_set">TWITTER_CONSUMER_SET</string>
+    <string name="preference_twitter_consumer_is_default">TWITTER_CONSUMER_IS_DEFAULT</string>
+
+    <string name="preference_twitter_default_consumer_key">Ipgm4AzfYJrBn4jVsBUrn9040</string>
+    <string name="preference_twitter_default_consumer_secret">lvblXIFQSnxnzxUvxBz48VMDNolFbPE09iiQ1Iqb88Az9CWtCH</string>
+
+</resources>
