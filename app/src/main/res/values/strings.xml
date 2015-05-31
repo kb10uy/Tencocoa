@@ -35,9 +35,12 @@
         <item>検索</item>
     </string-array>
 
+
     <string name="title_activity_accounts_list">アカウント</string>
     <string name="label_activity_accounts_list_new_account">新しいアカウント</string>
     <string name="uri_twitter_oauth_callback">tencocoa://twitter-oauth-callback</string>
+    <string name="text_activity_accounts_list_success">認証に成功しました。</string>
+    <string name="text_activity_accounts_list_failed">認証に失敗しました。</string>
 
     <!-- SharedPreference キー-->
     <string name="preference_name">TencocoaPreference</string>

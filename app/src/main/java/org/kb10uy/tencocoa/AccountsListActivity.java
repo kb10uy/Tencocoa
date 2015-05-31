@@ -1,6 +1,8 @@
 package org.kb10uy.tencocoa;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
@@ -8,10 +10,14 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import org.kb10uy.tencocoa.model.TwitterAccountInformation;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
+import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
 
 
@@ -26,8 +32,8 @@ public class AccountsListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accounts_list);
 
-        mTwitter= TwitterFactory.getSingleton();
-        mCallback=getString(R.string.uri_twitter_oauth_callback);
+        mTwitter = TwitterFactory.getSingleton();
+        mCallback = getString(R.string.uri_twitter_oauth_callback);
     }
 
     @Override
@@ -77,5 +83,40 @@ public class AccountsListActivity extends AppCompatActivity {
             }
         };
         task.execute();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        if (intent == null || intent.getData() == null || !intent.getData().toString().startsWith(mCallback))
+            return;
+        String verifier = intent.getData().getQueryParameter("oauth_verifier");
+        final Activity ta = this;
+
+        AsyncTask<String, Void, AccessToken> task = new AsyncTask<String, Void, AccessToken>() {
+            @Override
+            protected AccessToken doInBackground(String... params) {
+                try {
+                    return mTwitter.getOAuthAccessToken(mRequestToken, params[0]);
+                } catch (TwitterException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(AccessToken accessToken) {
+                if (accessToken != null) {
+                    Toast.makeText(ta, R.string.text_activity_accounts_list_success, Toast.LENGTH_SHORT).show();
+                    registerAuthorization(accessToken);
+                } else {
+                    Toast.makeText(ta, R.string.text_activity_accounts_list_failed, Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+        task.execute(verifier);
+    }
+
+    private void registerAuthorization(AccessToken accessToken) {
+        TwitterAccountInformation info=new TwitterAccountInformation(accessToken);
     }
 }

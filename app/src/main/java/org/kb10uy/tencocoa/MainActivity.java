@@ -12,13 +12,21 @@ import android.view.MenuItem;
 
 import org.kb10uy.tencocoa.settings.FirstSettingActivity;
 
+import twitter4j.Twitter;
+import twitter4j.TwitterFactory;
+
 
 public class MainActivity extends AppCompatActivity implements MainDrawerFragment.OnFragmentInteractionListener {
+
+    Twitter mTwitter;
+    boolean consumerSet = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        checkTwitterApiKeys();
+        initializeTwitter();
     }
 
 
@@ -32,13 +40,20 @@ public class MainActivity extends AppCompatActivity implements MainDrawerFragmen
     @Override
     protected void onStart() {
         super.onStart();
-        checkTwitterApiKeys();
+        startUser();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        startUser();
+    }
+
+    private void initializeTwitter() {
+        mTwitter = TwitterFactory.getSingleton();
+        SharedPreferences pref = getSharedPreferences(getString(R.string.preference_name), 0);
+        String ck = pref.getString(getString(R.string.preference_twitter_consumer_key), "");
+        String cs = pref.getString(getString(R.string.preference_twitter_consumer_secret), "");
+        mTwitter.setOAuthConsumer(ck, cs);
     }
 
     private void checkTwitterApiKeys() {
@@ -46,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements MainDrawerFragmen
         if (pref.getBoolean(getString(R.string.preference_twitter_consumer_set), false)) return;
 
         startActivity(new Intent(this, FirstSettingActivity.class));
-        //finish();
+        finish();
     }
 
     private void startUser() {
@@ -60,9 +75,12 @@ public class MainActivity extends AppCompatActivity implements MainDrawerFragmen
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id) {
+            case R.id.action_main_accounts:
+                startActivity(new Intent(this, AccountsListActivity.class));
+                return true;
+            case R.id.action_main_settings:
+                return true;
         }
 
         return super.onOptionsItemSelected(item);

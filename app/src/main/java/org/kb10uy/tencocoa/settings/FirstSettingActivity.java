@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.kb10uy.tencocoa.MainActivity;
 import org.kb10uy.tencocoa.R;
 
 public class FirstSettingActivity extends AppCompatActivity {
@@ -37,6 +39,7 @@ public class FirstSettingActivity extends AppCompatActivity {
                     return;
                 }
                 setCustomKeys();
+                startActivity(new Intent(ctx, MainActivity.class));
                 finish();
             }
         });
@@ -65,10 +68,6 @@ public class FirstSettingActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -94,6 +93,7 @@ public class FirstSettingActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             setDefaultKeys();
+                            startActivity(new Intent(getActivity(),MainActivity.class));
                             getActivity().finish();
                         }
 
