@@ -35,12 +35,22 @@ public class MainActivity extends AppCompatActivity implements MainDrawerFragmen
         checkTwitterApiKeys();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startUser();
+    }
+
     private void checkTwitterApiKeys() {
         SharedPreferences pref = getSharedPreferences(getString(R.string.preference_name), 0);
         if (pref.getBoolean(getString(R.string.preference_twitter_consumer_set), false)) return;
 
         startActivity(new Intent(this, FirstSettingActivity.class));
-        finish();
+        //finish();
+    }
+
+    private void startUser() {
+
     }
 
     @Override

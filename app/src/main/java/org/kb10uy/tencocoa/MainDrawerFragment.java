@@ -7,6 +7,10 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 
 
 /**
@@ -28,6 +32,8 @@ public class MainDrawerFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private ListView mDrawerList;
+    private LinearLayout mDrawerLayout;
 
     /**
      * Use this factory method to create a new instance of
@@ -58,13 +64,41 @@ public class MainDrawerFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_main_drawer, container, false);
+        View view = inflater.inflate(R.layout.fragment_main_drawer, container, false);
+
+        mDrawerLayout = (LinearLayout) view.findViewById(R.id.main_drawer_layout);
+
+        setupListView(view);
+        return view;
+    }
+
+
+    private void setupListView(View view) {
+        mDrawerList = (ListView) view.findViewById(R.id.MainDrawerListViewContents);
+        String cntlist[] = getResources().getStringArray(R.array.label_drawer_main_list);
+
+        mDrawerList.setAdapter(new ArrayAdapter<String>(
+                getActivity(),
+                android.R.layout.simple_list_item_activated_1,
+                android.R.id.text1,
+                cntlist));
+        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                onItemSelected(position);
+            }
+        });
+    }
+
+    private void onItemSelected(int position) {
+        mListener.onFragmentInteraction(Uri.parse("tencocoa://main/" + Integer.toString(position)));
     }
 
     // TODO: Rename method, update argument and hook method into UI event

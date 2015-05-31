@@ -18,7 +18,20 @@
         </activity>
         <activity
             android:name=".settings.FirstSettingActivity"
-            android:label="@string/title_activity_first_setting" >
+            android:label="@string/title_activity_first_setting">
+        </activity>
+        <activity
+            android:name=".AccountsListActivity"
+            android:label="@string/title_activity_accounts_list"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:host="twitter-oauth-callback"
+                    android:scheme="tencocoa"/>
+            </intent-filter>
         </activity>
     </application>
 
