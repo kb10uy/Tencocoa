@@ -2,7 +2,7 @@
     <string name="app_name">Tencocoa</string>
 
     <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">設定</string>
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -25,6 +25,22 @@
     </string>
     <string name="label_dialog_default_keys_ok">いいよ</string>
     <string name="label_dialog_default_keys_cancel">やっぱやめた</string>
+    <string name="toast_activity_first_setting_consumer_empty">CK/CSが空です。</string>
+
+    <string-array name="label_drawer_main_list">
+        <item>ホーム</item>
+        <item>通知</item>
+        <item>ユーザー</item>
+        <item>DM</item>
+        <item>検索</item>
+    </string-array>
+
+
+    <string name="title_activity_accounts_list">アカウント</string>
+    <string name="label_activity_accounts_list_new_account">新しいアカウント</string>
+    <string name="uri_twitter_oauth_callback">tencocoa://twitter-oauth-callback</string>
+    <string name="text_activity_accounts_list_success">認証に成功しました。</string>
+    <string name="text_activity_accounts_list_failed">認証に失敗しました。</string>
 
     <!-- SharedPreference キー-->
     <string name="preference_name">TencocoaPreference</string>
