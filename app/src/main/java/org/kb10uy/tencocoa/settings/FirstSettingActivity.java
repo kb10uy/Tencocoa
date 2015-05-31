@@ -1,28 +1,43 @@
 package org.kb10uy.tencocoa.settings;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import org.kb10uy.tencocoa.R;
 
-public class FirstSettingActivity extends ActionBarActivity {
+public class FirstSettingActivity extends AppCompatActivity {
+    EditText ck, cs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first_setting);
+        ck = (EditText) findViewById(R.id.FirstSettingEditTextConsumerKey);
+        cs = (EditText) findViewById(R.id.FirstSettingEditTextConsumerSecret);
+        final Context ctx = this;
 
         findViewById(R.id.FirstSettingButtonRegister).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if (ck.getText().toString().equals("") || cs.getText().toString().equals("")) {
+                    Toast.makeText(ctx, R.string.toast_activity_first_setting_consumer_empty, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                setCustomKeys();
+                finish();
             }
         });
 
@@ -58,6 +73,16 @@ public class FirstSettingActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void setCustomKeys() {
+        SharedPreferences pref = getSharedPreferences(getString(R.string.preference_name), 0);
+        SharedPreferences.Editor edit = pref.edit();
+
+        edit.putString(getString(R.string.preference_twitter_consumer_key), ck.getText().toString());
+        edit.putString(getString(R.string.preference_twitter_consumer_secret), cs.getText().toString());
+        edit.putBoolean(getString(R.string.preference_twitter_consumer_is_default), false);
+        edit.putBoolean(getString(R.string.preference_twitter_consumer_set), true);
+        edit.commit();
+    }
 
     //Checking for default keys
     public static class DefaultKeysConfirmDialogFragment extends DialogFragment {
@@ -68,7 +93,18 @@ public class FirstSettingActivity extends ActionBarActivity {
                     .setPositiveButton(R.string.label_dialog_default_keys_ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            setDefaultKeys();
+                            getActivity().finish();
+                        }
 
+                        public void setDefaultKeys() {
+                            SharedPreferences pref = getActivity().getSharedPreferences(getString(R.string.preference_name), 0);
+                            SharedPreferences.Editor edit = pref.edit();
+                            edit.putString(getString(R.string.preference_twitter_consumer_key), getString(R.string.preference_twitter_default_consumer_key));
+                            edit.putString(getString(R.string.preference_twitter_consumer_secret), getString(R.string.preference_twitter_default_consumer_secret));
+                            edit.putBoolean(getString(R.string.preference_twitter_consumer_is_default), true);
+                            edit.putBoolean(getString(R.string.preference_twitter_consumer_set), true);
+                            edit.commit();
                         }
                     })
                     .setNegativeButton(R.string.label_dialog_default_keys_cancel, new DialogInterface.OnClickListener() {

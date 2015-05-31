@@ -25,6 +25,8 @@
     </string>
     <string name="label_dialog_default_keys_ok">いいよ</string>
     <string name="label_dialog_default_keys_cancel">やっぱやめた</string>
+    <string name="toast_activity_first_setting_consumer_empty">CK/CSが空です。</string>
+
 
     <!-- SharedPreference キー-->
     <string name="preference_name">TencocoaPreference</string>
