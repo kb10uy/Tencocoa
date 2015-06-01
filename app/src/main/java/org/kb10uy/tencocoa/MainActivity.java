@@ -3,13 +3,17 @@ package org.kb10uy.tencocoa;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.net.Uri;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import org.kb10uy.tencocoa.model.TwitterHelper;
 import org.kb10uy.tencocoa.settings.FirstSettingActivity;
 
 import twitter4j.Twitter;
@@ -19,16 +23,47 @@ import twitter4j.TwitterFactory;
 public class MainActivity extends AppCompatActivity implements MainDrawerFragment.OnFragmentInteractionListener {
 
     Twitter mTwitter;
-    boolean consumerSet = false;
+    boolean initialized = false;
+
+    DrawerLayout mDrawerLayout;
+    ActionBarDrawerToggle mDrawerToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        checkTwitterApiKeys();
-        initializeTwitter();
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
+        mDrawerToggle = new ActionBarDrawerToggle(
+                this,
+                mDrawerLayout,
+                R.string.general_open,
+                R.string.general_close);
+        mDrawerToggle.setDrawerIndicatorEnabled(true);
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setLogo(R.drawable.ic_launcher);
+        getSupportActionBar().setIcon(R.drawable.ic_launcher);
+
+        if (!initialized) initialize();
     }
 
+    void initialize() {
+        checkTwitterApiKeys();
+        initializeTwitter();
+        initialized = true;
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("initialized", initialized);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        initialized = savedInstanceState.getBoolean("initialized");
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -49,11 +84,10 @@ public class MainActivity extends AppCompatActivity implements MainDrawerFragmen
     }
 
     private void initializeTwitter() {
-        mTwitter = TwitterFactory.getSingleton();
         SharedPreferences pref = getSharedPreferences(getString(R.string.preference_name), 0);
         String ck = pref.getString(getString(R.string.preference_twitter_consumer_key), "");
         String cs = pref.getString(getString(R.string.preference_twitter_consumer_secret), "");
-        mTwitter.setOAuthConsumer(ck, cs);
+        mTwitter = TwitterHelper.getTwitterInstance(ck, cs);
     }
 
     private void checkTwitterApiKeys() {
@@ -83,7 +117,21 @@ public class MainActivity extends AppCompatActivity implements MainDrawerFragmen
                 return true;
         }
 
-        return super.onOptionsItemSelected(item);
+
+        return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     @Override

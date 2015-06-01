@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Tencocoa</string>
 
+    <string name="general_open">開く</string>
+    <string name="general_close">閉じる</string>
+
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">設定</string>
 

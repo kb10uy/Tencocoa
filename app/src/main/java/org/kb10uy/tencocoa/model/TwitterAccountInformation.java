@@ -13,13 +13,29 @@ public class TwitterAccountInformation implements Serializable {
 
     private String accessTokenSecret;
     private String accessToken;
-    private long userID;
+    private long userId;
     private String screenName;
 
     public TwitterAccountInformation(AccessToken token) {
         accessToken=token.getToken();
         accessTokenSecret=token.getTokenSecret();
-        userID=token.getUserId();
+        userId=token.getUserId();
         screenName=token.getScreenName();
+    }
+
+    public String getAccessTokenSecret() {
+        return accessTokenSecret;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public String getScreenName() {
+        return screenName;
+    }
+
+    public long getUserId() {
+        return userId;
     }
 }
