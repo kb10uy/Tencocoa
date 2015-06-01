@@ -39,7 +39,9 @@ public class FirstSettingActivity extends AppCompatActivity {
                     return;
                 }
                 setCustomKeys();
-                startActivity(new Intent(ctx, MainActivity.class));
+                Intent main = new Intent(ctx, MainActivity.class);
+                main.putExtra("action", "ckcs_set");
+                startActivity(main);
                 finish();
             }
         });
@@ -93,7 +95,10 @@ public class FirstSettingActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             setDefaultKeys();
-                            startActivity(new Intent(getActivity(),MainActivity.class));
+                            Intent main = new Intent(getActivity(), MainActivity.class);
+                            main.putExtra("action", "ckcs_set");
+                            main.putExtras(new Bundle());
+                            startActivity(main);
                             getActivity().finish();
                         }
 

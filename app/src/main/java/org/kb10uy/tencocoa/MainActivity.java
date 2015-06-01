@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import org.kb10uy.tencocoa.model.TwitterHelper;
 import org.kb10uy.tencocoa.settings.FirstSettingActivity;
 
 import twitter4j.Twitter;
@@ -22,7 +23,7 @@ import twitter4j.TwitterFactory;
 public class MainActivity extends AppCompatActivity implements MainDrawerFragment.OnFragmentInteractionListener {
 
     Twitter mTwitter;
-    boolean consumerSet = false;
+    boolean initialized = false;
 
     DrawerLayout mDrawerLayout;
     ActionBarDrawerToggle mDrawerToggle;
@@ -43,10 +44,26 @@ public class MainActivity extends AppCompatActivity implements MainDrawerFragmen
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setLogo(R.drawable.ic_launcher);
         getSupportActionBar().setIcon(R.drawable.ic_launcher);
-        checkTwitterApiKeys();
-        initializeTwitter();
+
+        if (!initialized) initialize();
     }
 
+    void initialize() {
+        checkTwitterApiKeys();
+        initializeTwitter();
+        initialized = true;
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("initialized", initialized);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        initialized = savedInstanceState.getBoolean("initialized");
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -67,11 +84,10 @@ public class MainActivity extends AppCompatActivity implements MainDrawerFragmen
     }
 
     private void initializeTwitter() {
-        mTwitter = TwitterFactory.getSingleton();
         SharedPreferences pref = getSharedPreferences(getString(R.string.preference_name), 0);
         String ck = pref.getString(getString(R.string.preference_twitter_consumer_key), "");
         String cs = pref.getString(getString(R.string.preference_twitter_consumer_secret), "");
-        mTwitter.setOAuthConsumer(ck, cs);
+        mTwitter = TwitterHelper.getTwitterInstance(ck, cs);
     }
 
     private void checkTwitterApiKeys() {

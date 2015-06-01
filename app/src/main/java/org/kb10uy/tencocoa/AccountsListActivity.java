@@ -10,9 +10,17 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import org.kb10uy.tencocoa.adapters.GeneralListAdapter;
+import org.kb10uy.tencocoa.adapters.GeneralListAdapterViewGenerator;
 import org.kb10uy.tencocoa.model.TwitterAccountInformation;
+import org.kb10uy.tencocoa.model.TwitterHelper;
+
+import java.util.ArrayList;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -27,13 +35,36 @@ public class AccountsListActivity extends AppCompatActivity {
     Twitter mTwitter;
     RequestToken mRequestToken;
 
+    ListView mListView;
+    ArrayList<TwitterAccountInformation> accounts;
+    GeneralListAdapter<TwitterAccountInformation> accountsAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accounts_list);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mTwitter = TwitterFactory.getSingleton();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mListView = (ListView) findViewById(R.id.AccountsListListView);
+        accounts = new ArrayList<>();
+        accountsAdapter = new GeneralListAdapter<>(
+                this,
+                R.layout.item_accounts_list,
+                new GeneralListAdapterViewGenerator<TwitterAccountInformation>() {
+                    @Override
+                    public View generateView(View targetView, TwitterAccountInformation item) {
+                        ((TextView)targetView.findViewById(R.id.AccountsListListViewItemScreenName)).setText(item.getScreenName());
+                        ((TextView)targetView.findViewById(R.id.AccountsListListViewItemUserId)).setText(Long.toString(item.getUserId()));
+                        return targetView;
+                    }
+                });
+        accountsAdapter.setList(accounts);
+        mListView.setAdapter(accountsAdapter);
+
+        SharedPreferences pref = getSharedPreferences(getString(R.string.preference_name), 0);
+        String ck = pref.getString(getString(R.string.preference_twitter_consumer_key), "");
+        String cs = pref.getString(getString(R.string.preference_twitter_consumer_secret), "");
+        mTwitter = TwitterHelper.getTwitterInstance(ck, cs);
         mCallback = getString(R.string.uri_twitter_oauth_callback);
     }
 
@@ -87,6 +118,7 @@ public class AccountsListActivity extends AppCompatActivity {
             }
         };
         task.execute();
+
     }
 
     @Override
@@ -122,5 +154,7 @@ public class AccountsListActivity extends AppCompatActivity {
 
     private void registerAuthorization(AccessToken accessToken) {
         TwitterAccountInformation info = new TwitterAccountInformation(accessToken);
+        accounts.add(info);
+        accountsAdapter.notifyDataSetChanged();
     }
 }
