@@ -8,5 +8,6 @@
         android:layout_height="fill_parent"
         android:id="@+id/AccountsListListView"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:choiceMode="singleChoice"/>
 </RelativeLayout>

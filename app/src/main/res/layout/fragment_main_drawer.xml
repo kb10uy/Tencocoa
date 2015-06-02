@@ -9,100 +9,182 @@
     <!-- TODO: Update blank fragment layout -->
 
 
-    <RelativeLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:layout_gravity="center_horizontal"
-        android:background="#ddd">
-
-        <LinearLayout
-            android:orientation="horizontal"
+        android:layout_height="180dp">
+        <ImageView
             android:layout_width="fill_parent"
-            android:layout_height="80dp"
-            android:layout_margin="16dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
-            android:background="#eee">
-
-            <ImageView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:id="@+id/MainDrawerImageViewUserProfileImage" />
+            android:layout_height="fill_parent"
+            android:background="#ddd"
+            android:id="@+id/MainDrawerImageViewUserHeaderImage"
+            android:scaleType="centerCrop"
+            android:contentDescription="Header" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal">
 
             <LinearLayout
-                android:orientation="vertical"
+                android:orientation="horizontal"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
+                android:layout_height="80dp"
+                android:layout_margin="16dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"
+                android:background="#40eeeeee">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="ユーザー名"
-                    android:id="@+id/MainDrawerTextViewUserName" />
+                <ImageView
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:id="@+id/MainDrawerImageViewUserProfileImage"
+                    android:contentDescription="Profile" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="\@ScreenName"
-                    android:id="@+id/MainDrawerTextViewScreenName" />
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+
+                    <org.kb10uy.tencocoa.views.FontFitTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="32dp"
+                        android:layout_margin="8dp"
+                        android:textSize="24sp"
+                        android:text="ユーザー名"
+                        android:textColor="@color/tencocoa_black"
+                        android:gravity="center_vertical"
+                        android:id="@+id/MainDrawerTextViewUserName" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:text="\@"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:text="ScreenName"
+                            android:id="@+id/MainDrawerTextViewScreenName" />
+                    </LinearLayout>
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
-    </RelativeLayout>
+        </RelativeLayout>
+    </FrameLayout>
+
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:baselineAligned="false">
 
-        <TextView
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="0 ツイート"
+            android:layout_weight="1"
             android:layout_gravity="center_vertical"
-            android:layout_margin="8dp"
-            android:id="@+id/MainDrawerTextViewStatuses"
-            android:layout_weight="1" />
+            android:layout_margin="8dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="0"
+                android:textColor="@color/tencocoa_black"
+                android:layout_gravity="center_vertical"
+                android:id="@+id/MainDrawerTextViewStatuses"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_marginLeft="8dp"
+                android:text="@string/label_activity_main_tweets"
+                android:layout_gravity="center_vertical"/>
+        </LinearLayout>
 
-        <TextView
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="0 ふぁぼ"
+            android:layout_weight="1"
             android:layout_gravity="center_vertical"
-            android:layout_margin="8dp"
-            android:id="@+id/MainDrawerTextViewFavorites"
-            android:layout_weight="1" />
+            android:layout_margin="8dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="0"
+                android:textColor="@color/tencocoa_black"
+                android:layout_gravity="center_vertical"
+                android:id="@+id/MainDrawerTextViewFavorites"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_marginLeft="8dp"
+                android:text="@string/label_activity_main_favorites"
+                android:layout_gravity="center_vertical"/>
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:baselineAligned="false">
 
-        <TextView
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="0 フォロー"
+            android:layout_weight="1"
             android:layout_gravity="center_vertical"
-            android:layout_margin="8dp"
-            android:id="@+id/MainDrawerTextViewFriends"
-            android:layout_weight="1" />
+            android:layout_margin="8dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="0"
+                android:textColor="@color/tencocoa_black"
+                android:layout_gravity="center_vertical"
+                android:id="@+id/MainDrawerTextViewFriends"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_marginLeft="8dp"
+                android:text="@string/label_activity_main_friends"
+                android:layout_gravity="center_vertical"/>
+        </LinearLayout>
 
-        <TextView
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="0 フォロワー"
+            android:layout_weight="1"
             android:layout_gravity="center_vertical"
-            android:layout_margin="8dp"
-            android:id="@+id/MainDrawerTextViewFollowers"
-            android:layout_weight="1" />
+            android:layout_margin="8dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="0"
+                android:textColor="@color/tencocoa_black"
+                android:layout_gravity="center_vertical"
+                android:id="@+id/MainDrawerTextViewFollowers"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_marginLeft="8dp"
+                android:text="@string/label_activity_main_followers"
+                android:layout_gravity="center_vertical"/>
+        </LinearLayout>
     </LinearLayout>
 
     <ListView

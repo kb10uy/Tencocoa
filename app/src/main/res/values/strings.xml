@@ -38,6 +38,12 @@
         <item>検索</item>
     </string-array>
 
+    <string name="label_activity_main_tweets">ツイート</string>
+    <string name="label_activity_main_favorites">ふぁぼ</string>
+    <string name="label_activity_main_friends">フォロー</string>
+    <string name="label_activity_main_followers">フォロワー</string>
+
+
 
     <string name="title_activity_accounts_list">アカウント</string>
     <string name="label_activity_accounts_list_new_account">新しいアカウント</string>
@@ -56,5 +62,7 @@
 
     <string name="preference_twitter_default_consumer_key">Ipgm4AzfYJrBn4jVsBUrn9040</string>
     <string name="preference_twitter_default_consumer_secret">lvblXIFQSnxnzxUvxBz48VMDNolFbPE09iiQ1Iqb88Az9CWtCH</string>
+
+    <string name="preference_twitter_accounts_count">TWITTER_ACCOUNTS_COUNT</string>
 
 </resources>
