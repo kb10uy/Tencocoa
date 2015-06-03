@@ -43,7 +43,8 @@
     <string name="label_activity_main_friends">フォロー</string>
     <string name="label_activity_main_followers">フォロワー</string>
 
-
+    <string name="label_dialog_new_status_title">新しいツイート</string>
+    <string name="label_dialog_new_status_update">ツイート</string>
 
     <string name="title_activity_accounts_list">アカウント</string>
     <string name="label_activity_accounts_list_new_account">新しいアカウント</string>
@@ -64,5 +65,12 @@
     <string name="preference_twitter_default_consumer_secret">lvblXIFQSnxnzxUvxBz48VMDNolFbPE09iiQ1Iqb88Az9CWtCH</string>
 
     <string name="preference_twitter_accounts_count">TWITTER_ACCOUNTS_COUNT</string>
+
+    <!-- Notification テンプレート -->
+    <string name="notification_streaming_userstream_started_ticker">UserStream開始</string>
+    <string name="notification_streaming_userstream_started_text">UserStreamに接続されました。</string>
+
+    <string name="notification_update_status_success">ツイートに成功しました。</string>
+    <string name="notification_update_status_fail">ツイートに失敗しました。: </string>
 
 </resources>

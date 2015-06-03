@@ -51,7 +51,7 @@ public class AccountsListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accounts_list);
-        if (savedInstanceState == null) initialize();
+        initialize();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mListView = (ListView) findViewById(R.id.AccountsListListView);

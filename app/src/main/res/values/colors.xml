@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="tencocoa_black">#000022</color>
+    <color name="tencocoa_white">#FFF0F0</color>
 </resources>
