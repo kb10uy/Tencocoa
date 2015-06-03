@@ -52,6 +52,7 @@ public class MainActivity
     TencocoaStreamingService mStreamingService;
     TencocoaWritePermissionService mWritePermissionService;
     ServiceConnection mStreamingConnection, mWritePermissionConnection;
+    boolean mStreamingBound, mWritePermissionBound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,21 +118,23 @@ public class MainActivity
     @Override
     protected void onPause() {
         super.onPause();
-        if (mStreamingService != null) {
+        if (mStreamingBound) {
             unbindService(mStreamingConnection);
-            mStreamingService = null;
+            mStreamingBound = false;
         }
-        if (mWritePermissionService != null) {
+        if (mWritePermissionBound) {
             unbindService(mWritePermissionConnection);
-            mWritePermissionService = null;
+            mWritePermissionBound = false;
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        bindService(new Intent(this, TencocoaStreamingService.class), mStreamingConnection, BIND_AUTO_CREATE);
-        bindService(new Intent(this, TencocoaWritePermissionService.class), mWritePermissionConnection, BIND_AUTO_CREATE);
+        if (!mStreamingBound)
+            bindService(new Intent(this, TencocoaStreamingService.class), mStreamingConnection, BIND_AUTO_CREATE);
+        if (!mWritePermissionBound)
+            bindService(new Intent(this, TencocoaWritePermissionService.class), mWritePermissionConnection, BIND_AUTO_CREATE);
     }
 
     private void initializeTwitter() {
@@ -144,7 +147,6 @@ public class MainActivity
         if (pref.getBoolean(getString(R.string.preference_twitter_consumer_set), false)) return;
 
         startActivity(new Intent(this, FirstSettingActivity.class));
-        finish();
     }
 
     private void checkTwitterUserExists() {
@@ -159,22 +161,26 @@ public class MainActivity
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
                 mStreamingService = ((TencocoaStreamingService.TencocoaStreamingServiceBinder) service).getService();
+                mStreamingBound = true;
             }
 
             @Override
             public void onServiceDisconnected(ComponentName name) {
                 mStreamingService = null;
+                mStreamingBound = false;
             }
         };
         mWritePermissionConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
                 mWritePermissionService = ((TencocoaWritePermissionService.TencocoaWritePermissionServiceBinder) service).getService();
+                mWritePermissionBound = true;
             }
 
             @Override
             public void onServiceDisconnected(ComponentName name) {
                 mWritePermissionService = null;
+                mWritePermissionBound = false;
             }
         };
         checkTwitterUserExists();
