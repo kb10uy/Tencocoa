@@ -8,14 +8,17 @@ android {
         applicationId "org.kb10uy.tencocoa"
         minSdkVersion 17
         targetSdkVersion 21
-        versionCode 1
-        versionName "0.0.1 (build 1, Kbtter7.0.0.1, Dragonforce)"
+        versionCode 2
+        versionName "0.0.2 (build 2, Kbtter7.0.0.1, Dragonforce)"
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
     }
 }
 repositories {
@@ -29,6 +32,8 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.+'
     compile 'com.github.bumptech.glide:glide:3.6.0'
-    compile "org.twitter4j:twitter4j-core:4.+"
+    compile "org.twitter4j:twitter4j:4.0.3"
+    compile "org.twitter4j:twitter4j-stream:4.0.3"
+    compile "org.twitter4j:twitter4j-media-support:4.0.3"
     compile "com.google.guava:guava:18.+"
 }

@@ -63,7 +63,7 @@ public class MainActivity
         getSupportActionBar().setIcon(R.drawable.ic_launcher);
 
         pref = getSharedPreferences(getString(R.string.preference_name), 0);
-        ctx=this;
+        ctx = this;
 
         if (!initialized) initialize();
     }
@@ -156,6 +156,8 @@ public class MainActivity
                 if (resultCode == RESULT_OK) {
                     TwitterAccountInformation info = (TwitterAccountInformation) data.getSerializableExtra("Information");
                     refreshUserInformation(info);
+                    TencocoaStreamingService.setStreamingTargetUser(this, info);
+                    TencocoaStreamingService.startUserStream(this);
                 }
                 break;
         }
@@ -171,6 +173,16 @@ public class MainActivity
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        onExit();
+    }
+
+    private void onExit() {
+        stopService(new Intent(this, TencocoaStreamingService.class));
     }
 
     private void refreshUserInformation(final TwitterAccountInformation info) {

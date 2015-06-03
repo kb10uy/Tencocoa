@@ -11,16 +11,16 @@ import android.util.TypedValue;
 import android.widget.TextView;
 
 /**
- * ƒTƒCƒY©“®’²®TextView
+ * ã‚µã‚¤ã‚ºè‡ªå‹•èª¿æ•´TextView
  *
  */
 public class FontFitTextView extends TextView {
 
-    /** Å¬‚ÌƒeƒLƒXƒgƒTƒCƒY */
+    /** æœ€å°ã®ãƒ†ã‚­ã‚¹ãƒˆã‚µã‚¤ã‚º */
     private static final float MIN_TEXT_SIZE = 10f;
 
     /**
-     * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+     * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
      * @param context
      */
     public FontFitTextView(Context context) {
@@ -28,7 +28,7 @@ public class FontFitTextView extends TextView {
     }
 
     /**
-     * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+     * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
      * @param context
      * @param attrs
      */
@@ -45,42 +45,42 @@ public class FontFitTextView extends TextView {
     }
 
     /**
-     * ƒeƒLƒXƒgƒTƒCƒY’²®
+     * ãƒ†ã‚­ã‚¹ãƒˆã‚µã‚¤ã‚ºèª¿æ•´
      */
     private void resize() {
 
         Paint paint = new Paint();
 
-        // View‚Ì•
+        // Viewã®å¹…
         int viewWidth = this.getWidth();
-        // ƒeƒLƒXƒgƒTƒCƒY
+        // ãƒ†ã‚­ã‚¹ãƒˆã‚µã‚¤ã‚º
         float textSize = getTextSize();
 
-        // Paint‚ÉƒeƒLƒXƒgƒTƒCƒYİ’è
+        // Paintã«ãƒ†ã‚­ã‚¹ãƒˆã‚µã‚¤ã‚ºè¨­å®š
         paint.setTextSize(textSize);
-        // ƒeƒLƒXƒg‚Ì‰¡•æ“¾
+        // ãƒ†ã‚­ã‚¹ãƒˆã®æ¨ªå¹…å–å¾—
         float textWidth = paint.measureText(this.getText().toString());
 
         while (viewWidth <  textWidth) {
-            // ‰¡•‚Éû‚Ü‚é‚Ü‚Åƒ‹[ƒv
+            // æ¨ªå¹…ã«åã¾ã‚‹ã¾ã§ãƒ«ãƒ¼ãƒ—
 
             if (MIN_TEXT_SIZE >= textSize) {
-                // Å¬ƒTƒCƒYˆÈ‰º‚É‚È‚éê‡‚ÍÅ¬ƒTƒCƒY
+                // æœ€å°ã‚µã‚¤ã‚ºä»¥ä¸‹ã«ãªã‚‹å ´åˆã¯æœ€å°ã‚µã‚¤ã‚º
                 textSize = MIN_TEXT_SIZE;
                 break;
             }
 
-            // ƒeƒLƒXƒgƒTƒCƒY‚ğƒfƒNƒŠƒƒ“ƒg
+            // ãƒ†ã‚­ã‚¹ãƒˆã‚µã‚¤ã‚ºã‚’ãƒ‡ã‚¯ãƒªãƒ¡ãƒ³ãƒˆ
             textSize--;
 
-            // Paint‚ÉƒeƒLƒXƒgƒTƒCƒYİ’è
+            // Paintã«ãƒ†ã‚­ã‚¹ãƒˆã‚µã‚¤ã‚ºè¨­å®š
             paint.setTextSize(textSize);
-            // ƒeƒLƒXƒg‚Ì‰¡•‚ğÄæ“¾
+            // ãƒ†ã‚­ã‚¹ãƒˆã®æ¨ªå¹…ã‚’å†å–å¾—
             textWidth = paint.measureText(this.getText().toString());
 
         }
 
-        // ƒeƒLƒXƒgƒTƒCƒYİ’è
+        // ãƒ†ã‚­ã‚¹ãƒˆã‚µã‚¤ã‚ºè¨­å®š
         setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
     }
 
