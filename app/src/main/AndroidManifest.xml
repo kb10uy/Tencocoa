@@ -42,6 +42,10 @@
             android:name=".TencocoaStreamingService"
             android:exported="false" >
         </service>
+        <service
+            android:name=".TencocoaWritePermissionService"
+            android:exported="false" >
+        </service>
     </application>
 
 </manifest>

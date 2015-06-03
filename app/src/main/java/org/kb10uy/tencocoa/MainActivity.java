@@ -1,11 +1,14 @@
 package org.kb10uy.tencocoa;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.IBinder;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -34,7 +37,8 @@ import twitter4j.auth.AccessToken;
 
 public class MainActivity
         extends AppCompatActivity
-        implements MainDrawerFragment.OnFragmentInteractionListener {
+        implements MainDrawerFragment.OnFragmentInteractionListener,
+        NewStatusDialogFragment.NewStatusDialogFragmentInteractionListener {
 
     Twitter mTwitter;
     User currentUser;
@@ -44,6 +48,10 @@ public class MainActivity
     DrawerLayout mDrawerLayout;
     ActionBarDrawerToggle mDrawerToggle;
     Context ctx;
+
+    TencocoaStreamingService mStreamingService;
+    TencocoaWritePermissionService mWritePermissionService;
+    ServiceConnection mStreamingConnection, mWritePermissionConnection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,26 +72,34 @@ public class MainActivity
 
         pref = getSharedPreferences(getString(R.string.preference_name), 0);
         ctx = this;
-
-        if (!initialized) initialize();
     }
 
     void initialize() {
         checkTwitterApiKeys();
         checkTwitterUserExists();
         initializeTwitter();
+        startServices();
         initialized = true;
+    }
+
+    private void startServices() {
+        Intent tss = new Intent(this, TencocoaStreamingService.class);
+        Intent twps = new Intent(this, TencocoaWritePermissionService.class);
+        startService(tss);
+        startService(twps);
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean("initialized", initialized);
+        outState.putSerializable("user",currentUser);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         initialized = savedInstanceState.getBoolean("initialized");
+        currentUser=(User)savedInstanceState.getSerializable("user");
     }
 
     @Override
@@ -100,8 +116,17 @@ public class MainActivity
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        if (mStreamingService != null) unbindService(mStreamingConnection);
+        if (mWritePermissionService != null) unbindService(mWritePermissionConnection);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
+        bindService(new Intent(this, TencocoaStreamingService.class), mStreamingConnection, BIND_AUTO_CREATE);
+        bindService(new Intent(this, TencocoaWritePermissionService.class), mWritePermissionConnection, BIND_AUTO_CREATE);
     }
 
     private void initializeTwitter() {
@@ -125,7 +150,28 @@ public class MainActivity
     }
 
     private void startUser() {
+        mStreamingConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                mStreamingService = ((TencocoaStreamingService.TencocoaStreamingServiceBinder) service).getService();
+            }
 
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                mStreamingService = null;
+            }
+        };
+        mWritePermissionConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                mWritePermissionService = ((TencocoaWritePermissionService.TencocoaWritePermissionServiceBinder) service).getService();
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                mWritePermissionService = null;
+            }
+        };
     }
 
     @Override
@@ -136,6 +182,10 @@ public class MainActivity
         int id = item.getItemId();
 
         switch (id) {
+            case R.id.action_main_new_status:
+                NewStatusDialogFragment dialog = NewStatusDialogFragment.newInstance();
+                dialog.show(getFragmentManager(), "NewStatus");
+                break;
             case R.id.action_main_accounts:
                 Intent intent = new Intent(this, AccountsListActivity.class);
                 startActivityForResult(intent, TencocoaRequestCodes.AccountSelect);
@@ -156,8 +206,9 @@ public class MainActivity
                 if (resultCode == RESULT_OK) {
                     TwitterAccountInformation info = (TwitterAccountInformation) data.getSerializableExtra("Information");
                     refreshUserInformation(info);
-                    TencocoaStreamingService.setStreamingTargetUser(this, info);
-                    TencocoaStreamingService.startUserStream(this);
+                    mStreamingService.setStreamingUser(info);
+                    mWritePermissionService.setTargetUser(info);
+                    mStreamingService.startCurrentUserStream();
                 }
                 break;
         }
@@ -167,6 +218,8 @@ public class MainActivity
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         mDrawerToggle.syncState();
+        if (!initialized) initialize();
+        if (currentUser!=null) updateUserInformations(currentUser);
     }
 
     @Override
@@ -183,6 +236,7 @@ public class MainActivity
 
     private void onExit() {
         stopService(new Intent(this, TencocoaStreamingService.class));
+        stopService(new Intent(this, TencocoaWritePermissionService.class));
     }
 
     private void refreshUserInformation(final TwitterAccountInformation info) {
@@ -204,27 +258,31 @@ public class MainActivity
             protected void onPostExecute(User user) {
                 if (user == null) return;
                 currentUser = user;
-                ImageView profile = (ImageView) mDrawerLayout.findViewById(R.id.MainDrawerImageViewUserProfileImage);
-                ImageView header = (ImageView) mDrawerLayout.findViewById(R.id.MainDrawerImageViewUserHeaderImage);
-                TextView userName = (TextView) mDrawerLayout.findViewById(R.id.MainDrawerTextViewUserName);
-                TextView screenName = (TextView) mDrawerLayout.findViewById(R.id.MainDrawerTextViewScreenName);
-                TextView statuses = (TextView) mDrawerLayout.findViewById(R.id.MainDrawerTextViewStatuses);
-                TextView favorites = (TextView) mDrawerLayout.findViewById(R.id.MainDrawerTextViewFavorites);
-                TextView friends = (TextView) mDrawerLayout.findViewById(R.id.MainDrawerTextViewFriends);
-                TextView followers = (TextView) mDrawerLayout.findViewById(R.id.MainDrawerTextViewFollowers);
-
-                Glide.with(ctx).load(user.getBiggerProfileImageURLHttps()).into(profile);
-                Glide.with(ctx).load(user.getProfileBannerMobileURL()).into(header);
-
-                userName.setText(user.getName());
-                screenName.setText(user.getScreenName());
-                statuses.setText(Integer.toString(user.getStatusesCount()));
-                favorites.setText(Integer.toString(user.getFavouritesCount()));
-                friends.setText(Integer.toString(user.getFriendsCount()));
-                followers.setText(Integer.toString(user.getFollowersCount()));
+                updateUserInformations(user);
             }
         };
         task.execute(info);
+    }
+
+    private void updateUserInformations(User user) {
+        ImageView profile = (ImageView) mDrawerLayout.findViewById(R.id.MainDrawerImageViewUserProfileImage);
+        ImageView header = (ImageView) mDrawerLayout.findViewById(R.id.MainDrawerImageViewUserHeaderImage);
+        TextView userName = (TextView) mDrawerLayout.findViewById(R.id.MainDrawerTextViewUserName);
+        TextView screenName = (TextView) mDrawerLayout.findViewById(R.id.MainDrawerTextViewScreenName);
+        TextView statuses = (TextView) mDrawerLayout.findViewById(R.id.MainDrawerTextViewStatuses);
+        TextView favorites = (TextView) mDrawerLayout.findViewById(R.id.MainDrawerTextViewFavorites);
+        TextView friends = (TextView) mDrawerLayout.findViewById(R.id.MainDrawerTextViewFriends);
+        TextView followers = (TextView) mDrawerLayout.findViewById(R.id.MainDrawerTextViewFollowers);
+
+        Glide.with(ctx).load(user.getBiggerProfileImageURLHttps()).into(profile);
+        Glide.with(ctx).load(user.getProfileBannerMobileURL()).into(header);
+
+        userName.setText(user.getName());
+        screenName.setText(user.getScreenName());
+        statuses.setText(Integer.toString(user.getStatusesCount()));
+        favorites.setText(Integer.toString(user.getFavouritesCount()));
+        friends.setText(Integer.toString(user.getFriendsCount()));
+        followers.setText(Integer.toString(user.getFollowersCount()));
     }
 
     @Override
@@ -232,5 +290,8 @@ public class MainActivity
 
     }
 
-
+    @Override
+    public void applyUpdateStatus(String status) {
+        mWritePermissionService.updateStatus(status);
+    }
 }
