@@ -76,7 +76,6 @@ public class MainActivity
 
     void initialize() {
         checkTwitterApiKeys();
-        checkTwitterUserExists();
         initializeTwitter();
         startServices();
         initialized = true;
@@ -93,13 +92,13 @@ public class MainActivity
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean("initialized", initialized);
-        outState.putSerializable("user",currentUser);
+        outState.putSerializable("user", currentUser);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         initialized = savedInstanceState.getBoolean("initialized");
-        currentUser=(User)savedInstanceState.getSerializable("user");
+        currentUser = (User) savedInstanceState.getSerializable("user");
     }
 
     @Override
@@ -118,8 +117,14 @@ public class MainActivity
     @Override
     protected void onPause() {
         super.onPause();
-        if (mStreamingService != null) unbindService(mStreamingConnection);
-        if (mWritePermissionService != null) unbindService(mWritePermissionConnection);
+        if (mStreamingService != null) {
+            unbindService(mStreamingConnection);
+            mStreamingService = null;
+        }
+        if (mWritePermissionService != null) {
+            unbindService(mWritePermissionConnection);
+            mWritePermissionService = null;
+        }
     }
 
     @Override
@@ -172,6 +177,7 @@ public class MainActivity
                 mWritePermissionService = null;
             }
         };
+        checkTwitterUserExists();
     }
 
     @Override
@@ -219,7 +225,7 @@ public class MainActivity
         super.onPostCreate(savedInstanceState);
         mDrawerToggle.syncState();
         if (!initialized) initialize();
-        if (currentUser!=null) updateUserInformations(currentUser);
+        if (currentUser != null) updateUserInformations(currentUser);
     }
 
     @Override
