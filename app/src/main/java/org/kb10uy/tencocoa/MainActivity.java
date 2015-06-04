@@ -6,31 +6,31 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.IBinder;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
 import org.kb10uy.tencocoa.model.TencocoaRequestCodes;
+import org.kb10uy.tencocoa.model.TencocoaUserStreamLister;
 import org.kb10uy.tencocoa.model.TwitterAccountInformation;
-import org.kb10uy.tencocoa.model.TwitterAccountInformationReceiver;
 import org.kb10uy.tencocoa.model.TwitterHelper;
 import org.kb10uy.tencocoa.settings.FirstSettingActivity;
-import org.kb10uy.tencocoa.views.AsyncImageView;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
 import twitter4j.User;
 import twitter4j.auth.AccessToken;
 
@@ -38,7 +38,8 @@ import twitter4j.auth.AccessToken;
 public class MainActivity
         extends AppCompatActivity
         implements MainDrawerFragment.OnFragmentInteractionListener,
-        NewStatusDialogFragment.NewStatusDialogFragmentInteractionListener {
+        NewStatusDialogFragment.NewStatusDialogFragmentInteractionListener,
+        HomeTimeLineFragment.HomeTimeLineFragmentInteractionListener {
 
     Twitter mTwitter;
     User currentUser;
@@ -46,19 +47,24 @@ public class MainActivity
     SharedPreferences pref;
 
     DrawerLayout mDrawerLayout;
+    FrameLayout mFrameLayout;
     ActionBarDrawerToggle mDrawerToggle;
+    HomeTimeLineFragment mHomeTimeLineFragment;
     Context ctx;
 
     TencocoaStreamingService mStreamingService;
     TencocoaWritePermissionService mWritePermissionService;
     ServiceConnection mStreamingConnection, mWritePermissionConnection;
+    TencocoaUserStreamLister mUserStreamListener;
     boolean mStreamingBound, mWritePermissionBound;
+    boolean mIsTurning, mIsUserStreamEstablished;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
+        mFrameLayout = (FrameLayout) findViewById(R.id.MainActivityFragmentFrame);
         mDrawerToggle = new ActionBarDrawerToggle(
                 this,
                 mDrawerLayout,
@@ -71,14 +77,24 @@ public class MainActivity
         getSupportActionBar().setLogo(R.drawable.ic_launcher);
         getSupportActionBar().setIcon(R.drawable.ic_launcher);
 
+        mHomeTimeLineFragment = new HomeTimeLineFragment();
+        mUserStreamListener = new TencocoaUserStreamLister(mHomeTimeLineFragment);
         pref = getSharedPreferences(getString(R.string.preference_name), 0);
         ctx = this;
+        startServices();
+    }
+
+    private void initializeFragments() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.MainActivityFragmentFrame, mHomeTimeLineFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     void initialize() {
         checkTwitterApiKeys();
         initializeTwitter();
-        startServices();
         initialized = true;
     }
 
@@ -94,12 +110,15 @@ public class MainActivity
         super.onSaveInstanceState(outState);
         outState.putBoolean("initialized", initialized);
         outState.putSerializable("user", currentUser);
+        outState.putBoolean("mIsUserStreamEstablished", mIsUserStreamEstablished);
+        mIsTurning = true;
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         initialized = savedInstanceState.getBoolean("initialized");
         currentUser = (User) savedInstanceState.getSerializable("user");
+        mIsUserStreamEstablished = savedInstanceState.getBoolean("mIsUserStreamEstablished");
     }
 
     @Override
@@ -113,11 +132,16 @@ public class MainActivity
     protected void onStart() {
         super.onStart();
         startUser();
+        initializeFragments();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        unbindServices();
+    }
+
+    private void unbindServices() {
         if (mStreamingBound) {
             unbindService(mStreamingConnection);
             mStreamingBound = false;
@@ -131,6 +155,11 @@ public class MainActivity
     @Override
     protected void onResume() {
         super.onResume();
+        bindServices();
+    }
+
+    private void bindServices() {
+        startServices();
         if (!mStreamingBound)
             bindService(new Intent(this, TencocoaStreamingService.class), mStreamingConnection, BIND_AUTO_CREATE);
         if (!mWritePermissionBound)
@@ -162,6 +191,7 @@ public class MainActivity
             public void onServiceConnected(ComponentName name, IBinder service) {
                 mStreamingService = ((TencocoaStreamingService.TencocoaStreamingServiceBinder) service).getService();
                 mStreamingBound = true;
+                onStreamingServiceConnected();
             }
 
             @Override
@@ -184,6 +214,12 @@ public class MainActivity
             }
         };
         checkTwitterUserExists();
+    }
+
+    private void onStreamingServiceConnected() {
+        //mHomeTimeLineFragment.start(mStreamingService);
+        if (mIsUserStreamEstablished)
+            mStreamingService.getCurrentUserStreamListener().changeHomeTimeLineLister(mHomeTimeLineFragment);
     }
 
     @Override
@@ -213,6 +249,7 @@ public class MainActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        bindServices();
         switch (requestCode) {
             case TencocoaRequestCodes.AccountSelect:
                 if (resultCode == RESULT_OK) {
@@ -220,7 +257,9 @@ public class MainActivity
                     refreshUserInformation(info);
                     mStreamingService.setStreamingUser(info);
                     mWritePermissionService.setTargetUser(info);
+                    mStreamingService.addUserStreamListener(mUserStreamListener);
                     mStreamingService.startCurrentUserStream();
+                    mIsUserStreamEstablished = true;
                 }
                 break;
         }
@@ -243,12 +282,14 @@ public class MainActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        onExit();
+        unbindServices();
+        if (!mIsTurning) onExit();
     }
 
     private void onExit() {
         stopService(new Intent(this, TencocoaStreamingService.class));
         stopService(new Intent(this, TencocoaWritePermissionService.class));
+        mIsUserStreamEstablished = false;
     }
 
     private void refreshUserInformation(final TwitterAccountInformation info) {
@@ -298,8 +339,16 @@ public class MainActivity
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
-
+    public void onDrawerFragmentInteraction(int action) {
+        switch (action) {
+            case 0:
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.show(mHomeTimeLineFragment);
+                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                transaction.commit();
+                break;
+        }
     }
 
     @Override

@@ -10,11 +10,14 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Serializable;
+import java.text.DecimalFormat;
 
 /**
  * Created by kb10uy on 2015/06/02.
  */
 public class TencocoaHelper {
+    public static final char numberSuffixes[] = new char[]{' ', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'};
+
     public static boolean serializeObjectToFile(Serializable object, FileOutputStream output) {
         try {
             ObjectOutputStream serializer = new ObjectOutputStream(output);
@@ -38,5 +41,24 @@ public class TencocoaHelper {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static String getCompressedNumberString(int num) {
+        DecimalFormat df = new DecimalFormat("0.0");
+        double tg = num;
+        int si = 0;
+        while (tg > 1000) {
+            tg /= 1000.0;
+            si++;
+        }
+        if ((int) tg == num) {
+            df = new DecimalFormat("0");
+        } else {
+            df = new DecimalFormat("0.0");
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append(df.format(tg));
+        sb.append(numberSuffixes[si]);
+        return sb.toString();
     }
 }

@@ -10,11 +10,15 @@ import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.IBinder;
 
+import org.kb10uy.tencocoa.model.TencocoaUserStreamLister;
 import org.kb10uy.tencocoa.model.TwitterAccountInformation;
 import org.kb10uy.tencocoa.model.TwitterHelper;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterStream;
+import twitter4j.TwitterStreamFactory;
+import twitter4j.UserStreamListener;
+import twitter4j.auth.AccessToken;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -36,8 +40,9 @@ public class TencocoaStreamingService extends Service {
     private Twitter mTwitter;
     private TwitterStream mUserStream;
     private boolean isUserStreamRunning = false;
-    private TencocoaStreamingServiceBinder mBinder=new TencocoaStreamingServiceBinder();
-
+    private TencocoaStreamingServiceBinder mBinder = new TencocoaStreamingServiceBinder();
+    private String mConsumerKey, mConsumerSecret;
+    private TencocoaUserStreamLister mUserStreamListener;
     //helper methods
 
 
@@ -73,9 +78,9 @@ public class TencocoaStreamingService extends Service {
     public void onCreate() {
         super.onCreate();
         SharedPreferences pref = getSharedPreferences(getString(R.string.preference_name), 0);
-        String ck = pref.getString(getString(R.string.preference_twitter_consumer_key), "");
-        String cs = pref.getString(getString(R.string.preference_twitter_consumer_secret), "");
-        mTwitter = TwitterHelper.getTwitterInstance(ck, cs);
+        mConsumerKey = pref.getString(getString(R.string.preference_twitter_consumer_key), "");
+        mConsumerSecret = pref.getString(getString(R.string.preference_twitter_consumer_secret), "");
+        mTwitter = TwitterHelper.getTwitterInstance(mConsumerKey, mConsumerSecret);
 
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
     }
@@ -96,10 +101,14 @@ public class TencocoaStreamingService extends Service {
     public void setStreamingUser(TwitterAccountInformation info) {
         currentUser = info;
         stopCurrentUserStream();
+        mUserStream = new TwitterStreamFactory().getInstance();
+        mUserStream.setOAuthConsumer(mConsumerKey, mConsumerSecret);
+        mUserStream.setOAuthAccessToken(new AccessToken(currentUser.getAccessToken(), currentUser.getAccessTokenSecret()));
     }
 
     public void startCurrentUserStream() {
         showNotification(R.string.notification_streaming_userstream_started_ticker, R.string.notification_streaming_userstream_started_text);
+        mUserStream.user();
     }
 
     public void stopCurrentUserStream() {
@@ -107,6 +116,20 @@ public class TencocoaStreamingService extends Service {
             mUserStream.cleanUp();
             mUserStream = null;
         }
+    }
+
+    public void addUserStreamListener(TencocoaUserStreamLister listener) {
+        if (mUserStream != null) mUserStream.addListener(listener);
+        mUserStreamListener = listener;
+    }
+
+    public void removeUserStreamListener(UserStreamListener listener) {
+        if (mUserStream != null) mUserStream.removeListener(listener);
+        mUserStreamListener = null;
+    }
+
+    public TencocoaUserStreamLister getCurrentUserStreamListener() {
+        return mUserStreamListener;
     }
 
     public class TencocoaStreamingServiceBinder extends Binder {
