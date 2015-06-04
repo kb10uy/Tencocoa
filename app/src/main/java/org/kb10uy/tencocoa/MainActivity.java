@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.IBinder;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -28,6 +27,8 @@ import org.kb10uy.tencocoa.model.TencocoaUserStreamLister;
 import org.kb10uy.tencocoa.model.TwitterAccountInformation;
 import org.kb10uy.tencocoa.model.TwitterHelper;
 import org.kb10uy.tencocoa.settings.FirstSettingActivity;
+
+import java.util.concurrent.CountDownLatch;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -56,6 +57,7 @@ public class MainActivity
     TencocoaWritePermissionService mWritePermissionService;
     ServiceConnection mStreamingConnection, mWritePermissionConnection;
     TencocoaUserStreamLister mUserStreamListener;
+    CountDownLatch mServiceLatch = new CountDownLatch(2);
     boolean mStreamingBound, mWritePermissionBound;
     boolean mIsTurning, mIsUserStreamEstablished;
 
@@ -82,6 +84,7 @@ public class MainActivity
         pref = getSharedPreferences(getString(R.string.preference_name), 0);
         ctx = this;
         startServices();
+        initializeTwitter();
     }
 
     private void initializeFragments() {
@@ -94,7 +97,6 @@ public class MainActivity
 
     void initialize() {
         checkTwitterApiKeys();
-        initializeTwitter();
         initialized = true;
     }
 
@@ -191,6 +193,7 @@ public class MainActivity
             public void onServiceConnected(ComponentName name, IBinder service) {
                 mStreamingService = ((TencocoaStreamingService.TencocoaStreamingServiceBinder) service).getService();
                 mStreamingBound = true;
+                mServiceLatch.countDown();
                 onStreamingServiceConnected();
             }
 
@@ -205,6 +208,7 @@ public class MainActivity
             public void onServiceConnected(ComponentName name, IBinder service) {
                 mWritePermissionService = ((TencocoaWritePermissionService.TencocoaWritePermissionServiceBinder) service).getService();
                 mWritePermissionBound = true;
+                mServiceLatch.countDown();
             }
 
             @Override
@@ -249,17 +253,34 @@ public class MainActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        final Intent td = data;
         bindServices();
         switch (requestCode) {
             case TencocoaRequestCodes.AccountSelect:
                 if (resultCode == RESULT_OK) {
-                    TwitterAccountInformation info = (TwitterAccountInformation) data.getSerializableExtra("Information");
-                    refreshUserInformation(info);
-                    mStreamingService.setStreamingUser(info);
-                    mWritePermissionService.setTargetUser(info);
-                    mStreamingService.addUserStreamListener(mUserStreamListener);
-                    mStreamingService.startCurrentUserStream();
-                    mIsUserStreamEstablished = true;
+                    AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+                        @Override
+                        protected Void doInBackground(Void... params) {
+                            try {
+                                mServiceLatch.await();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            return null;
+                        }
+
+                        @Override
+                        protected void onPostExecute(Void aVoid) {
+                            TwitterAccountInformation info = (TwitterAccountInformation) td.getSerializableExtra("Information");
+                            refreshUserInformation(info);
+                            mStreamingService.setStreamingUser(info);
+                            mWritePermissionService.setTargetUser(info);
+                            mStreamingService.addUserStreamListener(mUserStreamListener);
+                            mStreamingService.startCurrentUserStream();
+                            mIsUserStreamEstablished = true;
+                        }
+                    };
+                    task.execute();
                 }
                 break;
         }
@@ -270,7 +291,7 @@ public class MainActivity
         super.onPostCreate(savedInstanceState);
         mDrawerToggle.syncState();
         if (!initialized) initialize();
-        if (currentUser != null) updateUserInformations(currentUser);
+        if (currentUser != null) updateUserInformation(currentUser);
     }
 
     @Override
@@ -311,13 +332,13 @@ public class MainActivity
             protected void onPostExecute(User user) {
                 if (user == null) return;
                 currentUser = user;
-                updateUserInformations(user);
+                updateUserInformation(user);
             }
         };
         task.execute(info);
     }
 
-    private void updateUserInformations(User user) {
+    private void updateUserInformation(User user) {
         ImageView profile = (ImageView) mDrawerLayout.findViewById(R.id.MainDrawerImageViewUserProfileImage);
         ImageView header = (ImageView) mDrawerLayout.findViewById(R.id.MainDrawerImageViewUserHeaderImage);
         TextView userName = (TextView) mDrawerLayout.findViewById(R.id.MainDrawerTextViewUserName);

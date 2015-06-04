@@ -7,6 +7,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
 
@@ -113,7 +114,14 @@ public class TencocoaStreamingService extends Service {
 
     public void stopCurrentUserStream() {
         if (mUserStream != null) {
-            mUserStream.cleanUp();
+            AsyncTask<TwitterStream, Void, Void> task = new AsyncTask<TwitterStream, Void, Void>() {
+                @Override
+                protected Void doInBackground(TwitterStream... params) {
+                    params[0].cleanUp();
+                    return null;
+                }
+            };
+            task.execute(mUserStream);
             mUserStream = null;
         }
     }
