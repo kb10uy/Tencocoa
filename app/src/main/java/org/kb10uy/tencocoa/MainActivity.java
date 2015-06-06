@@ -14,6 +14,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
@@ -57,9 +58,9 @@ public class MainActivity
     TencocoaWritePermissionService mWritePermissionService;
     ServiceConnection mStreamingConnection, mWritePermissionConnection;
     TencocoaUserStreamLister mUserStreamListener;
-    CountDownLatch mServiceLatch = new CountDownLatch(2);
+    CountDownLatch mServiceLatch;
     boolean mStreamingBound, mWritePermissionBound;
-    boolean mIsTurning, mIsUserStreamEstablished;
+    boolean mIsRestoring, mIsUserStreamEstablished;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,7 +125,7 @@ public class MainActivity
         outState.putBoolean("initialized", initialized);
         outState.putSerializable("user", currentUser);
         outState.putBoolean("mIsUserStreamEstablished", mIsUserStreamEstablished);
-        mIsTurning = true;
+        mIsRestoring = true;
     }
 
     @Override
@@ -136,7 +137,7 @@ public class MainActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (!mIsTurning) onExitTencocoa();
+        if (!mIsRestoring) onExitTencocoa();
     }
 
     @Override
@@ -208,7 +209,6 @@ public class MainActivity
                 return true;
         }
 
-
         return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 
@@ -226,31 +226,39 @@ public class MainActivity
         Intent twps = new Intent(ctx, TencocoaWritePermissionService.class);
         startService(tss);
         startService(twps);
+        Log.d(getString(R.string.app_name), "Services started now");
     }
 
     private void stopTencocoaServices() {
         stopService(new Intent(ctx, TencocoaStreamingService.class));
         stopService(new Intent(ctx, TencocoaWritePermissionService.class));
+        Log.d(getString(R.string.app_name), "Services stopped now");
     }
 
     private void bindTencocoaServices() {
+        if (mServiceLatch == null) mServiceLatch = new CountDownLatch(2);
         if (!mStreamingBound)
-            mStreamingBound = ctx.bindService(new Intent(this, TencocoaStreamingService.class), mStreamingConnection, BIND_AUTO_CREATE);
+            mStreamingBound = ctx.bindService(new Intent(this, TencocoaStreamingService.class), mStreamingConnection, 0);
         if (!mWritePermissionBound)
-            mWritePermissionBound = ctx.bindService(new Intent(this, TencocoaWritePermissionService.class), mWritePermissionConnection, BIND_AUTO_CREATE);
+            mWritePermissionBound = ctx.bindService(new Intent(this, TencocoaWritePermissionService.class), mWritePermissionConnection, 0);
+        Log.d(getString(R.string.app_name), "Services are now bound");
     }
 
     private void unbindTencocoaServices() {
         if (mStreamingBound) {
             ctx.unbindService(mStreamingConnection);
             mStreamingBound = false;
+            mStreamingService = null;
         }
         if (mWritePermissionBound) {
             ctx.unbindService(mWritePermissionConnection);
             mWritePermissionBound = false;
+            mStreamingService = null;
         }
+        Log.d(getString(R.string.app_name), "Services are now unbound");
+        mServiceLatch = null;
+        createServiceConnections();
     }
-
 
     void onInitializeTencocoa() {
         checkTwitterApiKeys();
@@ -283,6 +291,11 @@ public class MainActivity
     }
 
     private void startUser() {
+        createServiceConnections();
+        checkTwitterUserExists();
+    }
+
+    private void createServiceConnections() {
         mStreamingConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
@@ -312,7 +325,6 @@ public class MainActivity
                 mWritePermissionBound = false;
             }
         };
-        checkTwitterUserExists();
     }
 
     private void onStreamingServiceConnected() {
