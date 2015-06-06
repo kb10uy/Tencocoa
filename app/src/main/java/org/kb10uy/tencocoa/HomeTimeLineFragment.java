@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -21,7 +22,10 @@ import org.kb10uy.tencocoa.model.TencocoaHelper;
 import org.kb10uy.tencocoa.model.TencocoaStatus;
 
 import java.lang.reflect.Array;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import twitter4j.DirectMessage;
 import twitter4j.StallWarning;
@@ -40,6 +44,8 @@ public class HomeTimeLineFragment extends Fragment implements HomeTimeLineLister
     private GeneralReverseListAdapter<TencocoaStatus> mTimeLineAdapter;
     private TencocoaStreamingService mStreamingService;
     private ArrayList<TencocoaStatus> statuses = new ArrayList<>();
+    private SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+    private Pattern mViaPattern = Pattern.compile("<a href=\"(.+)\" rel=\"nofollow\">(.+)</a>");
 
     public HomeTimeLineFragment() {
         // Required empty public constructor
@@ -90,14 +96,24 @@ public class HomeTimeLineFragment extends Fragment implements HomeTimeLineLister
     }
 
     private View generateStatusView(View targetView, TencocoaStatus status) {
-        Status sourceStatus = status.getSourceStatus();
+        Status sourceStatus = status.getShowingStatus();
         User user = sourceStatus.getUser();
+
         ((TextView) targetView.findViewById(R.id.StatusItemUserName)).setText(user.getName());
         ((TextView) targetView.findViewById(R.id.StatusItemUserScreenName)).setText(user.getScreenName());
         ((TextView) targetView.findViewById(R.id.StatusItemFavoriteCount)).setText(TencocoaHelper.getCompressedNumberString(sourceStatus.getFavoriteCount()));
         ((TextView) targetView.findViewById(R.id.StatusItemRetweetCount)).setText(TencocoaHelper.getCompressedNumberString(sourceStatus.getRetweetCount()));
         ((TextView) targetView.findViewById(R.id.StatusItemStatusText)).setText(sourceStatus.getText());
+        ((TextView) targetView.findViewById(R.id.StatusItemCreatedAt)).setText(mDateFormat.format(sourceStatus.getCreatedAt()));
+        Matcher matcher = mViaPattern.matcher(sourceStatus.getSource());
+        if (matcher.find())
+            ((TextView) targetView.findViewById(R.id.StatusItemVia)).setText(matcher.group(2));
         Glide.with(getActivity()).load(user.getOriginalProfileImageURLHttps()).into(((ImageView) targetView.findViewById(R.id.StatusItemUserProfileImage)));
+        if (status.isRetweet()) {
+            ((LinearLayout) targetView.findViewById(R.id.StatusItemLayout)).setBackgroundResource(R.color.tencocoa_retweet_green);
+        } else {
+            ((LinearLayout) targetView.findViewById(R.id.StatusItemLayout)).setBackgroundResource(R.color.tencocoa_transparent);
+        }
         return targetView;
     }
 

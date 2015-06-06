@@ -60,7 +60,7 @@ public class MainActivity
     TencocoaUserStreamLister mUserStreamListener;
     CountDownLatch mServiceLatch;
     boolean mStreamingBound, mWritePermissionBound;
-    boolean mIsRestoring, mIsUserStreamEstablished;
+    boolean mIsRestoring, mIsUserStreamEstablished, mHasShowedFirstAccountActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,16 +83,18 @@ public class MainActivity
         mHomeTimeLineFragment = new HomeTimeLineFragment();
         mUserStreamListener = new TencocoaUserStreamLister(mHomeTimeLineFragment);
         pref = getSharedPreferences(getString(R.string.preference_name), 0);
-        ctx = getApplicationContext();
+        ctx = this;
         startTencocoaServices();
-        initializeTwitter();
+        createServiceConnections();
+        initializeFragments();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        startUser();
-        initializeFragments();
+        bindTencocoaServices();
+        initializeTwitter();
+        checkTwitterUserExists();
     }
 
 
@@ -114,7 +116,7 @@ public class MainActivity
     @Override
     protected void onResume() {
         super.onResume();
-        bindTencocoaServices();
+        //bindTencocoaServices();
     }
 
     //running
@@ -131,6 +133,12 @@ public class MainActivity
     @Override
     protected void onPause() {
         super.onPause();
+        //unbindTencocoaServices();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
         unbindTencocoaServices();
     }
 
@@ -272,6 +280,7 @@ public class MainActivity
 
 
     private void initializeTwitter() {
+        checkTwitterApiKeys();
         String ck = pref.getString(getString(R.string.preference_twitter_consumer_key), "");
         String cs = pref.getString(getString(R.string.preference_twitter_consumer_secret), "");
         mTwitter = TwitterHelper.getTwitterInstance(ck, cs);
@@ -280,19 +289,15 @@ public class MainActivity
     private void checkTwitterApiKeys() {
         if (pref.getBoolean(getString(R.string.preference_twitter_consumer_set), false)) return;
         startActivity(new Intent(this, FirstSettingActivity.class));
+        finish();
     }
 
     private void checkTwitterUserExists() {
         if (pref.getInt(getString(R.string.preference_twitter_accounts_count), 0) == 0) {
-            bindTencocoaServices();
             Intent intent = new Intent(this, AccountsListActivity.class);
             startActivityForResult(intent, TencocoaRequestCodes.AccountSelect);
+            mHasShowedFirstAccountActivity = true;
         }
-    }
-
-    private void startUser() {
-        createServiceConnections();
-        checkTwitterUserExists();
     }
 
     private void createServiceConnections() {

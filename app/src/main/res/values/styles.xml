@@ -5,4 +5,19 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="TencocoaTextAppearanceUserName">
+        <item name="android:textSize">16sp</item>
+    </style>
+    <style name="TencocoaTextAppearanceScreenName">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/tencocoa_gray_green</item>
+    </style>
+    <style name="TencocoaTextAppearanceStatusText">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/tencocoa_dark_gray</item>
+    </style>
+    <style name="TencocoaTextAppearanceSmall">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/tencocoa_dark_gray</item>
+    </style>
 </resources>
