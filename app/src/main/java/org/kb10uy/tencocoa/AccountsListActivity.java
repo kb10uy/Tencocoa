@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -51,9 +52,18 @@ public class AccountsListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accounts_list);
-        initialize();
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        accountsAdapter = new GeneralListAdapter<>(
+                this,
+                R.layout.item_accounts_list,
+                new GeneralListAdapterViewGenerator<TwitterAccountInformation>() {
+                    @Override
+                    public View generateView(View targetView, TwitterAccountInformation item) {
+                        ((TextView) targetView.findViewById(R.id.AccountsListListViewItemScreenName)).setText(item.getScreenName());
+                        ((TextView) targetView.findViewById(R.id.AccountsListListViewItemUserId)).setText(Long.toString(item.getUserId()));
+                        return targetView;
+                    }
+                });
         mListView = (ListView) findViewById(R.id.AccountsListListView);
         mListView.setAdapter(accountsAdapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -70,27 +80,48 @@ public class AccountsListActivity extends AppCompatActivity {
         mCallback = getString(R.string.uri_twitter_oauth_callback);
     }
 
-    private void initialize() {
-        loadAccounts();
-        if (accounts == null) {
-            accounts = new ArrayList<>();
-            saveAccounts();
-        }
-        accountsAdapter = new GeneralListAdapter<>(
-                this,
-                R.layout.item_accounts_list,
-                new GeneralListAdapterViewGenerator<TwitterAccountInformation>() {
-                    @Override
-                    public View generateView(View targetView, TwitterAccountInformation item) {
-                        ((TextView) targetView.findViewById(R.id.AccountsListListViewItemScreenName)).setText(item.getScreenName());
-                        ((TextView) targetView.findViewById(R.id.AccountsListListViewItemUserId)).setText(Long.toString(item.getUserId()));
-                        return targetView;
-                    }
-                });
-        accountsAdapter.setList(accounts);
-        accountsAdapter.notifyDataSetChanged();
+    @Override
+    protected void onStart() {
+        super.onStart();
+        initialize();
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("accounts", accounts);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        if (intent == null || intent.getData() == null || !intent.getData().toString().startsWith(mCallback))
+            return;
+        String verifier = intent.getData().getQueryParameter("oauth_verifier");
+        final Activity ta = this;
+
+        AsyncTask<String, Void, AccessToken> task = new AsyncTask<String, Void, AccessToken>() {
+            @Override
+            protected AccessToken doInBackground(String... params) {
+                try {
+                    return mTwitter.getOAuthAccessToken(mRequestToken, params[0]);
+                } catch (TwitterException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(AccessToken accessToken) {
+                if (accessToken != null) {
+                    Toast.makeText(ta, R.string.text_activity_accounts_list_success, Toast.LENGTH_SHORT).show();
+                    registerAuthorization(accessToken);
+                } else {
+                    Toast.makeText(ta, R.string.text_activity_accounts_list_failed, Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+        task.execute(verifier);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -116,12 +147,6 @@ public class AccountsListActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putSerializable("accounts", accounts);
     }
 
     @Override
@@ -158,42 +183,28 @@ public class AccountsListActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onNewIntent(Intent intent) {
-        if (intent == null || intent.getData() == null || !intent.getData().toString().startsWith(mCallback))
-            return;
-        String verifier = intent.getData().getQueryParameter("oauth_verifier");
-        final Activity ta = this;
-
-        AsyncTask<String, Void, AccessToken> task = new AsyncTask<String, Void, AccessToken>() {
-            @Override
-            protected AccessToken doInBackground(String... params) {
-                try {
-                    return mTwitter.getOAuthAccessToken(mRequestToken, params[0]);
-                } catch (TwitterException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(AccessToken accessToken) {
-                if (accessToken != null) {
-                    Toast.makeText(ta, R.string.text_activity_accounts_list_success, Toast.LENGTH_SHORT).show();
-                    registerAuthorization(accessToken);
-                } else {
-                    Toast.makeText(ta, R.string.text_activity_accounts_list_failed, Toast.LENGTH_SHORT).show();
-                }
-            }
-        };
-        task.execute(verifier);
+    private void initialize() {
+        loadAccounts();
+        if (accounts == null) {
+            accounts = new ArrayList<>();
+            saveAccounts();
+        }
+        accountsAdapter.setList(accounts);
+        accountsAdapter.notifyDataSetChanged();
     }
 
+
     private void registerAuthorization(AccessToken accessToken) {
-        TwitterAccountInformation info = new TwitterAccountInformation(accessToken);
-        accounts.add(info);
-        accountsAdapter.notifyDataSetChanged();
-        saveAccounts();
+        final TwitterAccountInformation info = new TwitterAccountInformation(accessToken);
+        Handler h = new Handler();
+        h.post(new Runnable() {
+            @Override
+            public void run() {
+                accounts.add(info);
+                accountsAdapter.notifyDataSetChanged();
+                saveAccounts();
+            }
+        });
     }
 
     private void saveAccounts() {
