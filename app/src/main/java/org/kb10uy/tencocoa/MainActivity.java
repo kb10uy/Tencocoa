@@ -253,7 +253,7 @@ public class MainActivity
         if (mWritePermissionBound) {
             ctx.unbindService(mWritePermissionConnection);
             mWritePermissionBound = false;
-            mStreamingService = null;
+            mWritePermissionService = null;
         }
         Log.d(getString(R.string.app_name), "Services are now unbound");
         mServiceLatch = null;
