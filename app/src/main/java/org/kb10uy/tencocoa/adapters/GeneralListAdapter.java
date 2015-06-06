@@ -32,12 +32,12 @@ public class GeneralListAdapter<T> extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return list.size();
+        return list != null ? list.size() : 0;
     }
 
     @Override
     public Object getItem(int position) {
-        return list.get(position);
+        return list != null ? list.get(position) : null;
     }
 
     @Override

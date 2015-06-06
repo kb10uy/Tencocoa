@@ -82,30 +82,41 @@ public class MainActivity
         mHomeTimeLineFragment = new HomeTimeLineFragment();
         mUserStreamListener = new TencocoaUserStreamLister(mHomeTimeLineFragment);
         pref = getSharedPreferences(getString(R.string.preference_name), 0);
-        ctx = this;
-        startServices();
+        ctx = getApplicationContext();
+        startTencocoaServices();
         initializeTwitter();
     }
 
-    private void initializeFragments() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.MainActivityFragmentFrame, mHomeTimeLineFragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
+    @Override
+    protected void onStart() {
+        super.onStart();
+        startUser();
+        initializeFragments();
     }
 
-    void initialize() {
-        checkTwitterApiKeys();
-        initialized = true;
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        initialized = savedInstanceState.getBoolean("initialized");
+        currentUser = (User) savedInstanceState.getSerializable("user");
+        mIsUserStreamEstablished = savedInstanceState.getBoolean("mIsUserStreamEstablished");
     }
 
-    private void startServices() {
-        Intent tss = new Intent(this, TencocoaStreamingService.class);
-        Intent twps = new Intent(this, TencocoaWritePermissionService.class);
-        startService(tss);
-        startService(twps);
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        mDrawerToggle.syncState();
+        if (!initialized) onInitializeTencocoa();
+        if (currentUser != null) updateUserInformation(currentUser);
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        bindTencocoaServices();
+    }
+
+    //running
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -117,144 +128,22 @@ public class MainActivity
     }
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        initialized = savedInstanceState.getBoolean("initialized");
-        currentUser = (User) savedInstanceState.getSerializable("user");
-        mIsUserStreamEstablished = savedInstanceState.getBoolean("mIsUserStreamEstablished");
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        startUser();
-        initializeFragments();
-    }
-
-    @Override
     protected void onPause() {
         super.onPause();
-        unbindServices();
-    }
-
-    private void unbindServices() {
-        if (mStreamingBound) {
-            unbindService(mStreamingConnection);
-            mStreamingBound = false;
-        }
-        if (mWritePermissionBound) {
-            unbindService(mWritePermissionConnection);
-            mWritePermissionBound = false;
-        }
+        unbindTencocoaServices();
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        bindServices();
-    }
-
-    private void bindServices() {
-        startServices();
-        if (!mStreamingBound)
-            bindService(new Intent(this, TencocoaStreamingService.class), mStreamingConnection, BIND_AUTO_CREATE);
-        if (!mWritePermissionBound)
-            bindService(new Intent(this, TencocoaWritePermissionService.class), mWritePermissionConnection, BIND_AUTO_CREATE);
-    }
-
-    private void initializeTwitter() {
-        String ck = pref.getString(getString(R.string.preference_twitter_consumer_key), "");
-        String cs = pref.getString(getString(R.string.preference_twitter_consumer_secret), "");
-        mTwitter = TwitterHelper.getTwitterInstance(ck, cs);
-    }
-
-    private void checkTwitterApiKeys() {
-        if (pref.getBoolean(getString(R.string.preference_twitter_consumer_set), false)) return;
-
-        startActivity(new Intent(this, FirstSettingActivity.class));
-    }
-
-    private void checkTwitterUserExists() {
-        if (pref.getInt(getString(R.string.preference_twitter_accounts_count), 0) == 0) {
-            Intent intent = new Intent(this, AccountsListActivity.class);
-            startActivityForResult(intent, TencocoaRequestCodes.AccountSelect);
-        }
-    }
-
-    private void startUser() {
-        mStreamingConnection = new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                mStreamingService = ((TencocoaStreamingService.TencocoaStreamingServiceBinder) service).getService();
-                mStreamingBound = true;
-                mServiceLatch.countDown();
-                onStreamingServiceConnected();
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-                mStreamingService = null;
-                mStreamingBound = false;
-            }
-        };
-        mWritePermissionConnection = new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                mWritePermissionService = ((TencocoaWritePermissionService.TencocoaWritePermissionServiceBinder) service).getService();
-                mWritePermissionBound = true;
-                mServiceLatch.countDown();
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-                mWritePermissionService = null;
-                mWritePermissionBound = false;
-            }
-        };
-        checkTwitterUserExists();
-    }
-
-    private void onStreamingServiceConnected() {
-        //mHomeTimeLineFragment.start(mStreamingService);
-        if (mIsUserStreamEstablished)
-            mStreamingService.getCurrentUserStreamListener().changeHomeTimeLineLister(mHomeTimeLineFragment);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        switch (id) {
-            case R.id.action_main_new_status:
-                NewStatusDialogFragment dialog = NewStatusDialogFragment.newInstance();
-                dialog.show(getFragmentManager(), "NewStatus");
-                break;
-            case R.id.action_main_accounts:
-                Intent intent = new Intent(this, AccountsListActivity.class);
-                startActivityForResult(intent, TencocoaRequestCodes.AccountSelect);
-                return true;
-            case R.id.action_main_settings:
-                return true;
-        }
-
-
-        return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
+    protected void onDestroy() {
+        super.onDestroy();
+        if (!mIsTurning) onExitTencocoa();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         final Intent td = data;
-        bindServices();
+        bindTencocoaServices();
         switch (requestCode) {
             case TencocoaRequestCodes.AccountSelect:
                 if (resultCode == RESULT_OK) {
@@ -287,30 +176,149 @@ public class MainActivity
     }
 
     @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        mDrawerToggle.syncState();
-        if (!initialized) initialize();
-        if (currentUser != null) updateUserInformation(currentUser);
-    }
-
-    @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unbindServices();
-        if (!mIsTurning) onExit();
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
     }
 
-    private void onExit() {
-        stopService(new Intent(this, TencocoaStreamingService.class));
-        stopService(new Intent(this, TencocoaWritePermissionService.class));
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.action_main_new_status:
+                NewStatusDialogFragment dialog = NewStatusDialogFragment.newInstance();
+                dialog.show(getFragmentManager(), "NewStatus");
+                break;
+            case R.id.action_main_accounts:
+                Intent intent = new Intent(this, AccountsListActivity.class);
+                startActivityForResult(intent, TencocoaRequestCodes.AccountSelect);
+                return true;
+            case R.id.action_main_settings:
+                return true;
+        }
+
+
+        return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
+    }
+
+
+    private void initializeFragments() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.MainActivityFragmentFrame, mHomeTimeLineFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    private void startTencocoaServices() {
+        Intent tss = new Intent(ctx, TencocoaStreamingService.class);
+        Intent twps = new Intent(ctx, TencocoaWritePermissionService.class);
+        startService(tss);
+        startService(twps);
+    }
+
+    private void stopTencocoaServices() {
+        stopService(new Intent(ctx, TencocoaStreamingService.class));
+        stopService(new Intent(ctx, TencocoaWritePermissionService.class));
+    }
+
+    private void bindTencocoaServices() {
+        if (!mStreamingBound)
+            mStreamingBound = ctx.bindService(new Intent(this, TencocoaStreamingService.class), mStreamingConnection, BIND_AUTO_CREATE);
+        if (!mWritePermissionBound)
+            mWritePermissionBound = ctx.bindService(new Intent(this, TencocoaWritePermissionService.class), mWritePermissionConnection, BIND_AUTO_CREATE);
+    }
+
+    private void unbindTencocoaServices() {
+        if (mStreamingBound) {
+            ctx.unbindService(mStreamingConnection);
+            mStreamingBound = false;
+        }
+        if (mWritePermissionBound) {
+            ctx.unbindService(mWritePermissionConnection);
+            mWritePermissionBound = false;
+        }
+    }
+
+
+    void onInitializeTencocoa() {
+        checkTwitterApiKeys();
+        initialized = true;
+    }
+
+    private void onExitTencocoa() {
+        stopTencocoaServices();
         mIsUserStreamEstablished = false;
+    }
+
+
+    private void initializeTwitter() {
+        String ck = pref.getString(getString(R.string.preference_twitter_consumer_key), "");
+        String cs = pref.getString(getString(R.string.preference_twitter_consumer_secret), "");
+        mTwitter = TwitterHelper.getTwitterInstance(ck, cs);
+    }
+
+    private void checkTwitterApiKeys() {
+        if (pref.getBoolean(getString(R.string.preference_twitter_consumer_set), false)) return;
+        startActivity(new Intent(this, FirstSettingActivity.class));
+    }
+
+    private void checkTwitterUserExists() {
+        if (pref.getInt(getString(R.string.preference_twitter_accounts_count), 0) == 0) {
+            bindTencocoaServices();
+            Intent intent = new Intent(this, AccountsListActivity.class);
+            startActivityForResult(intent, TencocoaRequestCodes.AccountSelect);
+        }
+    }
+
+    private void startUser() {
+        mStreamingConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                mStreamingService = ((TencocoaStreamingService.TencocoaStreamingServiceBinder) service).getService();
+                //mStreamingBound = true;
+                mServiceLatch.countDown();
+                onStreamingServiceConnected();
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                mStreamingService = null;
+                mStreamingBound = false;
+            }
+        };
+        mWritePermissionConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                mWritePermissionService = ((TencocoaWritePermissionService.TencocoaWritePermissionServiceBinder) service).getService();
+                //mWritePermissionBound = true;
+                mServiceLatch.countDown();
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                mWritePermissionService = null;
+                mWritePermissionBound = false;
+            }
+        };
+        checkTwitterUserExists();
+    }
+
+    private void onStreamingServiceConnected() {
+        //mHomeTimeLineFragment.start(mStreamingService);
+        if (mIsUserStreamEstablished)
+            mStreamingService.getCurrentUserStreamListener().changeHomeTimeLineLister(mHomeTimeLineFragment);
     }
 
     private void refreshUserInformation(final TwitterAccountInformation info) {
