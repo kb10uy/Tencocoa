@@ -1,23 +1,27 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <style name="TencocoaTextAppearanceDrawerUserName">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">?attr/colorWhite</item>
     </style>
 
-    <style name="TencocoaTextAppearanceUserName">
+    <style name="TencocoaTextAppearanceStatusUserName">
         <item name="android:textSize">16sp</item>
+        <item name="android:textColor">?attr/colorBlack</item>
     </style>
+
     <style name="TencocoaTextAppearanceScreenName">
         <item name="android:textSize">12sp</item>
-        <item name="android:textColor">@color/tencocoa_gray_green</item>
+        <item name="android:textColor">?attr/colorTextScreenName</item>
     </style>
+
     <style name="TencocoaTextAppearanceStatusText">
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/tencocoa_dark_gray</item>
+        <item name="android:textColor">?attr/colorTextNormal</item>
     </style>
+
     <style name="TencocoaTextAppearanceSmall">
         <item name="android:textSize">12sp</item>
-        <item name="android:textColor">@color/tencocoa_dark_gray</item>
+        <item name="android:textColor">?attr/colorTextNormal</item>
     </style>
 </resources>

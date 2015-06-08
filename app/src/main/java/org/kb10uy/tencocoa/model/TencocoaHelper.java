@@ -1,5 +1,8 @@
 package org.kb10uy.tencocoa.model;
 
+import org.joda.time.DateTime;
+import org.joda.time.Duration;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
@@ -11,6 +14,8 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.text.DecimalFormat;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by kb10uy on 2015/06/02.
@@ -60,5 +65,16 @@ public class TencocoaHelper {
         sb.append(df.format(tg));
         sb.append(numberSuffixes[si]);
         return sb.toString();
+    }
+
+    public static String getRelativeTimeString(Date targetDate) {
+        Duration d = new Duration(new DateTime(targetDate), new DateTime(new Date()));
+        long relative = d.getStandardSeconds();
+        if (relative < 20) return "now";
+        if (relative < 60) return Long.toString(relative) + "s";
+        if ((relative = d.getStandardMinutes()) < 60) return Long.toString(relative) + "m";
+        if ((relative = d.getStandardHours()) < 24) return Long.toString(relative) + "h";
+        relative = d.getStandardDays();
+        return Long.toString(relative) + "d";
     }
 }

@@ -1,7 +1,6 @@
 package org.kb10uy.tencocoa;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -9,13 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
 
 public class MainDrawerFragment extends Fragment {
 
-    private OnFragmentInteractionListener mListener;
+    private OnDrawerFragmentInteractionListener mListener;
     private ListView mDrawerList;
     private LinearLayout mDrawerLayout;
 
@@ -38,7 +38,17 @@ public class MainDrawerFragment extends Fragment {
         mDrawerLayout = (LinearLayout) view.findViewById(R.id.main_drawer_layout);
 
         setupListView(view);
+        setupListener(view);
         return view;
+    }
+
+    private void setupListener(View view) {
+        ((ImageView) view.findViewById(R.id.MainDrawerImageViewUserProfileImage)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onDrawerFragmentMiscInteraction("AccountSelect");
+            }
+        });
     }
 
 
@@ -60,7 +70,7 @@ public class MainDrawerFragment extends Fragment {
     }
 
     private void onItemSelected(int position) {
-        mListener.onDrawerFragmentInteraction(position);
+        mListener.onDrawerFragmentMainMenuInteraction(position);
     }
 
 
@@ -68,10 +78,10 @@ public class MainDrawerFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mListener = (OnFragmentInteractionListener) activity;
+            mListener = (OnDrawerFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement OnDrawerFragmentInteractionListener");
         }
     }
 
@@ -82,9 +92,11 @@ public class MainDrawerFragment extends Fragment {
     }
 
 
-    public interface OnFragmentInteractionListener {
+    public interface OnDrawerFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onDrawerFragmentInteraction(int action);
+        public void onDrawerFragmentMainMenuInteraction(int action);
+
+        public void onDrawerFragmentMiscInteraction(String action);
     }
 
 }

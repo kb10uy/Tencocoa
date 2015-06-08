@@ -2,74 +2,76 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="org.kb10uy.tencocoa.MainDrawerFragment"
     android:background="#fff"
-    android:orientation="vertical">
-
-    <!-- TODO: Update blank fragment layout -->
-
+    android:orientation="vertical"
+    tools:context="org.kb10uy.tencocoa.MainDrawerFragment">
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="180dp">
+        android:layout_height="180dp"
+        android:clickable="true">
+
         <ImageView
+            android:id="@+id/MainDrawerImageViewUserHeaderImage"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:background="#ddd"
-            android:id="@+id/MainDrawerImageViewUserHeaderImage"
-            android:scaleType="centerCrop"
-            android:contentDescription="Header" />
+            android:background="?attr/colorDarkGray"
+            android:contentDescription="Header"
+            android:scaleType="centerCrop" />
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal">
 
             <LinearLayout
-                android:orientation="horizontal"
                 android:layout_width="fill_parent"
                 android:layout_height="80dp"
-                android:layout_margin="16dp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentStart="true"
-                android:background="#40eeeeee">
+                android:layout_margin="16dp"
+                android:background="#40eeeeee"
+                android:orientation="horizontal">
 
                 <ImageView
+                    android:id="@+id/MainDrawerImageViewUserProfileImage"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:id="@+id/MainDrawerImageViewUserProfileImage"
                     android:contentDescription="Profile" />
 
                 <LinearLayout
-                    android:orientation="vertical"
                     android:layout_width="fill_parent"
-                    android:layout_height="fill_parent">
+                    android:layout_height="fill_parent"
+                    android:orientation="vertical">
 
                     <org.kb10uy.tencocoa.views.FontFitTextView
+                        android:id="@+id/MainDrawerTextViewUserName"
                         android:layout_width="wrap_content"
                         android:layout_height="32dp"
                         android:layout_margin="8dp"
-                        android:textSize="24sp"
-                        android:text="ユーザー名"
-                        android:textColor="@color/tencocoa_black"
                         android:gravity="center_vertical"
-                        android:id="@+id/MainDrawerTextViewUserName" />
+                        android:text="ユーザー名"
+                        android:textAppearance="@style/TencocoaTextAppearanceDrawerUserName" />
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:text="\@"/>
+                            android:text="\@"
+                            android:textAppearance="?android:attr/textAppearanceMedium" />
+
                         <TextView
+                            android:id="@+id/MainDrawerTextViewScreenName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
                             android:text="ScreenName"
-                            android:id="@+id/MainDrawerTextViewScreenName" />
+                            android:textAppearance="?android:attr/textAppearanceMedium" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -78,119 +80,130 @@
 
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:baselineAligned="false">
+        android:background="?attr/colorWhite"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_gravity="center_vertical"
-            android:layout_margin="8dp">
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
             <TextView
+                android:id="@+id/MainDrawerTextViewStatuses"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="0"
-                android:textColor="@color/tencocoa_black"
                 android:layout_gravity="center_vertical"
-                android:id="@+id/MainDrawerTextViewStatuses"/>
+                android:text="0"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="?attr/colorBlack" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_gravity="center_vertical"
                 android:layout_marginLeft="8dp"
                 android:text="@string/label_activity_main_tweets"
-                android:layout_gravity="center_vertical"/>
+                android:textAppearance="?android:attr/textAppearanceSmall" />
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_gravity="center_vertical"
-            android:layout_margin="8dp">
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
             <TextView
+                android:id="@+id/MainDrawerTextViewFavorites"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="0"
-                android:textColor="@color/tencocoa_black"
                 android:layout_gravity="center_vertical"
-                android:id="@+id/MainDrawerTextViewFavorites"/>
+                android:text="0"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="?attr/colorBlack" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_gravity="center_vertical"
                 android:layout_marginLeft="8dp"
                 android:text="@string/label_activity_main_favorites"
-                android:layout_gravity="center_vertical"/>
+                android:textAppearance="?android:attr/textAppearanceSmall" />
         </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:baselineAligned="false">
+        android:background="?attr/colorWhite"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_gravity="center_vertical"
-            android:layout_margin="8dp">
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
             <TextView
+                android:id="@+id/MainDrawerTextViewFriends"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="0"
-                android:textColor="@color/tencocoa_black"
                 android:layout_gravity="center_vertical"
-                android:id="@+id/MainDrawerTextViewFriends"/>
+                android:text="0"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="?attr/colorBlack" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_gravity="center_vertical"
                 android:layout_marginLeft="8dp"
                 android:text="@string/label_activity_main_friends"
-                android:layout_gravity="center_vertical"/>
+                android:textAppearance="?android:attr/textAppearanceSmall" />
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_gravity="center_vertical"
-            android:layout_margin="8dp">
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
             <TextView
+                android:id="@+id/MainDrawerTextViewFollowers"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="0"
-                android:textColor="@color/tencocoa_black"
                 android:layout_gravity="center_vertical"
-                android:id="@+id/MainDrawerTextViewFollowers"/>
+                android:text="0"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="?attr/colorBlack" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_gravity="center_vertical"
                 android:layout_marginLeft="8dp"
                 android:text="@string/label_activity_main_followers"
-                android:layout_gravity="center_vertical"/>
+                android:textAppearance="?android:attr/textAppearanceSmall" />
         </LinearLayout>
     </LinearLayout>
 
     <ListView
+        android:id="@+id/MainDrawerListViewContents"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/MainDrawerListViewContents"
         android:layout_gravity="center_horizontal"
-        android:choiceMode="singleChoice"/>
+        android:background="?attr/colorWhite"
+        android:choiceMode="singleChoice" />
 </LinearLayout>

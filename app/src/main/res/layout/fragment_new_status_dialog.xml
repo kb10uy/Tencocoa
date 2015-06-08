@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="400dp"
     android:layout_height="match_parent"
     tools:context="org.kb10uy.tencocoa.NewStatusDialogFragment"
-    android:background="@color/tencocoa_white"
+    android:background="?attr/colorWhite"
     android:orientation="vertical">
 
     <TextView

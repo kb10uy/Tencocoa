@@ -39,7 +39,7 @@ import twitter4j.auth.AccessToken;
 
 public class MainActivity
         extends AppCompatActivity
-        implements MainDrawerFragment.OnFragmentInteractionListener,
+        implements MainDrawerFragment.OnDrawerFragmentInteractionListener,
         NewStatusDialogFragment.NewStatusDialogFragmentInteractionListener,
         HomeTimeLineFragment.HomeTimeLineFragmentInteractionListener {
 
@@ -385,7 +385,7 @@ public class MainActivity
     }
 
     @Override
-    public void onDrawerFragmentInteraction(int action) {
+    public void onDrawerFragmentMainMenuInteraction(int action) {
         switch (action) {
             case 0:
                 FragmentManager fragmentManager = getSupportFragmentManager();
@@ -393,6 +393,16 @@ public class MainActivity
                 transaction.show(mHomeTimeLineFragment);
                 transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                 transaction.commit();
+                break;
+        }
+    }
+
+    @Override
+    public void onDrawerFragmentMiscInteraction(String action) {
+        switch (action) {
+            case "AccountSelect":
+                Intent intent = new Intent(this, AccountsListActivity.class);
+                startActivityForResult(intent, TencocoaRequestCodes.AccountSelect);
                 break;
         }
     }

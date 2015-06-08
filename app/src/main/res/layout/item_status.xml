@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/StatusItemLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/StatusItemLayout"
     android:orientation="vertical">
 
     <LinearLayout
@@ -23,52 +24,61 @@
                 android:layout_margin="4dp" />
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:id="@+id/StatusItemFavRtCounts"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                android:visibility="gone">
 
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:layout_marginLeft="4dp"
-                    android:src="@drawable/tencocoa_star1" />
-
-                <TextView
-                    android:id="@+id/StatusItemFavoriteCount"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|center_horizontal"
-                    android:layout_marginLeft="4dp"
-                    android:text="0" />
-            </LinearLayout>
+                    android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_marginLeft="4dp"
+                        android:src="@drawable/tencocoa_star1" />
 
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:layout_marginLeft="4dp"
-                    android:src="@drawable/tencocoa_rt1" />
+                    <TextView
+                        android:id="@+id/StatusItemFavoriteCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:layout_marginLeft="4dp"
+                        android:text="0" />
+                </LinearLayout>
 
-                <TextView
-                    android:id="@+id/StatusItemRetweetCount"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|center_horizontal"
-                    android:layout_marginLeft="4dp"
-                    android:text="0" />
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_marginLeft="4dp"
+                        android:src="@drawable/tencocoa_rt1" />
+
+                    <TextView
+                        android:id="@+id/StatusItemRetweetCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:layout_marginLeft="4dp"
+                        android:text="0" />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -77,27 +87,46 @@
                     android:id="@+id/StatusItemUserName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:layout_centerVertical="true"
                     android:layout_margin="4dp"
                     android:text="ユーザー名"
-                    android:textAppearance="@style/TencocoaTextAppearanceUserName" />
+                    android:textAppearance="@style/TencocoaTextAppearanceStatusUserName" />
 
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal|center_vertical"
-                    android:layout_marginLeft="4dp"
-                    android:text="\@"
-                    android:textAppearance="@style/TencocoaTextAppearanceScreenName" />
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/StatusItemUserName"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal|center_vertical"
+                        android:layout_marginStart="4dp"
+                        android:text="\@"
+                        android:textAppearance="@style/TencocoaTextAppearanceScreenName" />
+
+                    <TextView
+                        android:id="@+id/StatusItemUserScreenName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal|center_vertical"
+                        android:text="ScreenName"
+                        android:textAppearance="@style/TencocoaTextAppearanceScreenName" />
+                </LinearLayout>
+
 
                 <TextView
-                    android:id="@+id/StatusItemUserScreenName"
+                    android:id="@+id/StatusItemCreatedAt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal|center_vertical"
-                    android:text="ScreenName"
-                    android:textAppearance="@style/TencocoaTextAppearanceScreenName" />
-            </LinearLayout>
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="8dp"
+                    android:text="1970/01/01 12:00:00"
+                    android:textAppearance="@style/TencocoaTextAppearanceSmall" />
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/StatusItemStatusText"
@@ -110,32 +139,31 @@
         </LinearLayout>
 
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginStart="4dp" android:layout_marginBottom="4dp">
-        <TextView
-            android:id="@+id/StatusItemCreatedAt"
-            android:layout_width="wrap_content"
+    <!--
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|center_vertical"
-            android:text="1970/01/01 12:00:00"
-            android:textAppearance="@style/TencocoaTextAppearanceSmall" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_gravity="center_horizontal|center_vertical"
-            android:text="via"
-            android:textAppearance="@style/TencocoaTextAppearanceSmall" />
-        <TextView
-            android:id="@+id/StatusItemVia"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="4dp"
-            android:layout_gravity="right"
-            android:text="Client Name"
-            android:textAppearance="@style/TencocoaTextAppearanceSmall" />
+            android:layout_marginBottom="4dp"
+            android:layout_marginStart="4dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:layout_marginLeft="8dp"
+                android:text="via"
+                android:textAppearance="@style/TencocoaTextAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/StatusItemVia"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginLeft="4dp"
+                android:text="Client Name"
+                android:textAppearance="@style/TencocoaTextAppearanceSmall" />
+                -
     </LinearLayout>
+    -->
 </LinearLayout>

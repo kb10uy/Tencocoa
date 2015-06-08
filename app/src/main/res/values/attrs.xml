@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="TencocoaTheme">
+        <attr name="colorTencocoaPrimary" format="color" />
+        <attr name="colorBlack" format="color" />
+        <attr name="colorDarkGray" format="color" />
+        <attr name="colorWhite" format="color" />
+        <attr name="colorTextNormal" format="color" />
+        <attr name="colorTextScreenName" format="color" />
+        <attr name="colorRetweetBackground" format="color" />
+    </declare-styleable>
+</resources>

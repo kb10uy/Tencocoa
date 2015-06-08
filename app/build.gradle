@@ -35,5 +35,6 @@ dependencies {
     compile "org.twitter4j:twitter4j:4.0.3"
     compile "org.twitter4j:twitter4j-stream:4.0.3"
     compile "org.twitter4j:twitter4j-media-support:4.0.3"
+    compile "joda-time:joda-time:2.8"
     compile "com.google.guava:guava:18.+"
 }

@@ -1,10 +1,13 @@
 package org.kb10uy.tencocoa;
 
 import android.app.Activity;
+import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +60,12 @@ public class HomeTimeLineFragment extends Fragment implements HomeTimeLineLister
     }
 
     @Override
+    public void onInflate(Activity activity, AttributeSet attrs, Bundle savedInstanceState) {
+        super.onInflate(activity, attrs, savedInstanceState);
+
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -85,7 +94,7 @@ public class HomeTimeLineFragment extends Fragment implements HomeTimeLineLister
             mListener = (HomeTimeLineFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement HomeTimeLineFragmentInteractionListener");
         }
     }
 
@@ -101,18 +110,18 @@ public class HomeTimeLineFragment extends Fragment implements HomeTimeLineLister
 
         ((TextView) targetView.findViewById(R.id.StatusItemUserName)).setText(user.getName());
         ((TextView) targetView.findViewById(R.id.StatusItemUserScreenName)).setText(user.getScreenName());
-        ((TextView) targetView.findViewById(R.id.StatusItemFavoriteCount)).setText(TencocoaHelper.getCompressedNumberString(sourceStatus.getFavoriteCount()));
-        ((TextView) targetView.findViewById(R.id.StatusItemRetweetCount)).setText(TencocoaHelper.getCompressedNumberString(sourceStatus.getRetweetCount()));
         ((TextView) targetView.findViewById(R.id.StatusItemStatusText)).setText(sourceStatus.getText());
-        ((TextView) targetView.findViewById(R.id.StatusItemCreatedAt)).setText(mDateFormat.format(sourceStatus.getCreatedAt()));
+        ((TextView) targetView.findViewById(R.id.StatusItemCreatedAt)).setText(TencocoaHelper.getRelativeTimeString(sourceStatus.getCreatedAt()));
         Matcher matcher = mViaPattern.matcher(sourceStatus.getSource());
-        if (matcher.find())
-            ((TextView) targetView.findViewById(R.id.StatusItemVia)).setText(matcher.group(2));
+        //if (matcher.find()) ((TextView) targetView.findViewById(R.id.StatusItemVia)).setText(matcher.group(2));
         Glide.with(getActivity()).load(user.getOriginalProfileImageURLHttps()).into(((ImageView) targetView.findViewById(R.id.StatusItemUserProfileImage)));
         if (status.isRetweet()) {
-            ((LinearLayout) targetView.findViewById(R.id.StatusItemLayout)).setBackgroundResource(R.color.tencocoa_retweet_green);
+            //((LinearLayout) targetView.findViewById(R.id.StatusItemLayout)).setBackgroundResource(R.);
+            ((LinearLayout) targetView.findViewById(R.id.StatusItemFavRtCounts)).setVisibility(View.VISIBLE);
+            ((TextView) targetView.findViewById(R.id.StatusItemFavoriteCount)).setText(TencocoaHelper.getCompressedNumberString(sourceStatus.getFavoriteCount()));
+            ((TextView) targetView.findViewById(R.id.StatusItemRetweetCount)).setText(TencocoaHelper.getCompressedNumberString(sourceStatus.getRetweetCount()));
         } else {
-            ((LinearLayout) targetView.findViewById(R.id.StatusItemLayout)).setBackgroundResource(R.color.tencocoa_transparent);
+            ((LinearLayout) targetView.findViewById(R.id.StatusItemFavRtCounts)).setVisibility(View.GONE);
         }
         return targetView;
     }
