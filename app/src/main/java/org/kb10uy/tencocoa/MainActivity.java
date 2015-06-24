@@ -14,6 +14,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,6 +32,7 @@ import org.kb10uy.tencocoa.settings.FirstSettingActivity;
 
 import java.util.concurrent.CountDownLatch;
 
+import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.User;
@@ -77,8 +79,8 @@ public class MainActivity
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setLogo(R.drawable.ic_launcher);
-        getSupportActionBar().setIcon(R.drawable.ic_launcher);
+        //getSupportActionBar().setLogo(R.drawable.ic_launcher);
+        //getSupportActionBar().setIcon(R.drawable.ic_launcher);
 
         mHomeTimeLineFragment = new HomeTimeLineFragment();
         mUserStreamListener = new TencocoaUserStreamLister(mHomeTimeLineFragment);
@@ -145,7 +147,8 @@ public class MainActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (!mIsRestoring) onExitTencocoa();
+        /*if (!mIsRestoring) */
+        onExitTencocoa();
     }
 
     @Override
@@ -410,5 +413,11 @@ public class MainActivity
     @Override
     public void applyUpdateStatus(String status) {
         mWritePermissionService.updateStatus(status);
+    }
+
+    @Override
+    public void showStatusDetail(Status status) {
+        StatusDetailDialogFragment dialog = StatusDetailDialogFragment.newInstance(status);
+        dialog.show(getFragmentManager(), "NewStatus");
     }
 }

@@ -5,6 +5,7 @@
         <item name="colorPrimary">@color/hinanawi_primary</item>
         <item name="colorBlack">@color/hinanawi_black</item>
         <item name="colorWhite">@color/hinanawi_white</item>
+        <item name="colorDarkGray">@color/hinanawi_darkgray</item>
         <item name="colorTextNormal">@color/hinanawi_text_normal</item>
         <item name="colorTextScreenName">@color/hinanawi_text_screen_name</item>
         <item name="colorRetweetBackground">@color/hinanawi_retweet_green</item>

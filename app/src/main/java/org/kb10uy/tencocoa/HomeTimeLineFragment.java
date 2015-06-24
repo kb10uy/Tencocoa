@@ -12,6 +12,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -76,6 +77,12 @@ public class HomeTimeLineFragment extends Fragment implements HomeTimeLineLister
         mListView = (ListView) view.findViewById(R.id.HomeTimeLineDrawerListViewTimeLine);
         initializeAdapter();
         mListView.setAdapter(mTimeLineAdapter);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                mListener.showStatusDetail(((TencocoaStatus) mTimeLineAdapter.getItem(position)).getShowingStatus());
+            }
+        });
         view.getContext().getTheme().resolveAttribute(R.attr.colorRetweetBackground, mRewteetBackgroundValue, true);
 
         return view;
@@ -147,6 +154,7 @@ public class HomeTimeLineFragment extends Fragment implements HomeTimeLineLister
         // TODO: Update argument type and name
         //public void onFragmentInteraction(Uri uri);
         //public TencocoaStreamingService getStreamingService();
+        public void showStatusDetail(Status status);
     }
 
 }

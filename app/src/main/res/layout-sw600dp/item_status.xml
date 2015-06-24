@@ -96,7 +96,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/StatusItemUserName"
+                    android:layout_toEndOf="@id/StatusItemUserName"
                     android:orientation="horizontal">
 
                     <TextView
@@ -121,9 +121,9 @@
                     android:id="@+id/StatusItemCreatedAt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="8dp"
+                    android:layout_marginEnd="8dp"
                     android:text="1970/01/01 12:00:00"
                     android:textAppearance="@style/TencocoaTextAppearanceSmall" />
             </RelativeLayout>

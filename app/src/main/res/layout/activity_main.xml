@@ -4,11 +4,12 @@
     android:layout_height="match_parent">
 
     <!-- The main content view -->
+
+    <!-- The main content view -->
     <FrameLayout
         android:id="@+id/MainActivityFragmentFrame"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
 
     <!-- The navigation drawer -->
     <LinearLayout

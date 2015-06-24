@@ -38,7 +38,7 @@
                     <ImageView
                         android:layout_width="16dp"
                         android:layout_height="16dp"
-                        android:layout_marginLeft="4dp"
+                        android:layout_marginStart="4dp"
                         android:src="@drawable/tencocoa_star1" />
 
                     <TextView
@@ -46,7 +46,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical|center_horizontal"
-                        android:layout_marginLeft="4dp"
+                        android:layout_marginStart="4dp"
                         android:text="0" />
                 </LinearLayout>
 
@@ -58,7 +58,7 @@
                     <ImageView
                         android:layout_width="16dp"
                         android:layout_height="16dp"
-                        android:layout_marginLeft="4dp"
+                        android:layout_marginStart="4dp"
                         android:src="@drawable/tencocoa_rt1" />
 
                     <TextView
@@ -66,7 +66,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical|center_horizontal"
-                        android:layout_marginLeft="4dp"
+                        android:layout_marginStart="4dp"
                         android:text="0" />
                 </LinearLayout>
             </LinearLayout>
@@ -83,50 +83,56 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/StatusItemUserName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_margin="4dp"
-                    android:text="ユーザー名"
-                    android:textAppearance="@style/TencocoaTextAppearanceStatusUserName" />
-
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/StatusItemUserName"
-                    android:orientation="horizontal">
-
+                    android:orientation="vertical">
                     <TextView
+                        android:id="@+id/StatusItemUserName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal|center_vertical"
-                        android:layout_marginStart="4dp"
-                        android:text="\@"
-                        android:textAppearance="@style/TencocoaTextAppearanceScreenName" />
 
-                    <TextView
-                        android:id="@+id/StatusItemUserScreenName"
+                        android:layout_margin="4dp"
+                        android:text="ユーザー名"
+                        android:textAppearance="@style/TencocoaTextAppearanceStatusUserName" />
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal|center_vertical"
-                        android:text="ScreenName"
-                        android:textAppearance="@style/TencocoaTextAppearanceScreenName" />
+                        android:layout_centerVertical="true"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal|center_vertical"
+                            android:layout_marginStart="4dp"
+                            android:text="\@"
+                            android:textAppearance="@style/TencocoaTextAppearanceScreenName" />
+
+                        <TextView
+                            android:id="@+id/StatusItemUserScreenName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal|center_vertical"
+                            android:text="ScreenName"
+                            android:textAppearance="@style/TencocoaTextAppearanceScreenName" />
+                    </LinearLayout>
                 </LinearLayout>
-
 
                 <TextView
                     android:id="@+id/StatusItemCreatedAt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
+                    android:layout_alignParentTop="true"
                     android:layout_marginRight="8dp"
+                    android:layout_marginTop="8dp"
                     android:text="1970/01/01 12:00:00"
                     android:textAppearance="@style/TencocoaTextAppearanceSmall" />
             </RelativeLayout>
+
 
             <TextView
                 android:id="@+id/StatusItemStatusText"
