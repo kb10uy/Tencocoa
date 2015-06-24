@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +50,7 @@ public class HomeTimeLineFragment extends Fragment implements HomeTimeLineLister
     private ArrayList<TencocoaStatus> statuses = new ArrayList<>();
     private SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
     private Pattern mViaPattern = Pattern.compile("<a href=\"(.+)\" rel=\"nofollow\">(.+)</a>");
+    private TypedValue mRewteetBackgroundValue = new TypedValue();
 
     public HomeTimeLineFragment() {
         // Required empty public constructor
@@ -74,6 +76,8 @@ public class HomeTimeLineFragment extends Fragment implements HomeTimeLineLister
         mListView = (ListView) view.findViewById(R.id.HomeTimeLineDrawerListViewTimeLine);
         initializeAdapter();
         mListView.setAdapter(mTimeLineAdapter);
+        view.getContext().getTheme().resolveAttribute(R.attr.colorRetweetBackground, mRewteetBackgroundValue, true);
+
         return view;
     }
 
@@ -116,11 +120,12 @@ public class HomeTimeLineFragment extends Fragment implements HomeTimeLineLister
         //if (matcher.find()) ((TextView) targetView.findViewById(R.id.StatusItemVia)).setText(matcher.group(2));
         Glide.with(getActivity()).load(user.getOriginalProfileImageURLHttps()).into(((ImageView) targetView.findViewById(R.id.StatusItemUserProfileImage)));
         if (status.isRetweet()) {
-            //((LinearLayout) targetView.findViewById(R.id.StatusItemLayout)).setBackgroundResource(R.);
+            ((LinearLayout) targetView.findViewById(R.id.StatusItemLayout)).setBackgroundResource(mRewteetBackgroundValue.resourceId);
             ((LinearLayout) targetView.findViewById(R.id.StatusItemFavRtCounts)).setVisibility(View.VISIBLE);
             ((TextView) targetView.findViewById(R.id.StatusItemFavoriteCount)).setText(TencocoaHelper.getCompressedNumberString(sourceStatus.getFavoriteCount()));
             ((TextView) targetView.findViewById(R.id.StatusItemRetweetCount)).setText(TencocoaHelper.getCompressedNumberString(sourceStatus.getRetweetCount()));
         } else {
+            ((LinearLayout) targetView.findViewById(R.id.StatusItemLayout)).setBackgroundResource(R.color.tencocoa_transparent);
             ((LinearLayout) targetView.findViewById(R.id.StatusItemFavRtCounts)).setVisibility(View.GONE);
         }
         return targetView;

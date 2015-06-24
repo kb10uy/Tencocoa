@@ -94,7 +94,6 @@ public class MainActivity
         super.onStart();
         bindTencocoaServices();
         initializeTwitter();
-        checkTwitterUserExists();
     }
 
 
@@ -116,6 +115,7 @@ public class MainActivity
     @Override
     protected void onResume() {
         super.onResume();
+        checkTwitterUserExists();
         //bindTencocoaServices();
     }
 

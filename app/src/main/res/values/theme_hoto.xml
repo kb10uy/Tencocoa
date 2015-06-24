@@ -5,6 +5,7 @@
         <item name="colorPrimary">@color/hoto_primary</item>
         <item name="colorBlack">@color/hoto_black</item>
         <item name="colorWhite">@color/hoto_white</item>
+        <item name="colorDarkGray">@color/hoto_darkgray</item>
         <item name="colorTextNormal">@color/hoto_text_normal</item>
         <item name="colorTextScreenName">@color/hoto_text_screen_name</item>
         <item name="colorRetweetBackground">@color/hoto_retweet_green</item>

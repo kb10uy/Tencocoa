@@ -25,7 +25,7 @@
         <activity
             android:name=".AccountsListActivity"
             android:label="@string/title_activity_accounts_list"
-            android:launchMode="singleTop">
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
