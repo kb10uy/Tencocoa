@@ -43,8 +43,15 @@
     <string name="label_activity_main_friends">フォロー</string>
     <string name="label_activity_main_followers">フォロワー</string>
 
+    <string name="label_item_status_retweeted_by">Retweeted by</string>
+
     <string name="label_dialog_new_status_title">新しいツイート</string>
     <string name="label_dialog_new_status_update">ツイート</string>
+
+    <string name="label_dialog_status_detail_fav">ふぁぼ</string>
+    <string name="label_dialog_status_detail_rt">RT</string>
+    <string name="label_dialog_status_detail_favrt">ふぁぼRT</string>
+    <string name="label_dialog_status_detail_others">その他</string>
 
     <string name="title_activity_accounts_list">アカウント</string>
     <string name="label_activity_accounts_list_new_account">新しいアカウント</string>
@@ -72,5 +79,9 @@
 
     <string name="notification_update_status_success">ツイートに成功しました。</string>
     <string name="notification_update_status_fail">ツイートに失敗しました。: </string>
+    <string name="notification_favorite_status_success">お気に入りに成功しました。</string>
+    <string name="notification_favorite_status_fail">お気に入りに失敗しました。: </string>
+    <string name="notification_retweet_status_success">リツイートに成功しました。</string>
+    <string name="notification_retweet_status_fail">リツイートに失敗しました。: </string>
 
 </resources>

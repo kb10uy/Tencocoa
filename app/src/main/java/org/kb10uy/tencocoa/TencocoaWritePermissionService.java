@@ -57,6 +57,7 @@ public class TencocoaWritePermissionService extends Service {
                 .setTicker(getString(tickerStringId))
                 .setContentTitle(getString(R.string.app_name))
                 .setContentText(getString(descriptionStringId));
+        mNotificationManager.cancelAll();
         mNotificationManager.notify(TENCOCOA_WRITE_PERMISSION_NOTIFICATION_ID, builder.build());
     }
 
@@ -66,6 +67,7 @@ public class TencocoaWritePermissionService extends Service {
                 .setTicker(tickerString)
                 .setContentTitle(getString(R.string.app_name))
                 .setContentText(descriptionText);
+        mNotificationManager.cancelAll();
         mNotificationManager.notify(TENCOCOA_WRITE_PERMISSION_NOTIFICATION_ID, builder.build());
     }
 
@@ -102,6 +104,103 @@ public class TencocoaWritePermissionService extends Service {
             }
         };
         task.execute(statusText);
+    }
+
+    public void favoriteStatus(long id) {
+        AsyncTask<Long, Void, String> task = new AsyncTask<Long, Void, String>() {
+            @Override
+            protected String doInBackground(Long... params) {
+                if (currentUser == null) return null;
+                try {
+                    mTwitter.favorites().createFavorite(params[0].longValue());
+                    return "";
+                } catch (TwitterException e) {
+                    e.printStackTrace();
+                    return e.getErrorMessage();
+                }
+            }
+
+            @Override
+            protected void onPostExecute(String result) {
+                super.onPostExecute(result);
+                if (result.equals("")) {
+                    showNotification(R.string.notification_favorite_status_success, R.string.notification_favorite_status_success);
+                } else {
+                    StringBuilder sb = new StringBuilder();
+                    sb.append(getString(R.string.notification_favorite_status_fail));
+                    sb.append(result);
+                    showNotification(sb.toString(), sb.toString());
+                }
+            }
+        };
+        task.execute(new Long(id));
+    }
+
+    public void unfavoriteStatus(long id) {
+        /*
+        AsyncTask<Long, Void, String> task = new AsyncTask<Long, Void, String>() {
+            @Override
+            protected String doInBackground(Long... params) {
+                if (currentUser == null) return null;
+                try {
+                    mTwitter.favorites().destroyFavorite(params[0].longValue());
+                    return "";
+                } catch (TwitterException e) {
+                    e.printStackTrace();
+                    return e.getErrorMessage();
+                }
+            }
+
+            @Override
+            protected void onPostExecute(String result) {
+                super.onPostExecute(result);
+                if (result.equals("")) {
+                    showNotification(R.string.notification_update_status_success, R.string.notification_update_status_success);
+                } else {
+                    StringBuilder sb = new StringBuilder();
+                    sb.append(getString(R.string.notification_update_status_fail));
+                    sb.append(result);
+                    showNotification(sb.toString(), sb.toString());
+                }
+            }
+        };
+        task.execute(new Long(id));
+        */
+    }
+
+    public void retweetStatus(long id) {
+        AsyncTask<Long, Void, String> task = new AsyncTask<Long, Void, String>() {
+            @Override
+            protected String doInBackground(Long... params) {
+                if (currentUser == null) return null;
+                try {
+                    mTwitter.retweetStatus(params[0].longValue());
+                    return "";
+                } catch (TwitterException e) {
+                    e.printStackTrace();
+                    return e.getErrorMessage();
+                }
+            }
+
+            @Override
+            protected void onPostExecute(String result) {
+                super.onPostExecute(result);
+                if (result.equals("")) {
+                    showNotification(R.string.notification_retweet_status_success, R.string.notification_retweet_status_success);
+                } else {
+                    StringBuilder sb = new StringBuilder();
+                    sb.append(getString(R.string.notification_retweet_status_fail));
+                    sb.append(result);
+                    showNotification(sb.toString(), sb.toString());
+                }
+            }
+        };
+        task.execute(new Long(id));
+    }
+
+    public void favrtStatus(long id) {
+        favoriteStatus(id);
+        retweetStatus(id);
     }
 
     public class TencocoaWritePermissionServiceBinder extends Binder {

@@ -136,6 +136,34 @@
                 android:layout_margin="4dp"
                 android:text="本文"
                 android:textAppearance="@style/TencocoaTextAppearanceStatusText" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/StatusItemRetweeterFrame">
+
+                <ImageView
+                    android:id="@+id/StatusItemRetweetedUserProfile"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_margin="4dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="4dp"
+                    android:text="@string/label_item_status_retweeted_by"
+                    android:textAppearance="@style/TencocoaTextAppearanceRetweetedStatusText" />
+
+                <TextView
+                    android:id="@+id/StatusItemRetweetedUserName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="ユーザー名"
+                    android:textAppearance="@style/TencocoaTextAppearanceRetweetedStatusText" />
+            </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>

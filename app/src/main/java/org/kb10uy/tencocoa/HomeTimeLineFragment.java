@@ -80,7 +80,7 @@ public class HomeTimeLineFragment extends Fragment implements HomeTimeLineLister
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mListener.showStatusDetail(((TencocoaStatus) mTimeLineAdapter.getItem(position)).getShowingStatus());
+                mListener.showStatusDetail(((TencocoaStatus) mTimeLineAdapter.getItem(position)));
             }
         });
         view.getContext().getTheme().resolveAttribute(R.attr.colorRetweetBackground, mRewteetBackgroundValue, true);
@@ -127,13 +127,19 @@ public class HomeTimeLineFragment extends Fragment implements HomeTimeLineLister
         //if (matcher.find()) ((TextView) targetView.findViewById(R.id.StatusItemVia)).setText(matcher.group(2));
         Glide.with(getActivity()).load(user.getOriginalProfileImageURLHttps()).into(((ImageView) targetView.findViewById(R.id.StatusItemUserProfileImage)));
         if (status.isRetweet()) {
-            ((LinearLayout) targetView.findViewById(R.id.StatusItemLayout)).setBackgroundResource(mRewteetBackgroundValue.resourceId);
-            ((LinearLayout) targetView.findViewById(R.id.StatusItemFavRtCounts)).setVisibility(View.VISIBLE);
+            (targetView.findViewById(R.id.StatusItemLayout)).setBackgroundResource(mRewteetBackgroundValue.resourceId);
+            (targetView.findViewById(R.id.StatusItemFavRtCounts)).setVisibility(View.VISIBLE);
             ((TextView) targetView.findViewById(R.id.StatusItemFavoriteCount)).setText(TencocoaHelper.getCompressedNumberString(sourceStatus.getFavoriteCount()));
             ((TextView) targetView.findViewById(R.id.StatusItemRetweetCount)).setText(TencocoaHelper.getCompressedNumberString(sourceStatus.getRetweetCount()));
+
+            User retweeter = status.getRetweeter();
+            (targetView.findViewById(R.id.StatusItemRetweeterFrame)).setVisibility(View.VISIBLE);
+            Glide.with(getActivity()).load(retweeter.getOriginalProfileImageURLHttps()).into(((ImageView) targetView.findViewById(R.id.StatusItemRetweetedUserProfile)));
+            ((TextView) targetView.findViewById(R.id.StatusItemRetweetedUserName)).setText(retweeter.getName());
         } else {
-            ((LinearLayout) targetView.findViewById(R.id.StatusItemLayout)).setBackgroundResource(R.color.tencocoa_transparent);
-            ((LinearLayout) targetView.findViewById(R.id.StatusItemFavRtCounts)).setVisibility(View.GONE);
+            (targetView.findViewById(R.id.StatusItemLayout)).setBackgroundResource(R.color.tencocoa_transparent);
+            (targetView.findViewById(R.id.StatusItemFavRtCounts)).setVisibility(View.GONE);
+            (targetView.findViewById(R.id.StatusItemRetweeterFrame)).setVisibility(View.GONE);
         }
         return targetView;
     }
@@ -154,7 +160,7 @@ public class HomeTimeLineFragment extends Fragment implements HomeTimeLineLister
         // TODO: Update argument type and name
         //public void onFragmentInteraction(Uri uri);
         //public TencocoaStreamingService getStreamingService();
-        public void showStatusDetail(Status status);
+        public void showStatusDetail(TencocoaStatus status);
     }
 
 }

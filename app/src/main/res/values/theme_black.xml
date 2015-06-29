@@ -9,5 +9,6 @@
         <item name="colorTextNormal">@color/black_text_normal</item>
         <item name="colorTextScreenName">@color/black_text_screen_name</item>
         <item name="colorRetweetBackground">@color/black_retweet_green</item>
+        <item name="colorRetweetForeground">@color/black_retweet_green_text</item>
     </style>
 </resources>

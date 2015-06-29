@@ -11,6 +11,7 @@
     <color name="hinanawi_text_normal">#ff224455</color>
     <color name="hinanawi_text_screen_name">#ff4488aa</color>
     <color name="hinanawi_retweet_green">#4044bbaa</color>
+    <color name="hinanawi_retweet_green_text">#ff6cc795</color>
 
     <color name="hoto_primary">#ffffb063</color>
     <color name="hoto_black">#ff542308</color>
@@ -19,6 +20,8 @@
     <color name="hoto_text_normal">#ff7c6149</color>
     <color name="hoto_text_screen_name">#ffba7183</color>
     <color name="hoto_retweet_green">#409abb10</color>
+    <color name="hoto_retweet_green_text">#ff5f7446</color>
+
 
     <color name="black_primary">#ff262626</color>
     <color name="black_black">#ffffffff</color>
@@ -27,6 +30,7 @@
     <color name="black_text_normal">#ffe2e2e2</color>
     <color name="black_text_screen_name">#ff5aba55</color>
     <color name="black_retweet_green">#40367730</color>
+    <color name="black_retweet_green_text">#ff3b6e2b</color>
 
     <color name="white_primary">#ffd8d8d8</color>
     <color name="white_black">#ff383838</color>
@@ -35,4 +39,5 @@
     <color name="white_text_normal">#ff656565</color>
     <color name="white_text_screen_name">#ff7fe380</color>
     <color name="white_retweet_green">#4039be5c</color>
+    <color name="white_retweet_green_text">#ff569f56</color>
 </resources>

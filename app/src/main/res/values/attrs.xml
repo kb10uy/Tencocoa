@@ -8,5 +8,6 @@
         <attr name="colorTextNormal" format="color" />
         <attr name="colorTextScreenName" format="color" />
         <attr name="colorRetweetBackground" format="color" />
+        <attr name="colorRetweetForeground" format="color"/>
     </declare-styleable>
 </resources>

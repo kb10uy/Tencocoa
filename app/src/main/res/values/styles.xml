@@ -24,4 +24,10 @@
         <item name="android:textSize">12sp</item>
         <item name="android:textColor">?attr/colorTextNormal</item>
     </style>
+
+    <style name="TencocoaTextAppearanceRetweetedStatusText">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">?attr/colorRetweetForeground</item>
+    </style>
+
 </resources>

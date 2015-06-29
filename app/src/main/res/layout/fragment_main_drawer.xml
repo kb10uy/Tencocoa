@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:background="#fff"
     android:orientation="vertical"
+    android:clickable="true"
     tools:context="org.kb10uy.tencocoa.MainDrawerFragment">
 
     <FrameLayout

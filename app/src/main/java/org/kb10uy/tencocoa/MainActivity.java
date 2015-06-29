@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import org.kb10uy.tencocoa.model.TencocoaRequestCodes;
+import org.kb10uy.tencocoa.model.TencocoaStatus;
 import org.kb10uy.tencocoa.model.TencocoaUserStreamLister;
 import org.kb10uy.tencocoa.model.TwitterAccountInformation;
 import org.kb10uy.tencocoa.model.TwitterHelper;
@@ -43,7 +44,8 @@ public class MainActivity
         extends AppCompatActivity
         implements MainDrawerFragment.OnDrawerFragmentInteractionListener,
         NewStatusDialogFragment.NewStatusDialogFragmentInteractionListener,
-        HomeTimeLineFragment.HomeTimeLineFragmentInteractionListener {
+        HomeTimeLineFragment.HomeTimeLineFragmentInteractionListener,
+        StatusDetailDialogFragment.StatusDetailInteractionListener {
 
     Twitter mTwitter;
     User currentUser;
@@ -121,7 +123,7 @@ public class MainActivity
         //bindTencocoaServices();
     }
 
-    //running
+//running
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -416,8 +418,13 @@ public class MainActivity
     }
 
     @Override
-    public void showStatusDetail(Status status) {
+    public void showStatusDetail(TencocoaStatus status) {
         StatusDetailDialogFragment dialog = StatusDetailDialogFragment.newInstance(status);
         dialog.show(getFragmentManager(), "NewStatus");
+    }
+
+    @Override
+    public TencocoaWritePermissionService getWritePermissionService() {
+        return mWritePermissionService;
     }
 }
