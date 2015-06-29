@@ -9,7 +9,7 @@ android {
         minSdkVersion 17
         targetSdkVersion 21
         versionCode 2
-        versionName "0.0.3 (build 3, Kbtter7.0.0.3, Dragonforce)"
+        versionName "0.1.0 (build 5, Kbtter7.0.1.0, Dragonforce)"
     }
     buildTypes {
         release {
