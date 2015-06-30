@@ -6,9 +6,7 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
@@ -43,12 +41,7 @@ public class MainDrawerFragment extends Fragment {
     }
 
     private void setupListener(View view) {
-        ((ImageView) view.findViewById(R.id.MainDrawerImageViewUserProfileImage)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener.onDrawerFragmentMiscInteraction("AccountSelect");
-            }
-        });
+        view.findViewById(R.id.MainDrawerImageViewUserProfileImage).setOnClickListener(v -> mListener.onDrawerFragmentMiscInteraction("AccountSelect"));
     }
 
 
@@ -56,17 +49,12 @@ public class MainDrawerFragment extends Fragment {
         mDrawerList = (ListView) view.findViewById(R.id.MainDrawerListViewContents);
         String cntlist[] = getResources().getStringArray(R.array.label_drawer_main_list);
 
-        mDrawerList.setAdapter(new ArrayAdapter<String>(
+        mDrawerList.setAdapter(new ArrayAdapter<>(
                 getActivity(),
                 android.R.layout.simple_list_item_activated_1,
                 android.R.id.text1,
                 cntlist));
-        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                onItemSelected(position);
-            }
-        });
+        mDrawerList.setOnItemClickListener((parent, view1, position, id) -> onItemSelected(position));
     }
 
     private void onItemSelected(int position) {
@@ -93,10 +81,8 @@ public class MainDrawerFragment extends Fragment {
 
 
     public interface OnDrawerFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onDrawerFragmentMainMenuInteraction(int action);
-
-        public void onDrawerFragmentMiscInteraction(String action);
+        void onDrawerFragmentMainMenuInteraction(int action);
+        void onDrawerFragmentMiscInteraction(String action);
     }
 
 }

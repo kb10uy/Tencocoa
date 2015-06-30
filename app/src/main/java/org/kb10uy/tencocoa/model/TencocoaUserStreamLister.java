@@ -1,9 +1,5 @@
 package org.kb10uy.tencocoa.model;
 
-import org.kb10uy.tencocoa.HomeTimeLineFragment;
-
-import java.io.Serializable;
-
 import twitter4j.DirectMessage;
 import twitter4j.StallWarning;
 import twitter4j.Status;
@@ -12,9 +8,6 @@ import twitter4j.User;
 import twitter4j.UserList;
 import twitter4j.UserStreamListener;
 
-/**
- * Created by kb10uy on 2015/06/04.
- */
 public class TencocoaUserStreamLister implements UserStreamListener {
 
     HomeTimeLineLister mHomeTimeLineLister;

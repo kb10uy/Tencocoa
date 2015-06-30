@@ -1,11 +1,9 @@
 package org.kb10uy.tencocoa;
 
-import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Binder;
@@ -21,18 +19,9 @@ import twitter4j.TwitterStreamFactory;
 import twitter4j.UserStreamListener;
 import twitter4j.auth.AccessToken;
 
-/**
- * An {@link IntentService} subclass for handling asynchronous task requests in
- * a service on a separate handler thread.
- * <p/>
- * TODO: Customize class - update intent actions, extra parameters and static
- * helper methods.
- */
+
 public class TencocoaStreamingService extends Service {
 
-    private static final String ACTION_SET_USER = "SetUser";
-    private static final String ACTION_START_USERSTREAM = "StartUserStream";
-    private static final String ACTION_STOP_USERSTREAM = "StopUserStream";
     private static final int TENCOCOA_STREAMING_NOTIFICATION_ID = 0xC0C0A;
 
     private NotificationManager mNotificationManager;
@@ -56,21 +45,6 @@ public class TencocoaStreamingService extends Service {
                 .setContentTitle(getString(R.string.app_name))
                 .setContentText(getString(descriptionStringId));
         mNotificationManager.notify(TENCOCOA_STREAMING_NOTIFICATION_ID, builder.build());
-    }
-
-    //handler methods
-
-    private void handleStreamingTargetUser(TwitterAccountInformation info) {
-        currentUser = info;
-        stopCurrentUserStream();
-    }
-
-    private void handleStartUserStream() {
-        startCurrentUserStream();
-    }
-
-    private void handleStopUserStream() {
-        startCurrentUserStream();
     }
 
 

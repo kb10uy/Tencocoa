@@ -3,23 +3,15 @@ package org.kb10uy.tencocoa.model;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.Date;
-import java.util.Locale;
 
-/**
- * Created by kb10uy on 2015/06/02.
- */
 public class TencocoaHelper {
     public static final char numberSuffixes[] = new char[]{' ', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'};
 

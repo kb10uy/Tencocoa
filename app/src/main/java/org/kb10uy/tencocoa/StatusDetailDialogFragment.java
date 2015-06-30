@@ -3,14 +3,7 @@ package org.kb10uy.tencocoa;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,7 +11,6 @@ import com.bumptech.glide.Glide;
 
 import org.kb10uy.tencocoa.model.TencocoaStatus;
 
-import twitter4j.Status;
 import twitter4j.User;
 
 
@@ -54,34 +46,22 @@ public class StatusDetailDialogFragment extends DialogFragment {
         ((TextView) view.findViewById(R.id.StatusDetailTextViewStatusText)).setText(mTargetStatus.getShowingStatus().getText());
         Glide.with(getActivity()).load(user.getOriginalProfileImageURLHttps()).into(((ImageView) view.findViewById(R.id.StatusDetailImageViewUserProfile)));
 
-        ((Button) view.findViewById(R.id.StatusDetailButtonFav)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                favorite();
-                dismiss();
-            }
+        view.findViewById(R.id.StatusDetailButtonFav).setOnClickListener(v -> {
+            favorite();
+            dismiss();
         });
-        ((Button) view.findViewById(R.id.StatusDetailButtonFavRetweet)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                favoriteAndRetweet();
-                dismiss();
-            }
+        view.findViewById(R.id.StatusDetailButtonFavRetweet).setOnClickListener(v -> {
+            favoriteAndRetweet();
+            dismiss();
         });
-        ((Button) view.findViewById(R.id.StatusDetailButtonRetweet)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                retweet();
-                dismiss();
+        view.findViewById(R.id.StatusDetailButtonRetweet).setOnClickListener(v -> {
+            retweet();
+            dismiss();
 
-            }
         });
-        ((Button) view.findViewById(R.id.StatusDetailButtonOthers)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-                //favorite();
-            }
+        view.findViewById(R.id.StatusDetailButtonOthers).setOnClickListener(v -> {
+            dismiss();
+            //favorite();
         });
     }
 
@@ -124,7 +104,7 @@ public class StatusDetailDialogFragment extends DialogFragment {
 
 
     public interface StatusDetailInteractionListener {
-        public TencocoaWritePermissionService getWritePermissionService();
+        TencocoaWritePermissionService getWritePermissionService();
     }
 
 }

@@ -1,11 +1,9 @@
 package org.kb10uy.tencocoa;
 
-import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Binder;
@@ -21,8 +19,6 @@ import twitter4j.auth.AccessToken;
 
 public class TencocoaWritePermissionService extends Service {
 
-    private static final String ACTION_UPDATE_STATUS = "UpdateStatus";
-    private static final String ACTION_SET_USER = "SetUser";
     private static final int TENCOCOA_WRITE_PERMISSION_NOTIFICATION_ID = 0xC0C0A3;
 
     private TwitterAccountInformation currentUser;
@@ -112,7 +108,7 @@ public class TencocoaWritePermissionService extends Service {
             protected String doInBackground(Long... params) {
                 if (currentUser == null) return null;
                 try {
-                    mTwitter.favorites().createFavorite(params[0].longValue());
+                    mTwitter.favorites().createFavorite(params[0]);
                     return "";
                 } catch (TwitterException e) {
                     e.printStackTrace();
@@ -133,7 +129,7 @@ public class TencocoaWritePermissionService extends Service {
                 }
             }
         };
-        task.execute(new Long(id));
+        task.execute(id);
     }
 
     public void unfavoriteStatus(long id) {
@@ -174,7 +170,7 @@ public class TencocoaWritePermissionService extends Service {
             protected String doInBackground(Long... params) {
                 if (currentUser == null) return null;
                 try {
-                    mTwitter.retweetStatus(params[0].longValue());
+                    mTwitter.retweetStatus(params[0]);
                     return "";
                 } catch (TwitterException e) {
                     e.printStackTrace();
@@ -195,7 +191,7 @@ public class TencocoaWritePermissionService extends Service {
                 }
             }
         };
-        task.execute(new Long(id));
+        task.execute(id);
     }
 
     public void favrtStatus(long id) {

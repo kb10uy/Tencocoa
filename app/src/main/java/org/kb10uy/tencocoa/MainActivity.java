@@ -8,13 +8,13 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,7 +33,6 @@ import org.kb10uy.tencocoa.settings.FirstSettingActivity;
 
 import java.util.concurrent.CountDownLatch;
 
-import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.User;
@@ -102,7 +101,7 @@ public class MainActivity
 
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         initialized = savedInstanceState.getBoolean("initialized");
         currentUser = (User) savedInstanceState.getSerializable("user");
         mIsUserStreamEstablished = savedInstanceState.getBoolean("mIsUserStreamEstablished");
@@ -353,8 +352,6 @@ public class MainActivity
                 } catch (TwitterException e) {
                     e.printStackTrace();
                     return null;
-                } finally {
-
                 }
             }
 

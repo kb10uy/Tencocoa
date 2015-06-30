@@ -11,13 +11,13 @@ public class TencocoaStatus implements Serializable {
     private Status sourceStatus;
     private Status showingStatus;
     private boolean isRetweet;
-    private User retweeter;
+    private User mRetweeter;
 
     public TencocoaStatus(Status s) {
         sourceStatus = s;
         showingStatus = (isRetweet = s.isRetweet()) ? s.getRetweetedStatus() : sourceStatus;
         if (isRetweet()) {
-            retweeter = sourceStatus.getUser();
+            mRetweeter = sourceStatus.getUser();
         }
     }
 
@@ -34,6 +34,6 @@ public class TencocoaStatus implements Serializable {
     }
 
     public User getRetweeter() {
-        return retweeter;
+        return mRetweeter;
     }
 }

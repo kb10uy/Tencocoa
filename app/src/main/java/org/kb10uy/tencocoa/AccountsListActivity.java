@@ -6,25 +6,20 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.kb10uy.tencocoa.adapters.GeneralListAdapter;
-import org.kb10uy.tencocoa.adapters.GeneralListAdapterViewGenerator;
 import org.kb10uy.tencocoa.model.TencocoaHelper;
 import org.kb10uy.tencocoa.model.TwitterAccountInformation;
-import org.kb10uy.tencocoa.model.TwitterAccountInformationReceiver;
 import org.kb10uy.tencocoa.model.TwitterHelper;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -32,7 +27,6 @@ import java.util.ArrayList;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
 
@@ -56,22 +50,14 @@ public class AccountsListActivity extends AppCompatActivity {
         accountsAdapter = new GeneralListAdapter<>(
                 this,
                 R.layout.item_accounts_list,
-                new GeneralListAdapterViewGenerator<TwitterAccountInformation>() {
-                    @Override
-                    public View generateView(View targetView, TwitterAccountInformation item) {
-                        ((TextView) targetView.findViewById(R.id.AccountsListListViewItemScreenName)).setText(item.getScreenName());
-                        ((TextView) targetView.findViewById(R.id.AccountsListListViewItemUserId)).setText(Long.toString(item.getUserId()));
-                        return targetView;
-                    }
+                (targetView, item) -> {
+                    ((TextView) targetView.findViewById(R.id.AccountsListListViewItemScreenName)).setText(item.getScreenName());
+                    ((TextView) targetView.findViewById(R.id.AccountsListListViewItemUserId)).setText(Long.toString(item.getUserId()));
+                    return targetView;
                 });
         mListView = (ListView) findViewById(R.id.AccountsListListView);
         mListView.setAdapter(accountsAdapter);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                onAccountSelected(position);
-            }
-        });
+        mListView.setOnItemClickListener((parent, view, position, id) -> onAccountSelected(position));
 
         SharedPreferences pref = getSharedPreferences(getString(R.string.preference_name), 0);
         String ck = pref.getString(getString(R.string.preference_twitter_consumer_key), "");
@@ -150,7 +136,7 @@ public class AccountsListActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         accounts = (ArrayList<TwitterAccountInformation>) savedInstanceState.getSerializable("accounts");
         accountsAdapter.setList(accounts);
@@ -174,8 +160,6 @@ public class AccountsListActivity extends AppCompatActivity {
                 if (url != null) {
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                     startActivity(intent);
-                } else {
-
                 }
             }
         };
@@ -197,13 +181,10 @@ public class AccountsListActivity extends AppCompatActivity {
     private void registerAuthorization(AccessToken accessToken) {
         final TwitterAccountInformation info = new TwitterAccountInformation(accessToken);
         Handler h = new Handler();
-        h.post(new Runnable() {
-            @Override
-            public void run() {
-                accounts.add(info);
-                accountsAdapter.notifyDataSetChanged();
-                saveAccounts();
-            }
+        h.post(() -> {
+            accounts.add(info);
+            accountsAdapter.notifyDataSetChanged();
+            saveAccounts();
         });
     }
 
@@ -215,7 +196,7 @@ public class AccountsListActivity extends AppCompatActivity {
             SharedPreferences pref = getSharedPreferences(getString(R.string.preference_name), 0);
             SharedPreferences.Editor edit = pref.edit();
             edit.putInt(getString(R.string.preference_twitter_accounts_count), accounts.size());
-            edit.commit();
+            edit.apply();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

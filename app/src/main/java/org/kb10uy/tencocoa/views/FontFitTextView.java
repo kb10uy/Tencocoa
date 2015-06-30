@@ -16,22 +16,12 @@ import android.widget.TextView;
  */
 public class FontFitTextView extends TextView {
 
-    /** 最小のテキストサイズ */
     private static final float MIN_TEXT_SIZE = 10f;
 
-    /**
-     * コンストラクタ
-     * @param context
-     */
     public FontFitTextView(Context context) {
         super(context);
     }
 
-    /**
-     * コンストラクタ
-     * @param context
-     * @param attrs
-     */
     public FontFitTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
@@ -44,9 +34,6 @@ public class FontFitTextView extends TextView {
 
     }
 
-    /**
-     * テキストサイズ調整
-     */
     private void resize() {
 
         Paint paint = new Paint();

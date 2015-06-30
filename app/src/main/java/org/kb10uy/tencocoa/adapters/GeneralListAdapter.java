@@ -8,9 +8,6 @@ import android.widget.BaseAdapter;
 
 import java.util.List;
 
-/**
- * Created by kb10uy on 2015/06/01.
- */
 public class GeneralListAdapter<T> extends BaseAdapter {
 
     Context context;

@@ -1,9 +1,6 @@
 package org.kb10uy.tencocoa;
 
 import android.app.Activity;
-import android.content.res.TypedArray;
-import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -12,34 +9,24 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import org.kb10uy.tencocoa.adapters.GeneralListAdapterViewGenerator;
 import org.kb10uy.tencocoa.adapters.GeneralReverseListAdapter;
 import org.kb10uy.tencocoa.model.HomeTimeLineLister;
 import org.kb10uy.tencocoa.model.TencocoaHelper;
 import org.kb10uy.tencocoa.model.TencocoaStatus;
 
-import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.regex.Matcher;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
-import twitter4j.DirectMessage;
-import twitter4j.StallWarning;
 import twitter4j.Status;
-import twitter4j.StatusDeletionNotice;
 import twitter4j.User;
-import twitter4j.UserList;
-import twitter4j.UserStreamListener;
-
 
 public class HomeTimeLineFragment extends Fragment implements HomeTimeLineLister {
 
@@ -47,10 +34,10 @@ public class HomeTimeLineFragment extends Fragment implements HomeTimeLineLister
     private ListView mListView;
     private Handler mHandler;
     private GeneralReverseListAdapter<TencocoaStatus> mTimeLineAdapter;
-    private TencocoaStreamingService mStreamingService;
+    //private TencocoaStreamingService mStreamingService;
     private ArrayList<TencocoaStatus> statuses = new ArrayList<>();
-    private SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-    private Pattern mViaPattern = Pattern.compile("<a href=\"(.+)\" rel=\"nofollow\">(.+)</a>");
+    //private SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault());
+    //private Pattern mViaPattern = Pattern.compile("<a href=\"(.+)\" rel=\"nofollow\">(.+)</a>");
     private TypedValue mRewteetBackgroundValue = new TypedValue();
 
     public HomeTimeLineFragment() {
@@ -77,24 +64,14 @@ public class HomeTimeLineFragment extends Fragment implements HomeTimeLineLister
         mListView = (ListView) view.findViewById(R.id.HomeTimeLineDrawerListViewTimeLine);
         initializeAdapter();
         mListView.setAdapter(mTimeLineAdapter);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mListener.showStatusDetail(((TencocoaStatus) mTimeLineAdapter.getItem(position)));
-            }
-        });
+        mListView.setOnItemClickListener((parent, view1, position, id) -> mListener.showStatusDetail(((TencocoaStatus) mTimeLineAdapter.getItem(position))));
         view.getContext().getTheme().resolveAttribute(R.attr.colorRetweetBackground, mRewteetBackgroundValue, true);
 
         return view;
     }
 
     private void initializeAdapter() {
-        mTimeLineAdapter = new GeneralReverseListAdapter<>(getActivity(), R.layout.item_status, new GeneralListAdapterViewGenerator<TencocoaStatus>() {
-            @Override
-            public View generateView(View targetView, TencocoaStatus item) {
-                return generateStatusView(targetView, item);
-            }
-        });
+        mTimeLineAdapter = new GeneralReverseListAdapter<>(getActivity(), R.layout.item_status, this::generateStatusView);
         mTimeLineAdapter.setList(statuses);
     }
 
@@ -123,7 +100,7 @@ public class HomeTimeLineFragment extends Fragment implements HomeTimeLineLister
         ((TextView) targetView.findViewById(R.id.StatusItemUserScreenName)).setText(user.getScreenName());
         ((TextView) targetView.findViewById(R.id.StatusItemStatusText)).setText(sourceStatus.getText());
         ((TextView) targetView.findViewById(R.id.StatusItemCreatedAt)).setText(TencocoaHelper.getRelativeTimeString(sourceStatus.getCreatedAt()));
-        Matcher matcher = mViaPattern.matcher(sourceStatus.getSource());
+        //Matcher matcher = mViaPattern.matcher(sourceStatus.getSource());
         //if (matcher.find()) ((TextView) targetView.findViewById(R.id.StatusItemVia)).setText(matcher.group(2));
         Glide.with(getActivity()).load(user.getOriginalProfileImageURLHttps()).into(((ImageView) targetView.findViewById(R.id.StatusItemUserProfileImage)));
         if (status.isRetweet()) {
@@ -148,19 +125,13 @@ public class HomeTimeLineFragment extends Fragment implements HomeTimeLineLister
     @Override
     public void onHomeTimeLineStatus(Status status) {
         statuses.add(new TencocoaStatus(status));
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                mTimeLineAdapter.notifyDataSetChanged();
-            }
-        });
+        mHandler.post(mTimeLineAdapter::notifyDataSetChanged);
     }
 
     public interface HomeTimeLineFragmentInteractionListener {
-        // TODO: Update argument type and name
         //public void onFragmentInteraction(Uri uri);
         //public TencocoaStreamingService getStreamingService();
-        public void showStatusDetail(TencocoaStatus status);
+        void showStatusDetail(TencocoaStatus status);
     }
 
 }

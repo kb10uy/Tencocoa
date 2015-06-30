@@ -1,13 +1,8 @@
 package org.kb10uy.tencocoa.model;
 
 import java.io.Serializable;
-
 import twitter4j.auth.AccessToken;
-import twitter4j.auth.OAuthAuthorization;
 
-/**
- * Created by kb10uy on 2015/05/31.
- */
 public class TwitterAccountInformation implements Serializable {
     private static final long serialVersionUID = 2591925210205947107L;
 
