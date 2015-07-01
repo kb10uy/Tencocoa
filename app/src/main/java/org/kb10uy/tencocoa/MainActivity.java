@@ -80,6 +80,7 @@ public class MainActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         mDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
         mFrameLayout = (FrameLayout) findViewById(R.id.MainActivityFragmentFrame);
         mDrawerToggle = new ActionBarDrawerToggle(

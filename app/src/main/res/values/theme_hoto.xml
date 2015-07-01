@@ -3,6 +3,7 @@
     <!-- Base application theme. -->
     <style name="Hoto" parent="Theme.AppCompat.Light">
         <item name="colorPrimary">@color/hoto_primary</item>
+        <item name="colorPrimaryDark">@color/hoto_primary</item>
         <item name="colorBlack">@color/hoto_black</item>
         <item name="colorWhite">@color/hoto_white</item>
         <item name="colorDarkGray">@color/hoto_darkgray</item>
