@@ -1,22 +1,23 @@
 package org.kb10uy.tencocoa;
 
 import android.app.Activity;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+public class DirectMessageFragment extends Fragment {
 
-public class NotificationsFragment extends Fragment {
 
     //private OnNotificationFragmentInteractionListener mListener;
 
-    public static NotificationsFragment newInstance() {
-        return new NotificationsFragment();
+    public static DirectMessageFragment newInstance() {
+        return new DirectMessageFragment();
     }
 
-    public NotificationsFragment() {
+    public DirectMessageFragment() {
         // Required empty public constructor
     }
 
@@ -58,7 +59,7 @@ public class NotificationsFragment extends Fragment {
     }
 
     /*
-    public interface OnNotificationFragmentInteractionListener {
+    public interface OnDirectMessageFragmentInteractionListener {
         void onNotificationFragmentInteraction();
     }
     */

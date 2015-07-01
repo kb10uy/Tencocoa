@@ -72,37 +72,56 @@
         android:text="本文"
         android:textAppearance="@style/TencocoaTextAppearanceStatusText" />
 
+    <TextView
+        android:id="@+id/StatusDetailTextViewCreatedAt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|center_vertical"
+        android:layout_margin="4dp"
+        android:text="1970/01/01 00:00:00"
+        android:textAppearance="@style/TencocoaTextAppearanceSmall" />
+
     <LinearLayout
+        style="?attr/buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <Button
+        <ToggleButton
             android:id="@+id/StatusDetailButtonFav"
+            style="?attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/label_dialog_status_detail_fav" />
+            android:background="@color/tencocoa_color_overlay_favorite"
+            android:textOff="@string/label_dialog_status_detail_fav"
+            android:textOn="@string/label_dialog_status_detail_unfav" />
 
         <Button
             android:id="@+id/StatusDetailButtonFavRetweet"
+            style="?attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@drawable/gradient_fav2rt"
             android:text="@string/label_dialog_status_detail_favrt" />
 
         <Button
             android:id="@+id/StatusDetailButtonRetweet"
+            style="?attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@color/tencocoa_color_overlay_retweet"
             android:text="@string/label_dialog_status_detail_rt" />
 
         <Button
             android:id="@+id/StatusDetailButtonOthers"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@color/tencocoa_color_overlay_retweet"
             android:text="@string/label_dialog_status_detail_others" />
     </LinearLayout>
 </LinearLayout>

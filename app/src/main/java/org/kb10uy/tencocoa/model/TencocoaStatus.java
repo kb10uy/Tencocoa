@@ -11,6 +11,8 @@ public class TencocoaStatus implements Serializable {
     private Status sourceStatus;
     private Status showingStatus;
     private boolean isRetweet;
+    private boolean isFavorited;
+    private boolean isRetweeted;
     private User mRetweeter;
 
     public TencocoaStatus(Status s) {
@@ -35,5 +37,17 @@ public class TencocoaStatus implements Serializable {
 
     public User getRetweeter() {
         return mRetweeter;
+    }
+
+    public void favorite() {
+        isFavorited = true;
+    }
+
+    public void unfavorite() {
+        isFavorited = false;
+    }
+
+    public boolean isFavorited() {
+        return isFavorited;
     }
 }

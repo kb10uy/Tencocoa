@@ -24,15 +24,22 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import org.kb10uy.tencocoa.model.TencocoaHelper;
 import org.kb10uy.tencocoa.model.TencocoaRequestCodes;
 import org.kb10uy.tencocoa.model.TencocoaStatus;
+import org.kb10uy.tencocoa.model.TencocoaStatusCache;
 import org.kb10uy.tencocoa.model.TencocoaUserStreamLister;
 import org.kb10uy.tencocoa.model.TwitterAccountInformation;
 import org.kb10uy.tencocoa.model.TwitterHelper;
 import org.kb10uy.tencocoa.settings.FirstSettingActivity;
+import org.kb10uy.tencocoa.settings.SettingsActivity;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 
+import io.realm.Realm;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.User;
@@ -55,6 +62,10 @@ public class MainActivity
     FrameLayout mFrameLayout;
     ActionBarDrawerToggle mDrawerToggle;
     HomeTimeLineFragment mHomeTimeLineFragment;
+    NotificationsFragment mNotificationsFragment;
+    UserInformationFragment mUserInformationFragment;
+    DirectMessageFragment mDirectMessageFragment;
+    SearchFragment mSearchFragment;
     Context ctx;
 
     TencocoaStreamingService mStreamingService;
@@ -63,7 +74,7 @@ public class MainActivity
     TencocoaUserStreamLister mUserStreamListener;
     CountDownLatch mServiceLatch;
     boolean mStreamingBound, mWritePermissionBound;
-    boolean mIsRestoring, mIsUserStreamEstablished, mHasShowedFirstAccountActivity;
+    boolean mIsRestoring, mIsUserStreamEstablished, mHasShownFirstAccountActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +95,10 @@ public class MainActivity
         //getSupportActionBar().setIcon(R.drawable.ic_launcher);
 
         mHomeTimeLineFragment = new HomeTimeLineFragment();
+        mNotificationsFragment = NotificationsFragment.newInstance();
+        mUserInformationFragment = UserInformationFragment.newInstance();
+        mDirectMessageFragment = DirectMessageFragment.newInstance();
+        mSearchFragment = SearchFragment.newInstance();
         mUserStreamListener = new TencocoaUserStreamLister(mHomeTimeLineFragment);
         pref = getSharedPreferences(getString(R.string.preference_name), 0);
         ctx = this;
@@ -97,6 +112,9 @@ public class MainActivity
         super.onStart();
         bindTencocoaServices();
         initializeTwitter();
+        if (pref.getBoolean(getString(R.string.preference_login_auto_login_enabled), true)) {
+            autoConnectUserStream();
+        }
     }
 
 
@@ -218,6 +236,8 @@ public class MainActivity
                 startActivityForResult(intent, TencocoaRequestCodes.AccountSelect);
                 return true;
             case R.id.action_main_settings:
+                Intent intent2 = new Intent(this, SettingsActivity.class);
+                startActivity(intent2);
                 return true;
         }
 
@@ -228,8 +248,16 @@ public class MainActivity
     private void initializeFragments() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.MainActivityFragmentFrame, mHomeTimeLineFragment);
-        transaction.addToBackStack(null);
+        transaction.add(R.id.MainActivityFragmentFrame, mHomeTimeLineFragment);
+        transaction.add(R.id.MainActivityFragmentFrame, mNotificationsFragment);
+        transaction.add(R.id.MainActivityFragmentFrame, mUserInformationFragment);
+        transaction.add(R.id.MainActivityFragmentFrame, mDirectMessageFragment);
+        transaction.add(R.id.MainActivityFragmentFrame, mSearchFragment);
+        transaction.hide(mNotificationsFragment);
+        transaction.hide(mUserInformationFragment);
+        transaction.hide(mSearchFragment);
+        transaction.hide(mDirectMessageFragment);
+        transaction.show(mHomeTimeLineFragment);
         transaction.commit();
     }
 
@@ -300,7 +328,25 @@ public class MainActivity
         if (pref.getInt(getString(R.string.preference_twitter_accounts_count), 0) == 0) {
             Intent intent = new Intent(this, AccountsListActivity.class);
             startActivityForResult(intent, TencocoaRequestCodes.AccountSelect);
-            mHasShowedFirstAccountActivity = true;
+            mHasShownFirstAccountActivity = true;
+        }
+    }
+
+    private void autoConnectUserStream() {
+        if (pref.getInt(getString(R.string.preference_twitter_accounts_count), 0) > pref.getInt(getString(R.string.preference_twitter_accounts_auto_number), 0)) {
+            Intent intent = new Intent();
+            TwitterAccountInformation i = null;
+            try {
+                FileInputStream acfile = openFileInput("TwitterAccounts.dat");
+                ArrayList<TwitterAccountInformation> accounts = TencocoaHelper.deserializeObjectFromFile(acfile);
+                if (accounts != null) {
+                    i = accounts.get(pref.getInt(getString(R.string.preference_twitter_accounts_auto_number), 0));
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            intent.putExtra("Information", i);
+            onActivityResult(TencocoaRequestCodes.AccountSelect, RESULT_OK, intent);
         }
     }
 
@@ -388,15 +434,32 @@ public class MainActivity
 
     @Override
     public void onDrawerFragmentMainMenuInteraction(int action) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.hide(mHomeTimeLineFragment);
+        transaction.hide(mNotificationsFragment);
+        transaction.hide(mUserInformationFragment);
+        transaction.hide(mSearchFragment);
+        transaction.hide(mDirectMessageFragment);
         switch (action) {
             case 0:
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
                 transaction.show(mHomeTimeLineFragment);
-                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                transaction.commit();
+                break;
+            case 1:
+                transaction.show(mNotificationsFragment);
+                break;
+            case 2:
+                transaction.show(mUserInformationFragment);
+                break;
+            case 3:
+                transaction.show(mSearchFragment);
+                break;
+            case 4:
+                transaction.show(mDirectMessageFragment);
                 break;
         }
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        transaction.commit();
     }
 
     @Override
@@ -421,7 +484,52 @@ public class MainActivity
     }
 
     @Override
-    public TencocoaWritePermissionService getWritePermissionService() {
-        return mWritePermissionService;
+    public void onStatusDetailAction(int type, TencocoaStatus status) {
+        final long sourceId = status.getSourceStatus().getId();
+        AsyncTask<Void, Void, Realm> task = new AsyncTask<Void, Void, Realm>() {
+            @Override
+            protected Realm doInBackground(Void... params) {
+                Realm realm = Realm.getInstance(ctx);
+                TencocoaStatusCache statusCache = realm.where(TencocoaStatusCache.class).equalTo("statusId", sourceId).findFirst();
+                realm.beginTransaction();
+                if (statusCache == null) {
+                    statusCache = realm.createObject(TencocoaStatusCache.class);
+                    statusCache.setStatusId(status.getShowingStatus().getId());
+                }
+
+                switch (type) {
+                    case StatusDetailDialogFragment.ACTION_FAVORITE:
+                        mWritePermissionService.favoriteStatus(sourceId);
+                        statusCache.setIsFavorited(true);
+                        break;
+                    case StatusDetailDialogFragment.ACTION_UNFAVORITE:
+                        mWritePermissionService.unfavoriteStatus(sourceId);
+                        statusCache.setIsFavorited(false);
+                        break;
+                    case StatusDetailDialogFragment.ACTION_RETWEET:
+                        mWritePermissionService.retweetStatus(sourceId);
+                        statusCache.setIsRetweeted(true);
+                        break;
+                    case StatusDetailDialogFragment.ACTION_UNRETWEET:
+                        statusCache.setIsRetweeted(false);
+                        break;
+                    case StatusDetailDialogFragment.ACTION_FAVORITE_AND_RETWEET:
+                        mWritePermissionService.favoriteStatus(sourceId);
+                        mWritePermissionService.retweetStatus(sourceId);
+                        statusCache.setIsRetweeted(true);
+                        statusCache.setIsFavorited(true);
+                        break;
+                }
+                realm.commitTransaction();
+                return realm;
+            }
+
+            @Override
+            protected void onPostExecute(Realm realm) {
+                super.onPostExecute(realm);
+                if (realm != null) realm.close();
+            }
+        };
+        task.execute();
     }
 }

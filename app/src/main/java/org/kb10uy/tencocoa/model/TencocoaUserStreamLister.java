@@ -28,12 +28,12 @@ public class TencocoaUserStreamLister implements UserStreamListener {
 
     @Override
     public void onFavorite(User source, User target, Status favoritedStatus) {
-
+        mHomeTimeLineLister.onFavorite(favoritedStatus);
     }
 
     @Override
     public void onUnfavorite(User source, User target, Status unfavoritedStatus) {
-
+        mHomeTimeLineLister.onUnfavorite(unfavoritedStatus);
     }
 
     @Override

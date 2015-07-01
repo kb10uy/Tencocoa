@@ -1,6 +1,7 @@
 package org.kb10uy.tencocoa;
 
 import android.app.Activity;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -8,45 +9,38 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-public class NotificationsFragment extends Fragment {
+public class UserInformationFragment extends Fragment {
 
-    //private OnNotificationFragmentInteractionListener mListener;
-
-    public static NotificationsFragment newInstance() {
-        return new NotificationsFragment();
+    //private OnFragmentInteractionListener mListener;
+    public static UserInformationFragment newInstance() {
+        return new UserInformationFragment();
     }
 
-    public NotificationsFragment() {
+    public UserInformationFragment() {
         // Required empty public constructor
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /*
-        if (getArguments() != null) {
-
-        }
-        */
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_notifications, container, false);
+        return inflater.inflate(R.layout.fragment_user_information, container, false);
     }
-
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         /*
         try {
-            mListener = (OnNotificationFragmentInteractionListener) activity;
+            mListener = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement OnNotificationFragmentInteractionListener");
+                    + " must implement OnFragmentInteractionListener");
         }
         */
     }
@@ -56,11 +50,9 @@ public class NotificationsFragment extends Fragment {
         super.onDetach();
         //mListener = null;
     }
-
     /*
-    public interface OnNotificationFragmentInteractionListener {
-        void onNotificationFragmentInteraction();
+    public interface OnFragmentInteractionListener {
+        public void onFragmentInteraction(Uri uri);
     }
-    */
-
+   */
 }

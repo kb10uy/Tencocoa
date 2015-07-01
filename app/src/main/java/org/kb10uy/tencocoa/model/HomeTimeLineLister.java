@@ -4,5 +4,8 @@ import twitter4j.Status;
 
 
 public interface HomeTimeLineLister {
-    public void onHomeTimeLineStatus(Status status);
+    void onHomeTimeLineStatus(Status status);
+
+    void onFavorite(Status status);
+    void onUnfavorite(Status status);
 }

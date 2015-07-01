@@ -49,6 +49,7 @@
     <string name="label_dialog_new_status_update">ツイート</string>
 
     <string name="label_dialog_status_detail_fav">ふぁぼ</string>
+    <string name="label_dialog_status_detail_unfav">あんふぁぼ</string>
     <string name="label_dialog_status_detail_rt">RT</string>
     <string name="label_dialog_status_detail_favrt">ふぁぼRT</string>
     <string name="label_dialog_status_detail_others">その他</string>
@@ -72,7 +73,14 @@
     <string name="preference_twitter_default_consumer_secret">lvblXIFQSnxnzxUvxBz48VMDNolFbPE09iiQ1Iqb88Az9CWtCH</string>
 
     <string name="preference_twitter_accounts_count">TWITTER_ACCOUNTS_COUNT</string>
+    <string name="preference_twitter_accounts_auto_number">TWITTER_ACCOUNTS_AUTO_LOGIN_NUMBER</string>
 
+    <string name="preference_login_auto_login_enabled">LOGIN_AUTO_LOGIN_ENABLED</string>
+
+    <string name="prefscreen_twitter">Twitter</string>
+    <string name="prefscreen_twitter_api_key">APIキー</string>
+    <string name="prefscreen_twitter_api_key_ck">Consumer Key</string>
+    <string name="prefscreen_twitter_api_key_cs">Consumer Secret</string>
     <!-- Notification テンプレート -->
     <string name="notification_streaming_userstream_started_ticker">UserStream開始</string>
     <string name="notification_streaming_userstream_started_text">UserStreamに接続されました。</string>

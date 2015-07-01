@@ -55,6 +55,7 @@ public class MainDrawerFragment extends Fragment {
                 android.R.id.text1,
                 cntlist));
         mDrawerList.setOnItemClickListener((parent, view1, position, id) -> onItemSelected(position));
+        mDrawerList.setItemChecked(0, true);
     }
 
     private void onItemSelected(int position) {

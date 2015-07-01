@@ -10,11 +10,13 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class TencocoaHelper {
     public static final char numberSuffixes[] = new char[]{' ', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'};
-
+    private static SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault());
     public static boolean serializeObjectToFile(Serializable object, FileOutputStream output) {
         try {
             ObjectOutputStream serializer = new ObjectOutputStream(output);
@@ -68,5 +70,9 @@ public class TencocoaHelper {
         if ((relative = d.getStandardHours()) < 24) return Long.toString(relative) + "h";
         relative = d.getStandardDays();
         return Long.toString(relative) + "d";
+    }
+
+    public static String getAbsoluteTimeString(Date targetDate) {
+        return mDateFormat.format(targetDate);
     }
 }
