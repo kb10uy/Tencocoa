@@ -137,5 +137,9 @@ MIT Licenseとします。LICENSEも参照してください。
 Licensed under the Apache License 2.0
 http://www.apache.org/licenses/LICENSE-2.0
 
+### RxAndroid
+Licensed under the Apache License 2.0
+http://www.apache.org/licenses/LICENSE-2.0
+
 ###Joda-Time
 > Joda-Time is licensed under the business-friendly Apache 2.0 licence.
