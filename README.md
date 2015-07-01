@@ -17,6 +17,15 @@ Tencocoaという名前は言わずもがな比那名居「**天子**」と保�
 * マテリアルデザイン
 * 半分ぐらいのマルチアカ対応
 
+## Special Thanks (敬称略)
+* shibafu
+* otack
+* karno
+* wakamesoba
+* mumei
+* java_shit
+* ほか多数
+
 ## ライセンス
 MIT Licenseとします。LICENSEも参照してください。
 
@@ -140,6 +149,10 @@ http://www.apache.org/licenses/LICENSE-2.0
 ### RxAndroid
 Licensed under the Apache License 2.0
 http://www.apache.org/licenses/LICENSE-2.0
+
+### LuaJ
+The MIT License.
+LuaJの条文を入手できませんでした
 
 ###Joda-Time
 > Joda-Time is licensed under the business-friendly Apache 2.0 licence.
