@@ -258,6 +258,7 @@ public class MainActivity
         transaction.hide(mSearchFragment);
         transaction.hide(mDirectMessageFragment);
         transaction.show(mHomeTimeLineFragment);
+        transaction.addToBackStack(null);
         transaction.commit();
     }
 
@@ -458,6 +459,7 @@ public class MainActivity
                 transaction.show(mDirectMessageFragment);
                 break;
         }
+        transaction.addToBackStack(null);
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         transaction.commit();
     }
