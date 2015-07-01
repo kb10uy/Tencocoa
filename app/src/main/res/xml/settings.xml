@@ -1,0 +1,17 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- NOTE: Hide buttons to simplify the UI. Users can touch outside the dialog to
+         dismiss it. -->
+    <!-- NOTE: ListPreference's summary should be set to its value by the activity code. -->
+    <PreferenceScreen android:title="@string/prefscreen_twitter">
+        <PreferenceCategory android:title="@string/prefscreen_twitter_api_key">
+            <EditTextPreference
+                android:key="@string/preference_twitter_consumer_key"
+                android:title="@string/prefscreen_twitter_api_key_ck" />
+            <EditTextPreference
+                android:key="@string/preference_twitter_consumer_secret"
+                android:title="@string/prefscreen_twitter_api_key_cs" />
+        </PreferenceCategory>
+    </PreferenceScreen>
+
+</PreferenceScreen>

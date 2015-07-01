@@ -1,0 +1,37 @@
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- The main content view -->
+
+    <!-- The main content view -->
+    <FrameLayout
+        android:id="@+id/MainActivityFragmentFrame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- The navigation drawer -->
+    <LinearLayout
+        android:layout_width="320dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:orientation="horizontal">
+        <fragment
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:name="org.kb10uy.tencocoa.MainDrawerFragment"
+            android:id="@+id/main_fragment_drawer"
+            android:layout_weight="1"/>
+    </LinearLayout>
+    <!--
+    <ListView android:id="@+id/main_drawer"
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:choiceMode="singleChoice"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"
+        android:background="#111"/>
+    -->
+</android.support.v4.widget.DrawerLayout>

@@ -1,0 +1,67 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'me.tatarka:gradle-retrolambda:+'
+    }
+}
+
+
+repositories {
+    mavenCentral()
+    jcenter()
+    maven {
+        url 'http://twitter4j.org/maven2'
+    }
+}
+
+apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
+
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion "21.1.2"
+
+    defaultConfig {
+        applicationId "org.kb10uy.tencocoa"
+        minSdkVersion 17
+        targetSdkVersion 21
+        versionCode 6
+        versionName "0.1.2 (build 7, Kbtter7.0.1.2, Dragonforce)"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+retrolambda {
+
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:22.2.0'
+    compile 'com.github.bumptech.glide:glide:3.6.0'
+    compile 'org.twitter4j:twitter4j:4.0.3'
+    compile 'org.twitter4j:twitter4j-stream:4.0.3'
+    compile 'org.twitter4j:twitter4j-media-support:4.0.3'
+    compile 'joda-time:joda-time:2.8'
+    compile 'com.google.guava:guava:18.+'
+    compile 'org.luaj:luaj-jse:3.0.1'
+    compile 'io.reactivex:rxandroid:0.25.0'
+    compile 'io.realm:realm-android:0.81.1'
+    compile 'com.android.support:support-v4:22.2.0'
+}

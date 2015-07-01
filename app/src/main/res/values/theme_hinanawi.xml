@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base application theme. -->
+    <style name="Hinanawi" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/hinanawi_primary</item>
+        <item name="colorBlack">@color/hinanawi_black</item>
+        <item name="colorWhite">@color/hinanawi_white</item>
+        <item name="colorDarkGray">@color/hinanawi_darkgray</item>
+        <item name="colorTextNormal">@color/hinanawi_text_normal</item>
+        <item name="colorTextScreenName">@color/hinanawi_text_screen_name</item>
+        <item name="colorRetweetBackground">@color/hinanawi_retweet_green</item>
+        <item name="colorRetweetForeground">@color/hinanawi_retweet_green_text</item>
+    </style>
+</resources>

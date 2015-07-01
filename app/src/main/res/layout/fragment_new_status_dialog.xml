@@ -1,0 +1,33 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="320dp"
+    android:layout_height="match_parent"
+    tools:context="org.kb10uy.tencocoa.NewStatusDialogFragment"
+    android:background="?attr/colorWhite"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/label_dialog_new_status_title"
+        android:layout_margin="4dp"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_margin="4dp"
+        android:inputType="textMultiLine"
+        android:gravity="top"
+        android:ems="10"
+        android:id="@+id/NewStatusDialogFragmentEditTextStatusText"/>
+
+    <Button
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:text="@string/label_dialog_new_status_update"
+        android:id="@+id/NewStatusDialogFragmentButtonUpdateStatus"
+        android:layout_gravity="right"
+        android:layout_margin="4dp"/>
+
+
+</LinearLayout>
