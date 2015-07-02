@@ -3,6 +3,7 @@
     <!-- Base application theme. -->
     <style name="White" parent="Theme.AppCompat.Light">
         <item name="colorPrimary">@color/white_primary</item>
+        <item name="colorPrimaryDark">@color/white_primary</item>
         <item name="colorBlack">@color/white_black</item>
         <item name="colorWhite">@color/white_white</item>
         <item name="colorDarkGray">@color/white_darkgray</item>
