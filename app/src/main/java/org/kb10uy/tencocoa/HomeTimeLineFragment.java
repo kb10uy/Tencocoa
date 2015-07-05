@@ -123,7 +123,7 @@ public class HomeTimeLineFragment extends Fragment implements HomeTimeLineLister
         ((TextView) targetView.findViewById(R.id.StatusItemCreatedAt)).setText(TencocoaHelper.getRelativeTimeString(sourceStatus.getCreatedAt()));
         //Matcher matcher = mViaPattern.matcher(sourceStatus.getSource());
         //if (matcher.find()) ((TextView) targetView.findViewById(R.id.StatusItemVia)).setText(matcher.group(2));
-        Glide.with(getActivity()).load(user.getOriginalProfileImageURLHttps()).into(((ImageView) targetView.findViewById(R.id.StatusItemUserProfileImage)));
+        Glide.with(getActivity()).load(user.getMiniProfileImageURLHttps()).into(((ImageView) targetView.findViewById(R.id.StatusItemUserProfileImage)));
         if (status.isFavorited()) {
             targetView.findViewById(R.id.StatusItemFavorited).setVisibility(View.VISIBLE);
         } else {

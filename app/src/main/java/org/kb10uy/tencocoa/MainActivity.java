@@ -169,8 +169,7 @@ public class MainActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        final Intent td = data;
-        final TwitterAccountInformation info = (TwitterAccountInformation) td.getSerializableExtra("Information");
+        final TwitterAccountInformation info = (TwitterAccountInformation) data.getSerializableExtra("Information");
         bindTencocoaServices();
         switch (requestCode) {
             case TencocoaRequestCodes.AccountSelect:
@@ -341,7 +340,6 @@ public class MainActivity
     private void autoConnectUserStream() {
         if (mStreamingService.isUserStreamRunning()) return;
         if (pref.getInt(getString(R.string.preference_twitter_accounts_count), 0) > pref.getInt(getString(R.string.preference_twitter_accounts_auto_number), 0)) {
-            Intent intent = new Intent();
             TwitterAccountInformation i = null;
             try {
                 FileInputStream acfile = openFileInput("TwitterAccounts.dat");
