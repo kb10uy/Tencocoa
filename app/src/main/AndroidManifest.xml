@@ -49,6 +49,9 @@
         <service
             android:name=".TencocoaWritePermissionService"
             android:exported="false" />
+        <service
+            android:name=".TencocoaReadPermissionService"
+            android:exported="false" />
 
         <activity
             android:name=".settings.SettingsActivity"

@@ -46,6 +46,7 @@ public class TencocoaStreamingService extends Service {
                 .setTicker(getString(tickerStringId))
                 .setContentTitle(getString(R.string.app_name))
                 .setContentText(getString(descriptionStringId));
+        mNotificationManager.cancelAll();
         mNotificationManager.notify(TENCOCOA_STREAMING_NOTIFICATION_ID, builder.build());
     }
 
@@ -87,12 +88,12 @@ public class TencocoaStreamingService extends Service {
     }
 
     public void startCurrentUserStream(TencocoaUserStreamLister listener) {
-        stopCurrentUserStream();
-        mUserStream = TwitterHelper.getTwitterStreamInstance(mConsumerKey, mConsumerSecret, currentUser.getAccessToken());
-        mUserStream.addListener(listener);
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
+                stopCurrentUserStream();
+                mUserStream = TwitterHelper.getTwitterStreamInstance(mConsumerKey, mConsumerSecret, currentUser.getAccessToken());
+                mUserStream.addListener(listener);
                 mUserStream.user();
                 isUserStreamRunning = true;
                 return null;
@@ -108,6 +109,14 @@ public class TencocoaStreamingService extends Service {
     }
 
     public void stopCurrentUserStream() {
+        if (mUserStream == null) return;
+        mUserStream.cleanUp();
+        mUserStream = null;
+        isUserStreamRunning = false;
+        showNotification(R.string.notification_streaming_userstream_finished_ticker, R.string.notification_streaming_userstream_finished_text);
+    }
+
+    public void stopCurrentUserStreamAsync() {
         if (mUserStream == null) return;
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
@@ -125,21 +134,6 @@ public class TencocoaStreamingService extends Service {
             }
         };
         task.execute();
-    }
-
-    public void stopCurrentUserStreamAsync() {
-        if (mUserStream == null) return;
-        AsyncTask<TwitterStream, Void, Void> task = new AsyncTask<TwitterStream, Void, Void>() {
-            @Override
-            protected Void doInBackground(TwitterStream... params) {
-                mUserStream.cleanUp();
-                mUserStream = null;
-                return null;
-            }
-        };
-        task.execute(mUserStream);
-
-        isUserStreamRunning = false;
     }
 
     public boolean isUserStreamRunning() {
