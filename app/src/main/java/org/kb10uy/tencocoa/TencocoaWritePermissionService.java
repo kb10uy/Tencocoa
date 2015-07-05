@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 
 import org.kb10uy.tencocoa.model.TwitterAccountInformation;
 import org.kb10uy.tencocoa.model.TwitterHelper;
@@ -29,7 +30,7 @@ public class TencocoaWritePermissionService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        SharedPreferences pref = getSharedPreferences(getString(R.string.preference_name), 0);
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         String ck = pref.getString(getString(R.string.preference_twitter_consumer_key), "");
         String cs = pref.getString(getString(R.string.preference_twitter_consumer_secret), "");
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);

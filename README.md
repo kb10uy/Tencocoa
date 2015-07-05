@@ -27,7 +27,11 @@ Tencocoaという名前は言わずもがな比那名居「**天子**」と保�
 * ほか多数
 
 ## ライセンス
-MIT Licenseとします。LICENSEも参照してください。
+MIT Licenseとします。LICENSEも参照してください。  
+なお、
+* AppCompatPreferenceActivity.java
+
+についてはApache License 2.0を参照してください。
 
 ## 使用ライブラリのライセンス表示
 

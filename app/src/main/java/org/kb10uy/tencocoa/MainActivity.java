@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -78,6 +79,8 @@ public class MainActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        pref = PreferenceManager.getDefaultSharedPreferences(this);
+        checkTheme();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -101,7 +104,6 @@ public class MainActivity
         mDirectMessageFragment = DirectMessageFragment.newInstance();
         mSearchFragment = SearchFragment.newInstance();
         mUserStreamListener = new TencocoaUserStreamLister(mHomeTimeLineFragment);
-        pref = getSharedPreferences(getString(R.string.preference_name), 0);
         ctx = this;
         startTencocoaServices();
         createServiceConnections();
@@ -218,6 +220,10 @@ public class MainActivity
         return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 
+    private void checkTheme() {
+        String type = pref.getString(getString(R.string.preference_appearance_theme), "Black");
+        TencocoaHelper.setCurrentTheme(this, type);
+    }
 
     private void initializeFragments() {
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -342,7 +348,7 @@ public class MainActivity
         if (pref.getInt(getString(R.string.preference_twitter_accounts_count), 0) > pref.getInt(getString(R.string.preference_twitter_accounts_auto_number), 0)) {
             TwitterAccountInformation i = null;
             try {
-                FileInputStream acfile = openFileInput("TwitterAccounts.dat");
+                FileInputStream acfile = openFileInput(getString(R.string.accounts_file_name));
                 ArrayList<TwitterAccountInformation> accounts = TencocoaHelper.deserializeObjectFromFile(acfile);
                 if (accounts != null) {
                     i = accounts.get(pref.getInt(getString(R.string.preference_twitter_accounts_auto_number), 0));

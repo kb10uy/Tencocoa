@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 
 import org.kb10uy.tencocoa.model.TencocoaHelper;
 import org.kb10uy.tencocoa.model.TencocoaUserStreamLister;
@@ -55,7 +56,7 @@ public class TencocoaStreamingService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        SharedPreferences pref = getSharedPreferences(getString(R.string.preference_name), 0);
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         mConsumerKey = pref.getString(getString(R.string.preference_twitter_consumer_key), "");
         mConsumerSecret = pref.getString(getString(R.string.preference_twitter_consumer_secret), "");
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
