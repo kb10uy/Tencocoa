@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
+    <header
+        android:fragment="org.kb10uy.tencocoa.settings.SettingsActivity$SettingsFragment"
+        android:summary="@string/prefscreen_general_summary"
+        android:title="@string/prefscreen_general" >
+        <extra android:name="category" android:value="general" />
+    </header>
+    <header
+        android:fragment="org.kb10uy.tencocoa.settings.SettingsActivity$SettingsFragment"
+        android:summary="@string/prefscreen_appearance_summary"
+        android:title="@string/prefscreen_appearance" >
+        <extra android:name="category" android:value="appearance" />
+    </header>
+    <header
+        android:fragment="org.kb10uy.tencocoa.settings.SettingsActivity$SettingsFragment"
+        android:summary="@string/prefscreen_twitter_summary"
+        android:title="@string/prefscreen_twitter" >
+        <extra android:name="category" android:value="twitter" />
+    </header>
+</preference-headers>

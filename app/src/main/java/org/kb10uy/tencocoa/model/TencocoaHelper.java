@@ -1,7 +1,11 @@
 package org.kb10uy.tencocoa.model;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
+import org.kb10uy.tencocoa.R;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -17,6 +21,7 @@ import java.util.Locale;
 public class TencocoaHelper {
     public static final char numberSuffixes[] = new char[]{' ', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'};
     private static SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault());
+
     public static boolean serializeObjectToFile(Serializable object, FileOutputStream output) {
         try {
             ObjectOutputStream serializer = new ObjectOutputStream(output);
@@ -74,5 +79,28 @@ public class TencocoaHelper {
 
     public static String getAbsoluteTimeString(Date targetDate) {
         return mDateFormat.format(targetDate);
+    }
+
+    public static void setCurrentTheme(Context ctx, String theme) {
+        switch (theme) {
+            case "Black":
+                ctx.setTheme(R.style.Black);
+                break;
+            case "White":
+                ctx.setTheme(R.style.White);
+                break;
+            case "Hinanawi":
+                ctx.setTheme(R.style.Hinanawi);
+                break;
+            case "Hoto":
+                ctx.setTheme(R.style.Hoto);
+                break;
+            case "Komichi":
+                ctx.setTheme(R.style.Komichi);
+                break;
+            case "Witch":
+                ctx.setTheme(R.style.Witch);
+                break;
+        }
     }
 }

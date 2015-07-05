@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/prefscreen_appearance">
+        <ListPreference
+            android:entries="@array/prefscreen_appearance_theme_list"
+            android:entryValues="@array/prefscreen_appearance_theme_value_list"
+            android:key="@string/preference_appearance_theme"
+            android:summary="@string/prefscreen_appearance_theme_summary"
+            android:title="@string/prefscreen_appearance_theme">
+        </ListPreference>
+    </PreferenceCategory>
+</PreferenceScreen>

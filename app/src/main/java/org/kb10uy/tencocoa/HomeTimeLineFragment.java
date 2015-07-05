@@ -123,7 +123,7 @@ public class HomeTimeLineFragment extends Fragment implements HomeTimeLineLister
         ((TextView) targetView.findViewById(R.id.StatusItemCreatedAt)).setText(TencocoaHelper.getRelativeTimeString(sourceStatus.getCreatedAt()));
         //Matcher matcher = mViaPattern.matcher(sourceStatus.getSource());
         //if (matcher.find()) ((TextView) targetView.findViewById(R.id.StatusItemVia)).setText(matcher.group(2));
-        Glide.with(getActivity()).load(user.getOriginalProfileImageURLHttps()).into(((ImageView) targetView.findViewById(R.id.StatusItemUserProfileImage)));
+        Glide.with(getActivity()).load(user.getBiggerProfileImageURLHttps()).into(((ImageView) targetView.findViewById(R.id.StatusItemUserProfileImage)));
         if (status.isFavorited()) {
             targetView.findViewById(R.id.StatusItemFavorited).setVisibility(View.VISIBLE);
         } else {
@@ -137,7 +137,7 @@ public class HomeTimeLineFragment extends Fragment implements HomeTimeLineLister
 
             User retweeter = status.getRetweeter();
             (targetView.findViewById(R.id.StatusItemRetweeterFrame)).setVisibility(View.VISIBLE);
-            Glide.with(getActivity()).load(retweeter.getOriginalProfileImageURLHttps()).into(((ImageView) targetView.findViewById(R.id.StatusItemRetweetedUserProfile)));
+            Glide.with(getActivity()).load(retweeter.getMiniProfileImageURLHttps()).into(((ImageView) targetView.findViewById(R.id.StatusItemRetweetedUserProfile)));
             ((TextView) targetView.findViewById(R.id.StatusItemRetweetedUserName)).setText(retweeter.getName());
         } else {
             (targetView.findViewById(R.id.StatusItemLayout)).setBackgroundResource(R.color.tencocoa_color_transparent);

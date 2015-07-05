@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 
 import org.kb10uy.tencocoa.model.TwitterAccountInformation;
 import org.kb10uy.tencocoa.model.TwitterHelper;
@@ -29,11 +30,9 @@ public class TencocoaWritePermissionService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        SharedPreferences pref = getSharedPreferences(getString(R.string.preference_name), 0);
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         String ck = pref.getString(getString(R.string.preference_twitter_consumer_key), "");
         String cs = pref.getString(getString(R.string.preference_twitter_consumer_secret), "");
-        mTwitter = TwitterHelper.getTwitterInstance(ck, cs);
-
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
     }
 
@@ -67,9 +66,9 @@ public class TencocoaWritePermissionService extends Service {
         mNotificationManager.notify(TENCOCOA_WRITE_PERMISSION_NOTIFICATION_ID, builder.build());
     }
 
-    public void setTargetUser(TwitterAccountInformation info) {
+    public void setTarget(Twitter twitter, TwitterAccountInformation info) {
         currentUser = info;
-        mTwitter.setOAuthAccessToken(new AccessToken(info.getAccessToken(), info.getAccessTokenSecret()));
+        mTwitter = twitter;
     }
 
     public void updateStatus(String statusText) {
@@ -133,7 +132,7 @@ public class TencocoaWritePermissionService extends Service {
     }
 
     public void unfavoriteStatus(long id) {
-        /*
+
         AsyncTask<Long, Void, String> task = new AsyncTask<Long, Void, String>() {
             @Override
             protected String doInBackground(Long... params) {
@@ -161,7 +160,7 @@ public class TencocoaWritePermissionService extends Service {
             }
         };
         task.execute(new Long(id));
-        */
+
     }
 
     public void retweetStatus(long id) {

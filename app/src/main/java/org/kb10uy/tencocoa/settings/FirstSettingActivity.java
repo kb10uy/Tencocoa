@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,12 +17,15 @@ import android.widget.Toast;
 
 import org.kb10uy.tencocoa.MainActivity;
 import org.kb10uy.tencocoa.R;
+import org.kb10uy.tencocoa.model.TencocoaHelper;
 
 public class FirstSettingActivity extends AppCompatActivity {
     EditText ck, cs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        TencocoaHelper.setCurrentTheme(this, pref.getString(getString(R.string.preference_appearance_theme), "Black"));
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first_setting);
         ck = (EditText) findViewById(R.id.FirstSettingEditTextConsumerKey);
@@ -66,7 +70,7 @@ public class FirstSettingActivity extends AppCompatActivity {
     }
 
     public void setCustomKeys() {
-        SharedPreferences pref = getSharedPreferences(getString(R.string.preference_name), 0);
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor edit = pref.edit();
 
         edit.putString(getString(R.string.preference_twitter_consumer_key), ck.getText().toString());
@@ -94,7 +98,7 @@ public class FirstSettingActivity extends AppCompatActivity {
                         }
 
                         public void setDefaultKeys() {
-                            SharedPreferences pref = getActivity().getSharedPreferences(getString(R.string.preference_name), 0);
+                            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
                             SharedPreferences.Editor edit = pref.edit();
                             edit.putString(getString(R.string.preference_twitter_consumer_key), getString(R.string.preference_twitter_default_consumer_key));
                             edit.putString(getString(R.string.preference_twitter_consumer_secret), getString(R.string.preference_twitter_default_consumer_secret));
