@@ -7,8 +7,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Binder;
+import android.os.Handler;
 import android.os.IBinder;
 
+import org.kb10uy.tencocoa.model.TencocoaHelper;
 import org.kb10uy.tencocoa.model.TencocoaUserStreamLister;
 import org.kb10uy.tencocoa.model.TwitterAccountInformation;
 import org.kb10uy.tencocoa.model.TwitterHelper;
@@ -55,8 +57,6 @@ public class TencocoaStreamingService extends Service {
         SharedPreferences pref = getSharedPreferences(getString(R.string.preference_name), 0);
         mConsumerKey = pref.getString(getString(R.string.preference_twitter_consumer_key), "");
         mConsumerSecret = pref.getString(getString(R.string.preference_twitter_consumer_secret), "");
-        mTwitter = TwitterHelper.getTwitterInstance(mConsumerKey, mConsumerSecret);
-
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
     }
 
@@ -73,45 +73,77 @@ public class TencocoaStreamingService extends Service {
 
     //action methods
 
-    public void setStreamingUser(TwitterAccountInformation info) {
+    public void setTargetUser(TwitterAccountInformation info) {
         currentUser = info;
-        stopCurrentUserStream();
-        mUserStream = new TwitterStreamFactory().getInstance();
-        mUserStream.setOAuthConsumer(mConsumerKey, mConsumerSecret);
-        mUserStream.setOAuthAccessToken(new AccessToken(currentUser.getAccessToken(), currentUser.getAccessTokenSecret()));
+        mTwitter = TwitterHelper.getTwitterInstance(mConsumerKey, mConsumerSecret, currentUser.getAccessToken());
     }
 
-    public void startCurrentUserStream() {
-        showNotification(R.string.notification_streaming_userstream_started_ticker, R.string.notification_streaming_userstream_started_text);
-        mUserStream.user();
+    public TwitterAccountInformation getTargetUserInformation() {
+        return currentUser;
+    }
+
+    public Twitter getTargetUserTwitterInstance() {
+        return mTwitter;
+    }
+
+    public void startCurrentUserStream(TencocoaUserStreamLister listener) {
+        stopCurrentUserStream();
+        mUserStream = TwitterHelper.getTwitterStreamInstance(mConsumerKey, mConsumerSecret, currentUser.getAccessToken());
+        mUserStream.addListener(listener);
+        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                mUserStream.user();
+                isUserStreamRunning = true;
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                showNotification(R.string.notification_streaming_userstream_started_ticker, R.string.notification_streaming_userstream_started_text);
+            }
+        };
+        task.execute();
     }
 
     public void stopCurrentUserStream() {
-        if (mUserStream != null) {
-            AsyncTask<TwitterStream, Void, Void> task = new AsyncTask<TwitterStream, Void, Void>() {
-                @Override
-                protected Void doInBackground(TwitterStream... params) {
-                    params[0].cleanUp();
-                    return null;
-                }
-            };
-            task.execute(mUserStream);
-            mUserStream = null;
-        }
+        if (mUserStream == null) return;
+        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                mUserStream.cleanUp();
+                mUserStream = null;
+                isUserStreamRunning = false;
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                showNotification(R.string.notification_streaming_userstream_finished_ticker, R.string.notification_streaming_userstream_finished_text);
+            }
+        };
+        task.execute();
     }
 
-    public void addUserStreamListener(TencocoaUserStreamLister listener) {
-        if (mUserStream != null) mUserStream.addListener(listener);
-        mUserStreamListener = listener;
+    public void stopCurrentUserStreamAsync() {
+        if (mUserStream == null) return;
+        AsyncTask<TwitterStream, Void, Void> task = new AsyncTask<TwitterStream, Void, Void>() {
+            @Override
+            protected Void doInBackground(TwitterStream... params) {
+                mUserStream.cleanUp();
+                mUserStream = null;
+                return null;
+            }
+        };
+        task.execute(mUserStream);
+
+        isUserStreamRunning = false;
     }
 
-    public void removeUserStreamListener(UserStreamListener listener) {
-        if (mUserStream != null) mUserStream.removeListener(listener);
-        mUserStreamListener = null;
-    }
-
-    public TencocoaUserStreamLister getCurrentUserStreamListener() {
-        return mUserStreamListener;
+    public boolean isUserStreamRunning() {
+        return isUserStreamRunning;
     }
 
     public class TencocoaStreamingServiceBinder extends Binder {

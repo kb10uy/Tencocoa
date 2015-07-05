@@ -27,6 +27,7 @@ import java.util.ArrayList;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
 
@@ -62,14 +63,24 @@ public class AccountsListActivity extends AppCompatActivity {
         SharedPreferences pref = getSharedPreferences(getString(R.string.preference_name), 0);
         String ck = pref.getString(getString(R.string.preference_twitter_consumer_key), "");
         String cs = pref.getString(getString(R.string.preference_twitter_consumer_secret), "");
-        mTwitter = TwitterHelper.getTwitterInstance(ck, cs);
+        mTwitter = new TwitterFactory().getInstance();
+        mTwitter.setOAuthConsumer(ck, cs);
         mCallback = getString(R.string.uri_twitter_oauth_callback);
+        Intent intent = getIntent();
+        if (intent != null && intent.getData() != null && intent.getData().toString().startsWith(mCallback)) {
+            onNewIntent(intent);
+        }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         initialize();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     @Override
@@ -92,6 +103,8 @@ public class AccountsListActivity extends AppCompatActivity {
                     return mTwitter.getOAuthAccessToken(mRequestToken, params[0]);
                 } catch (TwitterException e) {
                     e.printStackTrace();
+                } catch (IllegalStateException e) {
+                    return null;
                 }
                 return null;
             }
@@ -128,6 +141,7 @@ public class AccountsListActivity extends AppCompatActivity {
                 newOAuthAuthorize();
                 return true;
             case android.R.id.home:
+                setResult(RESULT_CANCELED, resultIntent);
                 finish();
                 return true;
         }

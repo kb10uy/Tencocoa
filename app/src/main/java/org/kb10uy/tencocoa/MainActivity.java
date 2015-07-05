@@ -74,7 +74,8 @@ public class MainActivity
     TencocoaUserStreamLister mUserStreamListener;
     CountDownLatch mServiceLatch;
     boolean mStreamingBound, mWritePermissionBound;
-    boolean mIsRestoring, mIsUserStreamEstablished, mHasShownFirstAccountActivity;
+    boolean mIsRestoring, /*mIsUserStreamEstablished,*/
+            mHasShownFirstAccountActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -175,33 +176,12 @@ public class MainActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         final Intent td = data;
+        final TwitterAccountInformation info = (TwitterAccountInformation) td.getSerializableExtra("Information");
         bindTencocoaServices();
         switch (requestCode) {
             case TencocoaRequestCodes.AccountSelect:
                 if (resultCode == RESULT_OK) {
-                    AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-                        @Override
-                        protected Void doInBackground(Void... params) {
-                            try {
-                                mServiceLatch.await();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            return null;
-                        }
-
-                        @Override
-                        protected void onPostExecute(Void aVoid) {
-                            TwitterAccountInformation info = (TwitterAccountInformation) td.getSerializableExtra("Information");
-                            refreshUserInformation(info);
-                            mStreamingService.setStreamingUser(info);
-                            mWritePermissionService.setTargetUser(info);
-                            mStreamingService.addUserStreamListener(mUserStreamListener);
-                            mStreamingService.startCurrentUserStream();
-                            mIsUserStreamEstablished = true;
-                        }
-                    };
-                    task.execute();
+                    startActivity(info);
                 }
                 break;
         }
@@ -315,9 +295,9 @@ public class MainActivity
 
     private void initializeTwitter() {
         checkTwitterApiKeys();
-        String ck = pref.getString(getString(R.string.preference_twitter_consumer_key), "");
-        String cs = pref.getString(getString(R.string.preference_twitter_consumer_secret), "");
-        mTwitter = TwitterHelper.getTwitterInstance(ck, cs);
+        //String ck = pref.getString(getString(R.string.preference_twitter_consumer_key), "");
+        //String cs = pref.getString(getString(R.string.preference_twitter_consumer_secret), "");
+        //mTwitter = TwitterHelper.getTwitterInstance(ck, cs);
     }
 
     private void checkTwitterApiKeys() {
@@ -334,7 +314,32 @@ public class MainActivity
         }
     }
 
+    private void startUserStream(TwitterAccountInformation info) {
+        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    mServiceLatch.await();
+                    mStreamingService.setTargetUser(info);
+                    mWritePermissionService.setTarget(mStreamingService.getTargetUserTwitterInstance(), mStreamingService.getTargetUserInformation());
+                    mStreamingService.startCurrentUserStream(mUserStreamListener);
+                    mIsUserStreamEstablished = true;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                refreshUserInformation(info);
+            }
+        };
+        task.execute();
+    }
+
     private void autoConnectUserStream() {
+        if (mIsUserStreamEstablished) return;
         if (pref.getInt(getString(R.string.preference_twitter_accounts_count), 0) > pref.getInt(getString(R.string.preference_twitter_accounts_auto_number), 0)) {
             Intent intent = new Intent();
             TwitterAccountInformation i = null;
@@ -386,8 +391,9 @@ public class MainActivity
 
     private void onStreamingServiceConnected() {
         //mHomeTimeLineFragment.start(mStreamingService);
-        if (mIsUserStreamEstablished)
-            mStreamingService.getCurrentUserStreamListener().changeHomeTimeLineLister(mHomeTimeLineFragment);
+
+        if (!mIsUserStreamEstablished)
+            mStreamingService.startCurrentUserStream(mUserStreamListener);
     }
 
     private void refreshUserInformation(final TwitterAccountInformation info) {
@@ -395,7 +401,7 @@ public class MainActivity
             @Override
             protected User doInBackground(TwitterAccountInformation... params) {
                 try {
-                    mTwitter.setOAuthAccessToken(new AccessToken(info.getAccessToken(), info.getAccessTokenSecret()));
+                    if (mTwitter == null) return null;
                     return mTwitter.users().showUser(params[0].getUserId());
                 } catch (TwitterException e) {
                     e.printStackTrace();

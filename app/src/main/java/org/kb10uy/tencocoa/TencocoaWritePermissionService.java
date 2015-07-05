@@ -32,8 +32,6 @@ public class TencocoaWritePermissionService extends Service {
         SharedPreferences pref = getSharedPreferences(getString(R.string.preference_name), 0);
         String ck = pref.getString(getString(R.string.preference_twitter_consumer_key), "");
         String cs = pref.getString(getString(R.string.preference_twitter_consumer_secret), "");
-        mTwitter = TwitterHelper.getTwitterInstance(ck, cs);
-
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
     }
 
@@ -67,9 +65,9 @@ public class TencocoaWritePermissionService extends Service {
         mNotificationManager.notify(TENCOCOA_WRITE_PERMISSION_NOTIFICATION_ID, builder.build());
     }
 
-    public void setTargetUser(TwitterAccountInformation info) {
+    public void setTarget(Twitter twitter, TwitterAccountInformation info) {
         currentUser = info;
-        mTwitter.setOAuthAccessToken(new AccessToken(info.getAccessToken(), info.getAccessTokenSecret()));
+        mTwitter = twitter;
     }
 
     public void updateStatus(String statusText) {
@@ -133,7 +131,7 @@ public class TencocoaWritePermissionService extends Service {
     }
 
     public void unfavoriteStatus(long id) {
-        /*
+
         AsyncTask<Long, Void, String> task = new AsyncTask<Long, Void, String>() {
             @Override
             protected String doInBackground(Long... params) {
@@ -161,7 +159,7 @@ public class TencocoaWritePermissionService extends Service {
             }
         };
         task.execute(new Long(id));
-        */
+
     }
 
     public void retweetStatus(long id) {
