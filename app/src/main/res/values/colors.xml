@@ -41,4 +41,22 @@
     <color name="white_text_screen_name">#ff7fe380</color>
     <color name="white_retweet_green">#4039be5c</color>
     <color name="white_retweet_green_text">#ff569f56</color>
+
+    <color name="komichi_primary">#ff00399b</color>
+    <color name="komichi_black">#ffcedde5</color>
+    <color name="komichi_darkgray">#ff7ea5d8</color>
+    <color name="komichi_white">#ff083b6e</color>
+    <color name="komichi_text_normal">#fff46a80</color>
+    <color name="komichi_text_screen_name">#ffa71416</color>
+    <color name="komichi_retweet_green">#4061be7a</color>
+    <color name="komichi_retweet_green_text">#ff549f88</color>
+
+    <color name="witch_primary">#ff455ab9</color>
+    <color name="witch_black">#ff00123b</color>
+    <color name="witch_darkgray">#ff5258a5</color>
+    <color name="witch_white">#ffe8f3ff</color>
+    <color name="witch_text_normal">#ff797000</color>
+    <color name="witch_text_screen_name">#ffaa0f00</color>
+    <color name="witch_retweet_green">#4018bb68</color>
+    <color name="witch_retweet_green_text">#ff48694d</color>
 </resources>

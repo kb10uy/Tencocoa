@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
 
@@ -44,6 +46,8 @@ public class AccountsListActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        TencocoaHelper.setCurrentTheme(this, pref.getString(getString(R.string.preference_appearance_theme), "Black"));
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accounts_list);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -59,17 +63,27 @@ public class AccountsListActivity extends AppCompatActivity {
         mListView.setAdapter(accountsAdapter);
         mListView.setOnItemClickListener((parent, view, position, id) -> onAccountSelected(position));
 
-        SharedPreferences pref = getSharedPreferences(getString(R.string.preference_name), 0);
+
         String ck = pref.getString(getString(R.string.preference_twitter_consumer_key), "");
         String cs = pref.getString(getString(R.string.preference_twitter_consumer_secret), "");
-        mTwitter = TwitterHelper.getTwitterInstance(ck, cs);
+        mTwitter = new TwitterFactory().getInstance();
+        mTwitter.setOAuthConsumer(ck, cs);
         mCallback = getString(R.string.uri_twitter_oauth_callback);
+        Intent intent = getIntent();
+        if (intent != null && intent.getData() != null && intent.getData().toString().startsWith(mCallback)) {
+            onNewIntent(intent);
+        }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         initialize();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     @Override
@@ -92,6 +106,8 @@ public class AccountsListActivity extends AppCompatActivity {
                     return mTwitter.getOAuthAccessToken(mRequestToken, params[0]);
                 } catch (TwitterException e) {
                     e.printStackTrace();
+                } catch (IllegalStateException e) {
+                    return null;
                 }
                 return null;
             }
@@ -128,6 +144,7 @@ public class AccountsListActivity extends AppCompatActivity {
                 newOAuthAuthorize();
                 return true;
             case android.R.id.home:
+                setResult(RESULT_CANCELED, resultIntent);
                 finish();
                 return true;
         }
@@ -190,10 +207,10 @@ public class AccountsListActivity extends AppCompatActivity {
 
     private void saveAccounts() {
         try {
-            FileOutputStream acfile = openFileOutput("TwitterAccounts.dat", MODE_PRIVATE);
+            FileOutputStream acfile = openFileOutput(getString(R.string.accounts_file_name), MODE_PRIVATE);
             TencocoaHelper.serializeObjectToFile(accounts, acfile);
 
-            SharedPreferences pref = getSharedPreferences(getString(R.string.preference_name), 0);
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
             SharedPreferences.Editor edit = pref.edit();
             edit.putInt(getString(R.string.preference_twitter_accounts_count), accounts.size());
             edit.apply();
@@ -204,7 +221,7 @@ public class AccountsListActivity extends AppCompatActivity {
 
     private void loadAccounts() {
         try {
-            FileInputStream acfile = openFileInput("TwitterAccounts.dat");
+            FileInputStream acfile = openFileInput(getString(R.string.accounts_file_name));
             accounts = TencocoaHelper.deserializeObjectFromFile(acfile);
         } catch (FileNotFoundException e) {
             e.printStackTrace();

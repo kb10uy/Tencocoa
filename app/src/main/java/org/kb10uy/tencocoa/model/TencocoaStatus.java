@@ -1,8 +1,14 @@
 package org.kb10uy.tencocoa.model;
 
-import java.io.Serializable;
+import android.net.Uri;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Map;
+
+import twitter4j.MediaEntity;
 import twitter4j.Status;
+import twitter4j.URLEntity;
 import twitter4j.User;
 
 
@@ -14,6 +20,11 @@ public class TencocoaStatus implements Serializable {
     private boolean isFavorited;
     private boolean isRetweeted;
     private User mRetweeter;
+    private String replacedText;
+    private ArrayList<Uri> uris;
+    private ArrayList<TencocoaUriInfo> medias;
+    private boolean hasMedia;
+
 
     public TencocoaStatus(Status s) {
         sourceStatus = s;
@@ -21,6 +32,10 @@ public class TencocoaStatus implements Serializable {
         if (isRetweet()) {
             mRetweeter = sourceStatus.getUser();
         }
+        uris = new ArrayList<>();
+        medias = new ArrayList<>();
+        replaceTextElements();
+        fetchMediaEntities();
     }
 
     public Status getSourceStatus() {
@@ -29,6 +44,10 @@ public class TencocoaStatus implements Serializable {
 
     public Status getShowingStatus() {
         return showingStatus;
+    }
+
+    public boolean hasMedia() {
+        return hasMedia;
     }
 
     public boolean isRetweet() {
@@ -49,5 +68,35 @@ public class TencocoaStatus implements Serializable {
 
     public boolean isFavorited() {
         return isFavorited;
+    }
+
+    public String getReplacedText() {
+        return replacedText;
+    }
+
+    private void replaceTextElements() {
+        URLEntity[] urlEntities = showingStatus.getURLEntities();
+        String text = showingStatus.getText();
+        for (URLEntity e : urlEntities) {
+            text = text.replace(e.getURL(), e.getDisplayURL());
+            uris.add(Uri.parse(e.getExpandedURL()));
+        }
+        replacedText = text;
+    }
+
+    private void fetchMediaEntities() {
+        MediaEntity[] mediaEntities = showingStatus.getMediaEntities();
+        if (mediaEntities == null) return;
+        for (MediaEntity e : mediaEntities) {
+            TencocoaUriInfo info = new TencocoaUriInfo();
+            info.setType(TencocoaUriInfo.IMAGE);
+            info.setEmbeddedUri(Uri.parse(e.getURL()));
+            info.setDisplayUri(Uri.parse(e.getDisplayURL()));
+            info.setExpandedUri(Uri.parse(e.getExpandedURL()));
+            String mediaURLHttps = e.getMediaURLHttps();
+            info.setThumbnailImageUri(Uri.parse(mediaURLHttps + ":thumb"));
+            info.setFullImageUri(Uri.parse(mediaURLHttps + ":orig"));
+            medias.add(info);
+        }
     }
 }

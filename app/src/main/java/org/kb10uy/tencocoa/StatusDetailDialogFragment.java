@@ -50,7 +50,7 @@ public class StatusDetailDialogFragment extends DialogFragment {
         User user = mTargetStatus.getShowingStatus().getUser();
         ((TextView) view.findViewById(R.id.StatusDetailTextViewUserName)).setText(user.getName());
         ((TextView) view.findViewById(R.id.StatusDetailTextViewScreenName)).setText(user.getScreenName());
-        ((TextView) view.findViewById(R.id.StatusDetailTextViewStatusText)).setText(mTargetStatus.getShowingStatus().getText());
+        ((TextView) view.findViewById(R.id.StatusDetailTextViewStatusText)).setText(mTargetStatus.getReplacedText());
         ((TextView) view.findViewById(R.id.StatusDetailTextViewCreatedAt)).setText(TencocoaHelper.getAbsoluteTimeString(mTargetStatus.getShowingStatus().getCreatedAt()));
         Glide.with(getActivity()).load(user.getOriginalProfileImageURLHttps()).into(((ImageView) view.findViewById(R.id.StatusDetailImageViewUserProfile)));
 
