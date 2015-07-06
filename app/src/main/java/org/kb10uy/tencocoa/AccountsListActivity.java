@@ -106,10 +106,11 @@ public class AccountsListActivity extends AppCompatActivity {
                     return mTwitter.getOAuthAccessToken(mRequestToken, params[0]);
                 } catch (TwitterException e) {
                     e.printStackTrace();
+                    return null;
                 } catch (IllegalStateException e) {
+                    e.printStackTrace();
                     return null;
                 }
-                return null;
             }
 
             @Override
@@ -176,6 +177,7 @@ public class AccountsListActivity extends AppCompatActivity {
             protected void onPostExecute(String url) {
                 if (url != null) {
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     startActivity(intent);
                 }
             }
