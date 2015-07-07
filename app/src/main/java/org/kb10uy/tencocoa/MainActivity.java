@@ -505,6 +505,11 @@ public class MainActivity
     }
 
     @Override
+    public void applyUpdateStatus(StatusUpdate status) {
+        mWritePermissionService.updateStatus(status);
+    }
+
+    @Override
     public void showStatusDetail(TencocoaStatus status) {
         StatusDetailDialogFragment dialog = StatusDetailDialogFragment.newInstance(status);
         dialog.show(getFragmentManager(), "NewStatus");
@@ -547,7 +552,7 @@ public class MainActivity
                         statusCache.setIsFavorited(true);
                         break;
                     case StatusDetailDialogFragment.ACTION_REPLY:
-                        NewStatusDialogFragment dialog = NewStatusDialogFragment.newInstance();
+                        NewStatusDialogFragment dialog = NewStatusDialogFragment.newInstance(status);
                         dialog.show(getFragmentManager(), "NewStatus");
                         break;
                     case StatusDetailDialogFragment.ACTION_REPLY_BLANK:

@@ -73,16 +73,15 @@ public class StatusDetailDialogFragment extends DialogFragment {
             dismiss();
         });
         view.findViewById(R.id.StatusDetailButtonReply).setOnClickListener(v -> {
-            mListener.onStatusDetailAction(ACTION_RETWEET, mTargetStatus);
+            mListener.onStatusDetailAction(ACTION_REPLY, mTargetStatus);
             dismiss();
         });
         view.findViewById(R.id.StatusDetailButtonReplyBlank).setOnClickListener(v -> {
-            mListener.onStatusDetailAction(ACTION_RETWEET, mTargetStatus);
+            mListener.onStatusDetailAction(ACTION_REPLY_BLANK, mTargetStatus);
             dismiss();
         });
         view.findViewById(R.id.StatusDetailButtonOthers).setOnClickListener(v -> {
             dismiss();
-            //favorite();
         });
     }
 
