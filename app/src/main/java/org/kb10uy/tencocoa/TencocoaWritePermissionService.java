@@ -13,6 +13,7 @@ import android.preference.PreferenceManager;
 import org.kb10uy.tencocoa.model.TwitterAccountInformation;
 import org.kb10uy.tencocoa.model.TwitterHelper;
 
+import twitter4j.StatusUpdate;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.auth.AccessToken;
@@ -99,6 +100,36 @@ public class TencocoaWritePermissionService extends Service {
             }
         };
         task.execute(statusText);
+    }
+
+    public void updateStatus(StatusUpdate status) {
+        AsyncTask<StatusUpdate, Void, String> task = new AsyncTask<StatusUpdate, Void, String>() {
+            @Override
+            protected String doInBackground(StatusUpdate... params) {
+                if (currentUser == null) return null;
+                try {
+                    mTwitter.tweets().updateStatus(params[0]);
+                    return "";
+                } catch (TwitterException e) {
+                    e.printStackTrace();
+                    return e.getErrorMessage();
+                }
+            }
+
+            @Override
+            protected void onPostExecute(String result) {
+                super.onPostExecute(result);
+                if (result.equals("")) {
+                    showNotification(R.string.notification_update_status_success, R.string.notification_update_status_success);
+                } else {
+                    StringBuilder sb = new StringBuilder();
+                    sb.append(getString(R.string.notification_update_status_fail));
+                    sb.append(result);
+                    showNotification(sb.toString(), sb.toString());
+                }
+            }
+        };
+        task.execute(status);
     }
 
     public void favoriteStatus(long id) {

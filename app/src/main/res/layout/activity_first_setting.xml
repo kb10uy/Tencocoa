@@ -1,100 +1,109 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:context="org.kb10uy.tencocoa.settings.FirstSettingActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/text_activity_first_setting"
-        android:id="@+id/FirstSettingTextViewDescription"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="29dp" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/text_activity_first_setting_newapp_link"
-        android:autoLink="web"
-        android:id="@+id/FirstSettingTextViewNewApplication"
-        android:layout_marginTop="18dp"
-        android:layout_below="@+id/FirstSettingTextViewDescription"
-        android:layout_alignParentStart="true" />
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_marginTop="18dp"
-        android:layout_below="@+id/FirstSettingTextViewNewApplication"
-        android:layout_alignParentStart="true">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_gravity="center_horizontal">
-
-            <TextView
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/label_activity_first_setting_consumer_key"
-                android:layout_gravity="center_vertical"/>
-
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/FirstSettingEditTextConsumerKey"
-                android:layout_weight="1"
-                android:inputType="text"
-                android:layout_gravity="center_vertical"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_gravity="center_horizontal">
-
-            <TextView
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/label_activity_first_setting_consumer_secret"
-                android:layout_gravity="center_vertical"/>
-
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/FirstSettingEditTextConsumerSecret"
-                android:layout_gravity="center_vertical"
-                android:inputType="text"
-                android:layout_weight="1" />
-        </LinearLayout>
-
-        <Button
-            style="?android:attr/buttonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/label_activity_first_setting_consumer_ok"
-            android:id="@+id/FirstSettingButtonRegister"
-            android:textSize="20dp"
-            android:layout_gravity="center_horizontal" />
-
-        <Button
-            style="?android:attr/buttonStyleSmall"
+        <TextView
+            android:id="@+id/FirstSettingTextViewDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/label_activity_first_setting_consumer_use_default"
-            android:id="@+id/FirstSettingButtonUseDefault"
-            android:layout_marginTop="32dp"
-            android:layout_gravity="center_horizontal" />
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="29dp"
+            android:text="@string/text_activity_first_setting"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/FirstSettingTextViewNewApplication"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/FirstSettingTextViewDescription"
+            android:layout_marginTop="18dp"
+            android:autoLink="web"
+            android:text="@string/text_activity_first_setting_newapp_link"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
-</RelativeLayout>
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/FirstSettingTextViewNewApplication"
+            android:layout_marginTop="18dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/label_activity_first_setting_consumer_key"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <EditText
+                    android:id="@+id/FirstSettingEditTextConsumerKey"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:inputType="text" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/label_activity_first_setting_consumer_secret"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <EditText
+                    android:id="@+id/FirstSettingEditTextConsumerSecret"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:inputType="text" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/FirstSettingButtonRegister"
+                style="?android:attr/buttonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/label_activity_first_setting_consumer_ok"
+                android:textSize="20dp" />
+
+            <Button
+                android:id="@+id/FirstSettingButtonUseDefault"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="32dp"
+                android:text="@string/label_activity_first_setting_consumer_use_default" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+</ScrollView>

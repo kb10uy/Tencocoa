@@ -18,6 +18,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import twitter4j.Status;
+import twitter4j.User;
+import twitter4j.UserMentionEntity;
+
 public class TencocoaHelper {
     public static final char numberSuffixes[] = new char[]{' ', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'};
     private static SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault());
@@ -102,5 +106,19 @@ public class TencocoaHelper {
                 ctx.setTheme(R.style.Witch);
                 break;
         }
+    }
+
+    public static String createReplyTemplate(TencocoaStatus status) {
+        StringBuilder builder = new StringBuilder();
+        Status target = status.getShowingStatus();
+        User tweeter = target.getUser();
+        builder.append("@").append(target.getUser().getScreenName()).append(" ");
+        UserMentionEntity[] entities = target.getUserMentionEntities();
+        if (entities == null) return builder.toString();
+        for (UserMentionEntity e : entities) {
+            if (tweeter.getId() == e.getId()) continue;
+            builder.append("@").append(e.getScreenName()).append(" ");
+        }
+        return builder.toString();
     }
 }

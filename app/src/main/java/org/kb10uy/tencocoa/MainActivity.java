@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 
 import io.realm.Realm;
+import twitter4j.StatusUpdate;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.User;
@@ -171,6 +172,7 @@ public class MainActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_CANCELED) return;
         final TwitterAccountInformation info = (TwitterAccountInformation) data.getSerializableExtra("Information");
         bindTencocoaServices();
         switch (requestCode) {
@@ -503,6 +505,11 @@ public class MainActivity
     }
 
     @Override
+    public void applyUpdateStatus(StatusUpdate status) {
+        mWritePermissionService.updateStatus(status);
+    }
+
+    @Override
     public void showStatusDetail(TencocoaStatus status) {
         StatusDetailDialogFragment dialog = StatusDetailDialogFragment.newInstance(status);
         dialog.show(getFragmentManager(), "NewStatus");
@@ -543,6 +550,15 @@ public class MainActivity
                         mWritePermissionService.retweetStatus(sourceId);
                         statusCache.setIsRetweeted(true);
                         statusCache.setIsFavorited(true);
+                        break;
+                    case StatusDetailDialogFragment.ACTION_REPLY:
+                        NewStatusDialogFragment dialog = NewStatusDialogFragment.newInstance(status);
+                        dialog.show(getFragmentManager(), "NewStatus");
+                        break;
+                    case StatusDetailDialogFragment.ACTION_REPLY_BLANK:
+                        StatusUpdate update = new StatusUpdate(TencocoaHelper.createReplyTemplate(status));
+                        update.setInReplyToStatusId(status.getShowingStatus().getId());
+                        mWritePermissionService.updateStatus(update);
                         break;
                 }
                 realm.commitTransaction();
