@@ -43,10 +43,11 @@ public class AccountsListActivity extends AppCompatActivity {
     ArrayList<TwitterAccountInformation> accounts;
     GeneralListAdapter<TwitterAccountInformation> accountsAdapter;
     Intent resultIntent = new Intent();
+    SharedPreferences pref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        pref = PreferenceManager.getDefaultSharedPreferences(this);
         TencocoaHelper.setCurrentTheme(this, pref.getString(getString(R.string.preference_appearance_theme), "Black"));
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accounts_list);
@@ -96,6 +97,7 @@ public class AccountsListActivity extends AppCompatActivity {
     protected void onNewIntent(Intent intent) {
         if (intent == null || intent.getData() == null || !intent.getData().toString().startsWith(mCallback))
             return;
+        Uri data = intent.getData();
         String verifier = intent.getData().getQueryParameter("oauth_verifier");
         final Activity ta = this;
 
@@ -103,6 +105,11 @@ public class AccountsListActivity extends AppCompatActivity {
             @Override
             protected AccessToken doInBackground(String... params) {
                 try {
+                    if (mRequestToken == null) {
+                        String rt = pref.getString(getString(R.string.preference_twitter_request_token), "");
+                        String rts = pref.getString(getString(R.string.preference_twitter_request_token_secret), "");
+                        mRequestToken = new RequestToken(rt, rts);
+                    }
                     return mTwitter.getOAuthAccessToken(mRequestToken, params[0]);
                 } catch (TwitterException e) {
                     e.printStackTrace();
@@ -121,6 +128,10 @@ public class AccountsListActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(ta, R.string.text_activity_accounts_list_failed, Toast.LENGTH_SHORT).show();
                 }
+                pref.edit()
+                        .putString(getString(R.string.preference_twitter_request_token), mRequestToken.getToken())
+                        .putString(getString(R.string.preference_twitter_request_token_secret), mRequestToken.getTokenSecret())
+                        .apply();
             }
         };
         task.execute(verifier);
@@ -145,7 +156,7 @@ public class AccountsListActivity extends AppCompatActivity {
                 newOAuthAuthorize();
                 return true;
             case android.R.id.home:
-                setResult(RESULT_CANCELED, resultIntent);
+                setResult(RESULT_CANCELED);
                 finish();
                 return true;
         }
@@ -166,6 +177,10 @@ public class AccountsListActivity extends AppCompatActivity {
             protected String doInBackground(Void... params) {
                 try {
                     mRequestToken = mTwitter.getOAuthRequestToken(mCallback);
+                    pref.edit()
+                            .putString(getString(R.string.preference_twitter_request_token), mRequestToken.getToken())
+                            .putString(getString(R.string.preference_twitter_request_token_secret), mRequestToken.getTokenSecret())
+                            .apply();
                     return mRequestToken.getAuthorizationURL();
                 } catch (TwitterException e) {
                     e.printStackTrace();

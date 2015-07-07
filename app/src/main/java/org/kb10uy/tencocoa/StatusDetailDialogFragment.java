@@ -52,7 +52,7 @@ public class StatusDetailDialogFragment extends DialogFragment {
         ((TextView) view.findViewById(R.id.StatusDetailTextViewScreenName)).setText(user.getScreenName());
         ((TextView) view.findViewById(R.id.StatusDetailTextViewStatusText)).setText(mTargetStatus.getReplacedText());
         ((TextView) view.findViewById(R.id.StatusDetailTextViewCreatedAt)).setText(TencocoaHelper.getAbsoluteTimeString(mTargetStatus.getShowingStatus().getCreatedAt()));
-        Glide.with(getActivity()).load(user.getOriginalProfileImageURLHttps()).into(((ImageView) view.findViewById(R.id.StatusDetailImageViewUserProfile)));
+        Glide.with(getActivity()).load(user.getBiggerProfileImageURLHttps()).into(((ImageView) view.findViewById(R.id.StatusDetailImageViewUserProfile)));
 
         ToggleButton tbFav = (ToggleButton) view.findViewById(R.id.StatusDetailButtonFav);
         tbFav.setChecked(mTargetStatus.isFavorited());
@@ -69,6 +69,14 @@ public class StatusDetailDialogFragment extends DialogFragment {
             dismiss();
         });
         view.findViewById(R.id.StatusDetailButtonRetweet).setOnClickListener(v -> {
+            mListener.onStatusDetailAction(ACTION_RETWEET, mTargetStatus);
+            dismiss();
+        });
+        view.findViewById(R.id.StatusDetailButtonReply).setOnClickListener(v -> {
+            mListener.onStatusDetailAction(ACTION_RETWEET, mTargetStatus);
+            dismiss();
+        });
+        view.findViewById(R.id.StatusDetailButtonReplyBlank).setOnClickListener(v -> {
             mListener.onStatusDetailAction(ACTION_RETWEET, mTargetStatus);
             dismiss();
         });
@@ -117,6 +125,8 @@ public class StatusDetailDialogFragment extends DialogFragment {
     public static final int ACTION_FAVORITE_AND_RETWEET = 3;
     public static final int ACTION_RETWEET = 4;
     public static final int ACTION_UNRETWEET = 5;
+    public static final int ACTION_REPLY = 6;
+    public static final int ACTION_REPLY_BLANK = 7;
 
     public interface StatusDetailInteractionListener {
         void onStatusDetailAction(int type, TencocoaStatus status);

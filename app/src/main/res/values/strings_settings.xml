@@ -8,6 +8,8 @@
     <string name="preference_twitter_access_token_secret">TWITTER_ACCESS_TOKEN_SECRET</string>
     <string name="preference_twitter_consumer_set">TWITTER_CONSUMER_SET</string>
     <string name="preference_twitter_consumer_is_default">TWITTER_CONSUMER_IS_DEFAULT</string>
+    <string name="preference_twitter_request_token">TWITTER_REQUEST_TOKEN</string>
+    <string name="preference_twitter_request_token_secret">TWITTER_REQUEST_TOKEN_SECRET</string>
 
     <string name="preference_twitter_default_consumer_key">Ipgm4AzfYJrBn4jVsBUrn9040</string>
     <string name="preference_twitter_default_consumer_secret">lvblXIFQSnxnzxUvxBz48VMDNolFbPE09iiQ1Iqb88Az9CWtCH</string>

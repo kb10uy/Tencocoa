@@ -55,6 +55,9 @@
     <string name="label_dialog_status_detail_rt">RT</string>
     <string name="label_dialog_status_detail_favrt">ふぁぼRT</string>
     <string name="label_dialog_status_detail_others">その他</string>
+    <string name="label_dialog_status_detail_reply">返信</string>
+    <string name="label_dialog_status_detail_reply_blank">空リプ</string>
+    <string name="label_dialog_status_detail_back">戻る</string>
 
     <string name="title_activity_accounts_list">アカウント</string>
     <string name="label_activity_accounts_list_new_account">新しいアカウント</string>
