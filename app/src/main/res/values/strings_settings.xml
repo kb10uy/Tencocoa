@@ -22,6 +22,8 @@
 
     <string name="preference_appearance_theme">APPEARANCE_THEME</string>
 
+    <string name="preference_general_behavior_write_as_toast">GENERAL_BEHAVIOR_WRITE_AS_TOAST</string>
+
     <string name="prefscreen_twitter">Twitter</string>
     <string name="prefscreen_twitter_summary">Twitterアクセスの設定を変更します</string>
     <string name="prefscreen_twitter_api_key">APIキー</string>
@@ -57,4 +59,7 @@
 
     <string name="prefscreen_general">一般</string>
     <string name="prefscreen_general_summary">汎用的な設定を変更します</string>
+    <string name="prefscreen_general_behavior">動作</string>
+    <string name="prefscreen_general_behavior_write_as_toast">UserStream・Write操作の結果をToastで表示</string>
+
 </resources>

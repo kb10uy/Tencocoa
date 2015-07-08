@@ -29,8 +29,8 @@ android {
         applicationId "org.kb10uy.tencocoa"
         minSdkVersion 17
         targetSdkVersion 21
-        versionCode 12
-        versionName "0.2.2 (build 12, Kbtter7.0.2.2, Dragonforce)"
+        versionCode 14
+        versionName "0.2.4 (build 14, Kbtter7.0.2.4, Dragonforce)"
     }
     buildTypes {
         release {

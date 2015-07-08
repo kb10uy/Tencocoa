@@ -116,6 +116,8 @@ public class HomeTimeLineFragment extends Fragment implements HomeTimeLineLister
     private View generateStatusView(View targetView, TencocoaStatus status) {
         Status sourceStatus = status.getShowingStatus();
         User user = sourceStatus.getUser();
+        View itemLayout = targetView.findViewById(R.id.StatusItemLayout);
+        View privateMark = targetView.findViewById(R.id.StatusItemUserPrivateMark);
 
         ((TextView) targetView.findViewById(R.id.StatusItemUserName)).setText(user.getName());
         ((TextView) targetView.findViewById(R.id.StatusItemUserScreenName)).setText(user.getScreenName());
@@ -130,7 +132,7 @@ public class HomeTimeLineFragment extends Fragment implements HomeTimeLineLister
             targetView.findViewById(R.id.StatusItemFavorited).setVisibility(View.GONE);
         }
         if (status.isRetweet()) {
-            (targetView.findViewById(R.id.StatusItemLayout)).setBackgroundResource(mRewteetBackgroundValue.resourceId);
+            itemLayout.setBackgroundResource(mRewteetBackgroundValue.resourceId);
             (targetView.findViewById(R.id.StatusItemFavRtCounts)).setVisibility(View.VISIBLE);
             ((TextView) targetView.findViewById(R.id.StatusItemFavoriteCount)).setText(TencocoaHelper.getCompressedNumberString(sourceStatus.getFavoriteCount()));
             ((TextView) targetView.findViewById(R.id.StatusItemRetweetCount)).setText(TencocoaHelper.getCompressedNumberString(sourceStatus.getRetweetCount()));
@@ -140,9 +142,15 @@ public class HomeTimeLineFragment extends Fragment implements HomeTimeLineLister
             Glide.with(getActivity()).load(retweeter.getMiniProfileImageURLHttps()).into(((ImageView) targetView.findViewById(R.id.StatusItemRetweetedUserProfile)));
             ((TextView) targetView.findViewById(R.id.StatusItemRetweetedUserName)).setText(retweeter.getName());
         } else {
-            (targetView.findViewById(R.id.StatusItemLayout)).setBackgroundResource(R.color.tencocoa_color_transparent);
+            itemLayout.setBackgroundResource(R.color.tencocoa_color_transparent);
             (targetView.findViewById(R.id.StatusItemFavRtCounts)).setVisibility(View.GONE);
             (targetView.findViewById(R.id.StatusItemRetweeterFrame)).setVisibility(View.GONE);
+        }
+
+        if(user.isProtected()) {
+            privateMark.setVisibility(View.VISIBLE);
+        } else {
+            privateMark.setVisibility(View.GONE);
         }
         return targetView;
     }

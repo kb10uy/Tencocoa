@@ -7,6 +7,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">設定</string>
     <string name="accounts_file_name">TwitterAccounts.dat</string>
+    <string name="mark_key">[private]</string>
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -67,6 +68,8 @@
     <string name="text_activity_accounts_list_failed">認証に失敗しました。\n時計が合っていないか、AppにCallbackが設定されていないもしれません。</string>
 
     <!-- Notification テンプレート -->
+    <string name="notification_network_unavailable">ネットワークを利用できません。</string>
+
     <string name="notification_streaming_userstream_started_ticker">UserStream開始</string>
     <string name="notification_streaming_userstream_started_text">UserStreamに接続されました。</string>
     <string name="notification_streaming_userstream_finished_ticker">UserStream終了</string>

@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
@@ -22,6 +24,7 @@ import android.view.MenuItem;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -57,6 +60,8 @@ public class MainActivity
     private User currentUser;
     private boolean initialized = false;
     private SharedPreferences pref;
+    private ConnectivityManager mConnectivityManager;
+    private NetworkInfo mCurrentNetworkInfo;
 
     private DrawerLayout mDrawerLayout;
     private FrameLayout mFrameLayout;
@@ -114,6 +119,8 @@ public class MainActivity
     @Override
     protected void onStart() {
         super.onStart();
+        mConnectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+
         bindTencocoaServices();
         initializeTwitter();
     }
@@ -137,6 +144,7 @@ public class MainActivity
     protected void onResume() {
         super.onResume();
         checkTwitterUserExists();
+        mCurrentNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
         //bindTencocoaServices();
     }
 
@@ -322,6 +330,10 @@ public class MainActivity
     }
 
     private void startUserStream(TwitterAccountInformation info) {
+        if (mCurrentNetworkInfo == null || !(mCurrentNetworkInfo.isConnected())) {
+            showToast(getString(R.string.notification_network_unavailable));
+            return;
+        }
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
@@ -572,5 +584,13 @@ public class MainActivity
             }
         };
         task.execute();
+    }
+
+    private void showBehaviorNotification(String title, String description) {
+
+    }
+
+    private void showToast(String text) {
+        Toast.makeText(ctx, text, Toast.LENGTH_SHORT);
     }
 }
