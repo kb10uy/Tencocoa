@@ -8,6 +8,8 @@
     <string name="preference_twitter_access_token_secret">TWITTER_ACCESS_TOKEN_SECRET</string>
     <string name="preference_twitter_consumer_set">TWITTER_CONSUMER_SET</string>
     <string name="preference_twitter_consumer_is_default">TWITTER_CONSUMER_IS_DEFAULT</string>
+    <string name="preference_twitter_request_token">TWITTER_REQUEST_TOKEN</string>
+    <string name="preference_twitter_request_token_secret">TWITTER_REQUEST_TOKEN_SECRET</string>
 
     <string name="preference_twitter_default_consumer_key">Ipgm4AzfYJrBn4jVsBUrn9040</string>
     <string name="preference_twitter_default_consumer_secret">lvblXIFQSnxnzxUvxBz48VMDNolFbPE09iiQ1Iqb88Az9CWtCH</string>
@@ -19,6 +21,8 @@
     <string name="preference_login_auto_login_enabled">LOGIN_AUTO_LOGIN_ENABLED</string>
 
     <string name="preference_appearance_theme">APPEARANCE_THEME</string>
+
+    <string name="preference_general_behavior_write_as_toast">GENERAL_BEHAVIOR_WRITE_AS_TOAST</string>
 
     <string name="prefscreen_twitter">Twitter</string>
     <string name="prefscreen_twitter_summary">Twitterアクセスの設定を変更します</string>
@@ -55,4 +59,7 @@
 
     <string name="prefscreen_general">一般</string>
     <string name="prefscreen_general_summary">汎用的な設定を変更します</string>
+    <string name="prefscreen_general_behavior">動作</string>
+    <string name="prefscreen_general_behavior_write_as_toast">UserStream・Write操作の結果をToastで表示</string>
+
 </resources>

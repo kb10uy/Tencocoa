@@ -58,6 +58,17 @@
                     android:text="ScreenName"
                     android:textAppearance="@style/TencocoaTextAppearanceScreenName"
                     android:textSize="14dp" />
+
+                <TextView
+                    android:id="@+id/StatusDetailTextViewPrivateMark"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/mark_key"
+                    android:textAppearance="@style/TencocoaTextAppearanceScreenName"
+                    android:textColor="@color/tencocoa_color_private_mark"
+                    android:visibility="gone" />
             </LinearLayout>
         </LinearLayout>
 
@@ -88,6 +99,15 @@
         android:orientation="horizontal">
 
         <ToggleButton
+            android:id="@+id/StatusDetailButtonReply"
+            style="?attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textOff="@string/label_dialog_status_detail_reply"
+            android:textOn="@string/label_dialog_status_detail_reply" />
+
+        <ToggleButton
             android:id="@+id/StatusDetailButtonFav"
             style="?attr/buttonBarButtonStyle"
             android:layout_width="0dp"
@@ -106,6 +126,15 @@
             android:background="@drawable/gradient_fav2rt"
             android:text="@string/label_dialog_status_detail_favrt" />
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/StatusDetailButtonBarExtra"
+        style="?attr/buttonBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
         <Button
             android:id="@+id/StatusDetailButtonRetweet"
             style="?attr/buttonBarButtonStyle"
@@ -116,12 +145,19 @@
             android:text="@string/label_dialog_status_detail_rt" />
 
         <Button
+            android:id="@+id/StatusDetailButtonReplyBlank"
+            style="?attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/label_dialog_status_detail_reply_blank" />
+
+        <Button
             android:id="@+id/StatusDetailButtonOthers"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@color/tencocoa_color_overlay_retweet"
             android:text="@string/label_dialog_status_detail_others" />
     </LinearLayout>
 </LinearLayout>

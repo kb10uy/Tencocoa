@@ -1,33 +1,60 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="320dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="320dp"
     android:layout_height="match_parent"
-    tools:context="org.kb10uy.tencocoa.NewStatusDialogFragment"
     android:background="?attr/colorWhite"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context="org.kb10uy.tencocoa.NewStatusDialogFragment">
 
     <TextView
+        android:id="@+id/NewStatusDialogFragmentTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_margin="4dp"
         android:text="@string/label_dialog_new_status_title"
-        android:layout_margin="4dp"/>
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <LinearLayout
+        android:id="@+id/NewStatusDialogFragmentReply"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/NewStatusDialogFragmentReplyUserName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="4dp"
+            android:text="ユーザー名"
+            android:textAppearance="@style/TencocoaTextAppearanceSmall" />
+
+        <TextView
+            android:id="@+id/NewStatusDialogFragmentReplyText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="本文"
+            android:textAppearance="@style/TencocoaTextAppearanceSmall" />
+    </LinearLayout>
 
     <EditText
+        android:id="@+id/NewStatusDialogFragmentStatusText"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_margin="4dp"
-        android:inputType="textMultiLine"
-        android:gravity="top"
         android:ems="10"
-        android:id="@+id/NewStatusDialogFragmentEditTextStatusText"/>
+        android:gravity="top"
+        android:inputType="textMultiLine" />
 
     <Button
+        android:id="@+id/NewStatusDialogFragmentButtonUpdateStatus"
         android:layout_width="160dp"
         android:layout_height="wrap_content"
-        android:text="@string/label_dialog_new_status_update"
-        android:id="@+id/NewStatusDialogFragmentButtonUpdateStatus"
         android:layout_gravity="right"
-        android:layout_margin="4dp"/>
+        android:layout_margin="4dp"
+        android:text="@string/label_dialog_new_status_update" />
 
 
 </LinearLayout>

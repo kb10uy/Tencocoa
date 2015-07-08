@@ -18,6 +18,7 @@ import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.User;
 import twitter4j.auth.AccessToken;
+import twitter4j.auth.RequestToken;
 
 
 public class TencocoaReadPermissionService extends Service {
@@ -28,6 +29,7 @@ public class TencocoaReadPermissionService extends Service {
     private Twitter mTwitter;
     private NotificationManager mNotificationManager;
     private TencocoaReadPermissionServiceBinder mBinder = new TencocoaReadPermissionServiceBinder();
+    private RequestToken storedToken;
 
     @Override
     public void onCreate() {
@@ -81,6 +83,14 @@ public class TencocoaReadPermissionService extends Service {
             Log.d(getString(R.string.app_name), te.getErrorMessage());
         }
         return null;
+    }
+
+    public void storeOAuthRequestToken(RequestToken token) {
+        storedToken = token;
+    }
+
+    public RequestToken recallOAuthRequestToken() {
+        return storedToken;
     }
 
     public class TencocoaReadPermissionServiceBinder extends Binder {
