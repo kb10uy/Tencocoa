@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
@@ -28,6 +29,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
+import org.kb10uy.tencocoa.model.DoubleTapHelper;
 import org.kb10uy.tencocoa.model.TencocoaHelper;
 import org.kb10uy.tencocoa.model.TencocoaRequestCodes;
 import org.kb10uy.tencocoa.model.TencocoaStatus;
@@ -79,6 +81,7 @@ public class MainActivity
     private ServiceConnection mStreamingConnection, mWritePermissionConnection, mReadPermissionConnection;
     private TencocoaUserStreamLister mUserStreamListener;
     private CountDownLatch mServiceLatch;
+    private DoubleTapHelper mBackDoubleTapHelper;
     private boolean mStreamingBound, mWritePermissionBound, mReadPermissionBound;
     private boolean mIsRestoring, mAutoConnectTried,
             mHasShownFirstAccountActivity;
@@ -110,7 +113,10 @@ public class MainActivity
         mDirectMessageFragment = DirectMessageFragment.newInstance();
         mSearchFragment = SearchFragment.newInstance();
         mUserStreamListener = new TencocoaUserStreamLister(mHomeTimeLineFragment);
+
         ctx = this;
+        mBackDoubleTapHelper = new DoubleTapHelper(ctx, getString(R.string.notification_double_tap_to_exit), 1000, 500);
+
         startTencocoaServices();
         createServiceConnections();
         initializeFragments();
@@ -228,6 +234,19 @@ public class MainActivity
         }
 
         return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_BACK:
+                boolean fin = mBackDoubleTapHelper.onTap();
+                if (fin) {
+                    finish();
+                }
+                return fin;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     private void checkTheme() {
