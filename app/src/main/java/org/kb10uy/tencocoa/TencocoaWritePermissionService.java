@@ -51,7 +51,7 @@ public class TencocoaWritePermissionService extends Service {
 
     private void showNotification(String tickerString, String descriptionText) {
         if (showNotificationsAsToast) {
-            Toast.makeText(getApplicationContext(), descriptionText, Toast.LENGTH_SHORT);
+            Toast.makeText(getApplicationContext(), descriptionText, Toast.LENGTH_SHORT).show();
         } else {
             Notification.Builder builder = new Notification.Builder(getApplicationContext())
                     .setSmallIcon(R.drawable.tencocoa_notify)

@@ -591,6 +591,6 @@ public class MainActivity
     }
 
     private void showToast(String text) {
-        Toast.makeText(ctx, text, Toast.LENGTH_SHORT);
+        Toast.makeText(ctx, text, Toast.LENGTH_SHORT).show();
     }
 }
