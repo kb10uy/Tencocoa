@@ -9,7 +9,9 @@ import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
@@ -36,6 +38,7 @@ import org.kb10uy.tencocoa.model.TencocoaStatus;
 import org.kb10uy.tencocoa.model.TencocoaStatusCache;
 import org.kb10uy.tencocoa.model.TencocoaUserStreamLister;
 import org.kb10uy.tencocoa.model.TwitterAccountInformation;
+import org.kb10uy.tencocoa.model.TwitterAccountInformationReceiver;
 import org.kb10uy.tencocoa.settings.FirstSettingActivity;
 import org.kb10uy.tencocoa.settings.SettingsActivity;
 
@@ -56,7 +59,8 @@ public class MainActivity
         implements MainDrawerFragment.OnDrawerFragmentInteractionListener,
         NewStatusDialogFragment.NewStatusDialogFragmentInteractionListener,
         HomeTimeLineFragment.HomeTimeLineFragmentInteractionListener,
-        StatusDetailDialogFragment.StatusDetailInteractionListener {
+        StatusDetailDialogFragment.StatusDetailInteractionListener,
+        TwitterAccountInformationReceiver {
 
     private Twitter mTwitter;
     private User currentUser;
@@ -112,7 +116,7 @@ public class MainActivity
         mUserInformationFragment = UserInformationFragment.newInstance();
         mDirectMessageFragment = DirectMessageFragment.newInstance();
         mSearchFragment = SearchFragment.newInstance();
-        mUserStreamListener = new TencocoaUserStreamLister(mHomeTimeLineFragment);
+        mUserStreamListener = new TencocoaUserStreamLister(mHomeTimeLineFragment, this);
 
         ctx = this;
         mBackDoubleTapHelper = new DoubleTapHelper(ctx, getString(R.string.notification_double_tap_to_exit), 1000, 500);
@@ -611,5 +615,18 @@ public class MainActivity
 
     private void showToast(String text) {
         Toast.makeText(ctx, text, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onTwitterAccountInformationReceived(User info) {
+        new Handler(Looper.getMainLooper()).post(() -> {
+            currentUser = info;
+            updateUserInformation(info);
+        });
+    }
+
+    @Override
+    public long getTargetAccountId() {
+        return currentUser.getId();
     }
 }

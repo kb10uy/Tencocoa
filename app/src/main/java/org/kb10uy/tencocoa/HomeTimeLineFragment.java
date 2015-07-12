@@ -35,8 +35,6 @@ public class HomeTimeLineFragment extends Fragment implements HomeTimeLineLister
     private ListView mListView;
     private Handler mHandler;
     private GeneralReverseListAdapter<TencocoaStatus> mTimeLineAdapter;
-    //private TencocoaStreamingService mStreamingService;
-    private ArrayList<TencocoaStatus> statuses = new ArrayList<>();
     //private Pattern mViaPattern = Pattern.compile("<a href=\"(.+)\" rel=\"nofollow\">(.+)</a>");
     private TypedValue mRewteetBackgroundValue = new TypedValue();
     private Context ctx;
@@ -73,7 +71,6 @@ public class HomeTimeLineFragment extends Fragment implements HomeTimeLineLister
 
     private void initializeAdapter() {
         mTimeLineAdapter = new GeneralReverseListAdapter<>(getActivity(), R.layout.item_status, this::generateStatusView);
-        mTimeLineAdapter.setList(statuses);
     }
 
     @Override
@@ -121,7 +118,7 @@ public class HomeTimeLineFragment extends Fragment implements HomeTimeLineLister
 
         ((TextView) targetView.findViewById(R.id.StatusItemUserName)).setText(user.getName());
         ((TextView) targetView.findViewById(R.id.StatusItemUserScreenName)).setText(user.getScreenName());
-        ((TextView) targetView.findViewById(R.id.StatusItemStatusText)).setText(sourceStatus.getText());
+        ((TextView) targetView.findViewById(R.id.StatusItemStatusText)).setText(status.getReplacedText());
         ((TextView) targetView.findViewById(R.id.StatusItemCreatedAt)).setText(TencocoaHelper.getRelativeTimeString(sourceStatus.getCreatedAt()));
         //Matcher matcher = mViaPattern.matcher(sourceStatus.getSource());
         //if (matcher.find()) ((TextView) targetView.findViewById(R.id.StatusItemVia)).setText(matcher.group(2));
@@ -147,7 +144,7 @@ public class HomeTimeLineFragment extends Fragment implements HomeTimeLineLister
             (targetView.findViewById(R.id.StatusItemRetweeterFrame)).setVisibility(View.GONE);
         }
 
-        if(user.isProtected()) {
+        if (user.isProtected()) {
             privateMark.setVisibility(View.VISIBLE);
         } else {
             privateMark.setVisibility(View.GONE);
@@ -164,15 +161,12 @@ public class HomeTimeLineFragment extends Fragment implements HomeTimeLineLister
             tstatus.favorite();
         }
         realm.close();
-        synchronized(statuses) {
-            statuses.add(tstatus);
-            mHandler.post(mTimeLineAdapter::notifyDataSetChanged);
-        }
+        mHandler.post(() -> mTimeLineAdapter.add(tstatus));
     }
 
     @Override
     public void onFavorite(Status status) {
-        for (TencocoaStatus ts : statuses) {
+        for (TencocoaStatus ts : mTimeLineAdapter.getList()) {
             if (ts.getShowingStatus().getId() == status.getId()) {
                 updateFavoriteStatus(ts, true);
             }
@@ -182,7 +176,7 @@ public class HomeTimeLineFragment extends Fragment implements HomeTimeLineLister
 
     @Override
     public void onUnfavorite(Status status) {
-        for (TencocoaStatus ts : statuses) {
+        for (TencocoaStatus ts : mTimeLineAdapter.getList()) {
             if (ts.getShowingStatus().getId() == status.getId()) {
                 updateFavoriteStatus(ts, false);
             }
@@ -208,10 +202,10 @@ public class HomeTimeLineFragment extends Fragment implements HomeTimeLineLister
         }
     }
 
-    public interface HomeTimeLineFragmentInteractionListener {
-        //public void onFragmentInteraction(Uri uri);
-        //public TencocoaStreamingService getStreamingService();
-        void showStatusDetail(TencocoaStatus status);
-    }
+public interface HomeTimeLineFragmentInteractionListener {
+    //public void onFragmentInteraction(Uri uri);
+    //public TencocoaStreamingService getStreamingService();
+    void showStatusDetail(TencocoaStatus status);
+}
 
 }

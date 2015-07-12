@@ -40,7 +40,6 @@ public class AccountsListActivity extends AppCompatActivity {
     RequestToken mRequestToken;
 
     ListView mListView;
-    ArrayList<TwitterAccountInformation> accounts;
     GeneralListAdapter<TwitterAccountInformation> accountsAdapter;
     Intent resultIntent = new Intent();
     SharedPreferences pref;
@@ -90,7 +89,7 @@ public class AccountsListActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable("accounts", accounts);
+        outState.putSerializable("accounts", new ArrayList<>(accountsAdapter.getList()));
     }
 
     @Override
@@ -167,7 +166,7 @@ public class AccountsListActivity extends AppCompatActivity {
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        accounts = (ArrayList<TwitterAccountInformation>) savedInstanceState.getSerializable("accounts");
+        ArrayList<TwitterAccountInformation> accounts = (ArrayList<TwitterAccountInformation>) savedInstanceState.getSerializable("accounts");
         accountsAdapter.setList(accounts);
     }
 
@@ -203,11 +202,10 @@ public class AccountsListActivity extends AppCompatActivity {
 
     private void initialize() {
         loadAccounts();
-        if (accounts == null) {
-            accounts = new ArrayList<>();
+        if (accountsAdapter.getList() == null) {
+            accountsAdapter.setList(new ArrayList<>());
             saveAccounts();
         }
-        accountsAdapter.setList(accounts);
         accountsAdapter.notifyDataSetChanged();
     }
 
@@ -216,8 +214,7 @@ public class AccountsListActivity extends AppCompatActivity {
         final TwitterAccountInformation info = new TwitterAccountInformation(accessToken);
         Handler h = new Handler();
         h.post(() -> {
-            accounts.add(info);
-            accountsAdapter.notifyDataSetChanged();
+            accountsAdapter.add(info);
             saveAccounts();
         });
     }
@@ -225,11 +222,11 @@ public class AccountsListActivity extends AppCompatActivity {
     private void saveAccounts() {
         try {
             FileOutputStream acfile = openFileOutput(getString(R.string.accounts_file_name), MODE_PRIVATE);
-            TencocoaHelper.serializeObjectToFile(accounts, acfile);
+            TencocoaHelper.serializeObjectToFile(new ArrayList<>(accountsAdapter.getList()), acfile);
 
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
             SharedPreferences.Editor edit = pref.edit();
-            edit.putInt(getString(R.string.preference_twitter_accounts_count), accounts.size());
+            edit.putInt(getString(R.string.preference_twitter_accounts_count), accountsAdapter.getCount());
             edit.apply();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -239,14 +236,15 @@ public class AccountsListActivity extends AppCompatActivity {
     private void loadAccounts() {
         try {
             FileInputStream acfile = openFileInput(getString(R.string.accounts_file_name));
-            accounts = TencocoaHelper.deserializeObjectFromFile(acfile);
+            ArrayList<TwitterAccountInformation> accounts = TencocoaHelper.deserializeObjectFromFile(acfile);
+            accountsAdapter.setList(accounts);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
 
     private void onAccountSelected(int position) {
-        resultIntent.putExtra("Information", accounts.get(position));
+        resultIntent.putExtra("Information", (TwitterAccountInformation) accountsAdapter.getItem(position));
         setResult(RESULT_OK, resultIntent);
         finish();
     }
