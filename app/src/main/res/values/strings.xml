@@ -69,6 +69,7 @@
 
     <!-- Notification テンプレート -->
     <string name="notification_network_unavailable">ネットワークを利用できません。</string>
+    <string name="notification_double_tap_to_exit">ダブルタップで終了します</string>
 
     <string name="notification_streaming_userstream_started_ticker">UserStream開始</string>
     <string name="notification_streaming_userstream_started_text">UserStreamに接続されました。</string>

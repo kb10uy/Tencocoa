@@ -97,6 +97,7 @@ public class TencocoaStatus implements Serializable {
             info.setThumbnailImageUri(Uri.parse(mediaURLHttps + ":thumb"));
             info.setFullImageUri(Uri.parse(mediaURLHttps + ":orig"));
             medias.add(info);
+            replacedText = replacedText.replace(e.getURL(), e.getDisplayURL());
         }
     }
 }

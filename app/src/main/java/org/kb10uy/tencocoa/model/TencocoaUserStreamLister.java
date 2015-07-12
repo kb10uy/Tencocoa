@@ -11,9 +11,12 @@ import twitter4j.UserStreamListener;
 public class TencocoaUserStreamLister implements UserStreamListener {
 
     HomeTimeLineLister mHomeTimeLineLister;
+    TwitterAccountInformationReceiver mSelfInfoReceiver;
+    long targetId;
 
-    public TencocoaUserStreamLister(HomeTimeLineLister htl) {
+    public TencocoaUserStreamLister(HomeTimeLineLister htl, TwitterAccountInformationReceiver selfInfoReceiver) {
         mHomeTimeLineLister = htl;
+        mSelfInfoReceiver = selfInfoReceiver;
     }
 
     @Override
@@ -113,6 +116,9 @@ public class TencocoaUserStreamLister implements UserStreamListener {
 
     @Override
     public void onStatus(Status status) {
+        if (targetId == 0) targetId = mSelfInfoReceiver.getTargetAccountId();
+        if (status.getUser().getId() == targetId)
+            mSelfInfoReceiver.onTwitterAccountInformationReceived(status.getUser());
         mHomeTimeLineLister.onHomeTimeLineStatus(status);
     }
 
