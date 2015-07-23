@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="prefscreen_twitter">Twitter</string>
+    <string name="prefscreen_twitter_summary">Change about Twitter access.</string>
+    <string name="prefscreen_twitter_api_key">API Keys</string>
+    <string name="prefscreen_twitter_api_key_ck">Consumer Key</string>
+    <string name="prefscreen_twitter_api_key_cs">Consumer Secret</string>
+
+    <string name="prefscreen_twitter_account">Accounts</string>
+    <string name="prefscreen_twitter_account_delete">Remove all account information</string>
+    <string name="prefscreen_twitter_account_delete_summary">Do this when you changed API keys.</string>
+    <string name="prefscreen_twitter_account_delete_success">Deleted successfully.</string>
+
+    <string name="prefscreen_appearance">Appearance</string>
+    <string name="prefscreen_appearance_summary">Change about appearance of Tencocoa.</string>
+    <string name="prefscreen_appearance_theme">Theme</string>
+    <string name="prefscreen_appearance_theme_summary">Change AppTheme(require relaunch).</string>
+    <string-array name="prefscreen_appearance_theme_value_list">
+        <item>Black</item>
+        <item>White</item>
+        <item>Hinanawi</item>
+        <item>Hoto</item>
+        <item>Komichi</item>
+        <item>Witch</item>
+    </string-array>
+
+    <string-array name="prefscreen_appearance_theme_list">
+        <item>Black</item>
+        <item>White</item>
+        <item>Hinanawi (Scarlet Weather Rhapsody)</item>
+        <item>Hoto (Is the order a rabbit?)</item>
+        <item>Komichi (Kin-iro mosaic)</item>
+        <item>Witch (Puyopuyo)</item>
+    </string-array>
+
+    <string name="prefscreen_general">General</string>
+    <string name="prefscreen_general_summary">Change general settings.</string>
+    <string name="prefscreen_general_behavior">Behavior</string>
+    <string name="prefscreen_general_behavior_write_as_toast">Show the result of UserStream/Write action by Toast</string>
+
+</resources>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="general_open">開く</string>
+    <string name="general_close">閉じる</string>
+
+    <string name="action_settings">設定</string>
+    <string name="title_activity_settings">設定</string>
+
+    <string name="title_activity_first_setting">初回起動時の設定</string>
+    <string name="text_activity_first_setting">
+        Tencocoaでは、基本的にユーザーがそれぞれTwitterのAPIキーを取得し、それを設定することが推奨されています。 \n
+        特別な事情がない限り、APIキーは手動で設定してください。 \n
+        その際、Twitter Appの設定でCallback URLを必ず指定してください。\n
+        デフォルトのAPIキーを使用することも出来ますが、一部の操作に制限が生じます(キーの変更は後からでも出来ます)。
+    </string>
+
+    <string name="label_activity_first_setting_consumer_ok">このCK/CSを使用する</string>
+    <string name="label_activity_first_setting_consumer_use_default">デフォルトを使用する</string>
+
+    <string name="title_dialog_default_keys">
+        本当にデフォルトのキーを使用してよろしいですか?\n
+        後からでも変更できますがすでに持っているなら予め設定しておいたほうが便利です。
+    </string>
+
+    <string name="label_dialog_default_keys_ok">いいよ</string>
+    <string name="label_dialog_default_keys_cancel">やっぱやめた</string>
+    <string name="toast_activity_first_setting_consumer_empty">CK/CSが空です。</string>
+
+    <string-array name="label_drawer_main_list">
+        <item>ホーム</item>
+        <item>通知</item>
+        <item>ユーザー</item>
+        <item>DM</item>
+        <item>検索</item>
+    </string-array>
+
+    <string name="label_activity_main_tweets">ツイート</string>
+    <string name="label_activity_main_favorites">ふぁぼ</string>
+    <string name="label_activity_main_friends">フォロー</string>
+    <string name="label_activity_main_followers">フォロワー</string>
+
+    <string name="label_item_status_retweeted_by">Retweeted by</string>
+
+    <string name="label_dialog_new_status_title">新しいツイート</string>
+    <string name="label_dialog_new_status_reply">返信</string>
+    <string name="label_dialog_new_status_update">ツイート</string>
+
+    <string name="label_dialog_status_detail_fav">ふぁぼ</string>
+    <string name="label_dialog_status_detail_unfav">あんふぁぼ</string>
+    <string name="label_dialog_status_detail_rt">RT</string>
+    <string name="label_dialog_status_detail_favrt">ふぁぼRT</string>
+    <string name="label_dialog_status_detail_others">その他</string>
+    <string name="label_dialog_status_detail_reply">返信</string>
+    <string name="label_dialog_status_detail_reply_blank">空リプ</string>
+    <string name="label_dialog_status_detail_back">戻る</string>
+
+    <string name="title_activity_accounts_list">アカウント</string>
+    <string name="label_activity_accounts_list_new_account">新しいアカウント</string>
+    <string name="text_activity_accounts_list_success">認証に成功しました。</string>
+    <string name="text_activity_accounts_list_failed">認証に失敗しました。\n時計が合っていないか、AppにCallbackが設定されていないもしれません。</string>
+
+    <!-- Notification テンプレート -->
+    <string name="notification_network_unavailable">ネットワークを利用できません。</string>
+    <string name="notification_double_tap_to_exit">ダブルタップで終了します</string>
+
+    <string name="notification_streaming_userstream_started_ticker">UserStream開始</string>
+    <string name="notification_streaming_userstream_started_text">UserStreamに接続されました。</string>
+    <string name="notification_streaming_userstream_finished_ticker">UserStream終了</string>
+    <string name="notification_streaming_userstream_finished_text">UserStreamから切断しました。</string>
+
+    <string name="notification_update_status_success">ツイートに成功しました。</string>
+    <string name="notification_update_status_fail">ツイートに失敗しました。: </string>
+    <string name="notification_favorite_status_success">お気に入りに成功しました。</string>
+    <string name="notification_favorite_status_fail">お気に入りに失敗しました。: </string>
+    <string name="notification_retweet_status_success">リツイートに成功しました。</string>
+    <string name="notification_retweet_status_fail">リツイートに失敗しました。: </string>
+</resources>
