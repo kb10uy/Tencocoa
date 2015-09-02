@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="prefscreen_twitter">Twitter</string>
+    <string name="prefscreen_twitter_summary">Twitterアクセスの設定を変更します</string>
+    <string name="prefscreen_twitter_api_key">APIキー</string>
+    <string name="prefscreen_twitter_api_key_ck">Consumer Key</string>
+    <string name="prefscreen_twitter_api_key_cs">Consumer Secret</string>
+
+    <string name="prefscreen_twitter_account">アカウント</string>
+    <string name="prefscreen_twitter_account_delete">アカウント情報を削除</string>
+    <string name="prefscreen_twitter_account_delete_summary">Consumer Key/Secretを書き換えた場合などに実行してください</string>
+    <string name="prefscreen_twitter_account_delete_success">削除しました。</string>
+
+    <string name="prefscreen_appearance">外観</string>
+    <string name="prefscreen_appearance_summary">見た目の設定を変更します</string>
+    <string name="prefscreen_appearance_theme">テーマ</string>
+    <string name="prefscreen_appearance_theme_summary">テーマを変更します(反映には再起動が必要です)</string>
+    <string-array name="prefscreen_appearance_theme_value_list">
+        <item>Black</item>
+        <item>White</item>
+        <item>Hinanawi</item>
+        <item>Hoto</item>
+        <item>Komichi</item>
+        <item>Witch</item>
+    </string-array>
+
+    <string-array name="prefscreen_appearance_theme_list">
+        <item>黒</item>
+        <item>白</item>
+        <item>比那名居</item>
+        <item>保登</item>
+        <item>小路</item>
+        <item>ウィッチ</item>
+    </string-array>
+
+    <string name="prefscreen_general">一般</string>
+    <string name="prefscreen_general_summary">汎用的な設定を変更します</string>
+    <string name="prefscreen_general_behavior">動作</string>
+    <string name="prefscreen_general_behavior_write_as_toast">UserStream・Write操作の結果をToastで表示</string>
+
+</resources>
