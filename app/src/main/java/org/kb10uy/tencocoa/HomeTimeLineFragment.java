@@ -18,7 +18,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import org.kb10uy.tencocoa.adapters.GeneralReverseListAdapter;
-import org.kb10uy.tencocoa.model.HomeTimeLineLister;
 import org.kb10uy.tencocoa.model.TencocoaDatabaseHelper;
 import org.kb10uy.tencocoa.model.TencocoaHelper;
 import org.kb10uy.tencocoa.model.TencocoaStatus;
@@ -31,7 +30,7 @@ import io.realm.Realm;
 import twitter4j.Status;
 import twitter4j.User;
 
-public class HomeTimeLineFragment extends Fragment implements HomeTimeLineLister {
+public class HomeTimeLineFragment extends Fragment {
 
     private HomeTimeLineFragmentInteractionListener mListener;
     private ListView mListView;
@@ -159,8 +158,6 @@ public class HomeTimeLineFragment extends Fragment implements HomeTimeLineLister
         return targetView;
     }
 
-
-    @Override
     public void onHomeTimeLineStatus(Status status) {
         TencocoaStatus tstatus = new TencocoaStatus(status);
         Realm realm = Realm.getInstance(ctx);
@@ -171,7 +168,6 @@ public class HomeTimeLineFragment extends Fragment implements HomeTimeLineLister
         mHandler.post(() -> mTimeLineAdapter.add(tstatus));
     }
 
-    @Override
     public void onFavorite(Status status) {
         for (TencocoaStatus ts : mTimeLineAdapter.getList()) {
             if (ts.getShowingStatus().getId() == status.getId()) {
@@ -181,7 +177,6 @@ public class HomeTimeLineFragment extends Fragment implements HomeTimeLineLister
         mHandler.post(mTimeLineAdapter::notifyDataSetChanged);
     }
 
-    @Override
     public void onUnfavorite(Status status) {
         for (TencocoaStatus ts : mTimeLineAdapter.getList()) {
             if (ts.getShowingStatus().getId() == status.getId()) {
@@ -207,6 +202,10 @@ public class HomeTimeLineFragment extends Fragment implements HomeTimeLineLister
         } else {
             status.unfavorite();
         }
+    }
+
+    public void clearStatuses() {
+        mTimeLineAdapter.clear();
     }
 
     public interface HomeTimeLineFragmentInteractionListener {

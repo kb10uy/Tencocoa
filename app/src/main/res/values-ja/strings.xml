@@ -76,4 +76,9 @@
     <string name="notification_unfavorite_status_fail">お気に入り解除に失敗しました。: </string>
     <string name="notification_retweet_status_success">リツイートに成功しました。</string>
     <string name="notification_retweet_status_fail">リツイートに失敗しました。: </string>
+
+    <string name="headline_favorited">%1$sさんにふぁぼられました: %2$s</string>
+    <string name="headline_unfavorited">%1$sさんにあんふぁぼられました: %2$s</string>
+    <string name="headline_followed">%1$s(@%2$s)さんにフォローされました</string>
+    <string name="headline_unfollowed">%1$s(@%2$s)さんにリムられました</string>
 </resources>

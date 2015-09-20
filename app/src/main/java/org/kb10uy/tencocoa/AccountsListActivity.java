@@ -133,7 +133,7 @@ public class AccountsListActivity extends AppCompatActivity {
                         .apply();
             }
         };
-        task.execute(verifier);
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, verifier);
     }
 
     @Override
@@ -196,7 +196,7 @@ public class AccountsListActivity extends AppCompatActivity {
                 }
             }
         };
-        task.execute();
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
     }
 

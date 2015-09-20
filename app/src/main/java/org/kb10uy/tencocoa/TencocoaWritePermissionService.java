@@ -96,7 +96,7 @@ public class TencocoaWritePermissionService extends Service {
                 }
             }
         };
-        task.execute(statusText);
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, statusText);
     }
 
     public void updateStatus(StatusUpdate status) {
@@ -126,7 +126,7 @@ public class TencocoaWritePermissionService extends Service {
                 }
             }
         };
-        task.execute(status);
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, status);
     }
 
     public void favoriteStatus(long id) {
@@ -156,7 +156,7 @@ public class TencocoaWritePermissionService extends Service {
                 }
             }
         };
-        task.execute(id);
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,id);
     }
 
     public void unfavoriteStatus(long id) {
@@ -187,7 +187,7 @@ public class TencocoaWritePermissionService extends Service {
                 }
             }
         };
-        task.execute(new Long(id));
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, id);
 
     }
 
@@ -218,7 +218,7 @@ public class TencocoaWritePermissionService extends Service {
                 }
             }
         };
-        task.execute(id);
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, id);
     }
 
     public void favrtStatus(long id) {

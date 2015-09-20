@@ -2,6 +2,7 @@ package org.kb10uy.tencocoa.model;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
@@ -120,5 +121,15 @@ public class TencocoaHelper {
             builder.append("@").append(e.getScreenName()).append(" ");
         }
         return builder.toString();
+    }
+
+    public static void Run(Runnable r) {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                r.run();
+                return null;
+            }
+        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 }
