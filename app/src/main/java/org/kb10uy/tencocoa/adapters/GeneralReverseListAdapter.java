@@ -44,6 +44,12 @@ public class GeneralReverseListAdapter<T> extends BaseAdapter {
 
     public void setList(List<T> l) {
         list = l;
+        notifyDataSetChanged();
+    }
+
+    public void clear() {
+        list.clear();
+        notifyDataSetChanged();
     }
 
     @Override

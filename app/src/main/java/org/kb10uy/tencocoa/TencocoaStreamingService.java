@@ -10,11 +10,14 @@ import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import org.kb10uy.tencocoa.model.TencocoaHelper;
 import org.kb10uy.tencocoa.model.TencocoaUserStreamLister;
 import org.kb10uy.tencocoa.model.TwitterAccountInformation;
 import org.kb10uy.tencocoa.model.TwitterHelper;
+
+import java.util.concurrent.CountDownLatch;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterStream;
@@ -36,6 +39,7 @@ public class TencocoaStreamingService extends Service {
     private TencocoaStreamingServiceBinder mBinder = new TencocoaStreamingServiceBinder();
     private String mConsumerKey, mConsumerSecret;
     private TencocoaUserStreamLister mUserStreamListener;
+    private CountDownLatch mStreamStopperLatch;
     //helper methods
 
 
@@ -60,6 +64,7 @@ public class TencocoaStreamingService extends Service {
         mConsumerKey = pref.getString(getString(R.string.preference_twitter_consumer_key), "");
         mConsumerSecret = pref.getString(getString(R.string.preference_twitter_consumer_secret), "");
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        mStreamStopperLatch = new CountDownLatch(1);
     }
 
     @Override
@@ -92,9 +97,15 @@ public class TencocoaStreamingService extends Service {
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
-                stopCurrentUserStream();
+                Log.i("Tencocoa", "--------------------start streaming!!");
+                if (isUserStreamRunning) {
+                    mUserStream.clearListeners();
+                    TencocoaHelper.Run(mUserStream::shutdown);
+                    Log.i("Tencocoa", "--------------------removed listener");
+                }
+                mUserStreamListener = listener;
                 mUserStream = TwitterHelper.getTwitterStreamInstance(mConsumerKey, mConsumerSecret, currentUser.getAccessToken());
-                mUserStream.addListener(listener);
+                mUserStream.addListener(mUserStreamListener);
                 mUserStream.user();
                 isUserStreamRunning = true;
                 return null;
@@ -103,10 +114,11 @@ public class TencocoaStreamingService extends Service {
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
+                mStreamStopperLatch = new CountDownLatch(1);
                 showNotification(R.string.notification_streaming_userstream_started_ticker, R.string.notification_streaming_userstream_started_text);
             }
         };
-        task.execute();
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public void stopCurrentUserStream() {
@@ -114,19 +126,17 @@ public class TencocoaStreamingService extends Service {
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
-                mUserStream.cleanUp();
+                TencocoaHelper.Run(mUserStream::shutdown);
+                mUserStream.removeListener(mUserStreamListener);
                 return null;
             }
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-                mUserStream = null;
-                isUserStreamRunning = false;
                 showNotification(R.string.notification_streaming_userstream_finished_ticker, R.string.notification_streaming_userstream_finished_text);
             }
         };
-        task.execute();
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public boolean isUserStreamRunning() {

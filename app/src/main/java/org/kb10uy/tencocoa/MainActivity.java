@@ -9,6 +9,7 @@ import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
@@ -17,7 +18,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
-import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -48,10 +49,11 @@ import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 
 import io.realm.Realm;
+import twitter4j.Status;
 import twitter4j.StatusUpdate;
 import twitter4j.Twitter;
-import twitter4j.TwitterException;
 import twitter4j.User;
+import twitter4j.UserStreamAdapter;
 
 
 public class MainActivity
@@ -70,20 +72,22 @@ public class MainActivity
     private NetworkInfo mCurrentNetworkInfo;
 
     private DrawerLayout mDrawerLayout;
-    private FrameLayout mFrameLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private HomeTimeLineFragment mHomeTimeLineFragment;
     private NotificationsFragment mNotificationsFragment;
     private UserInformationFragment mUserInformationFragment;
     private DirectMessageFragment mDirectMessageFragment;
     private SearchFragment mSearchFragment;
+    private ActionBar mActionBar;
     private Context ctx;
+    private Handler mHandler;
 
     private TencocoaStreamingService mStreamingService;
     private TencocoaWritePermissionService mWritePermissionService;
     private TencocoaReadPermissionService mReadPermissionService;
     private ServiceConnection mStreamingConnection, mWritePermissionConnection, mReadPermissionConnection;
     private TencocoaUserStreamLister mUserStreamListener;
+    private UserStreamAdapter mHomeTimelineStreamAdapter, mSelfInfoStreamAdapter, mHeadlineStreamAdapter;
     private CountDownLatch mServiceLatch;
     private DoubleTapHelper mBackDoubleTapHelper;
     private boolean mStreamingBound, mWritePermissionBound, mReadPermissionBound;
@@ -98,7 +102,7 @@ public class MainActivity
         setContentView(R.layout.activity_main);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
-        mFrameLayout = (FrameLayout) findViewById(R.id.MainActivityFragmentFrame);
+        FrameLayout mFrameLayout = (FrameLayout) findViewById(R.id.MainActivityFragmentFrame);
         mDrawerToggle = new ActionBarDrawerToggle(
                 this,
                 mDrawerLayout,
@@ -106,17 +110,12 @@ public class MainActivity
                 R.string.general_close);
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        mActionBar = getSupportActionBar();
+        mActionBar.setDisplayHomeAsUpEnabled(true);
+        mActionBar.setDisplayShowHomeEnabled(true);
+        mHandler = new Handler();
         //getSupportActionBar().setLogo(R.drawable.ic_launcher);
         //getSupportActionBar().setIcon(R.drawable.ic_launcher);
-
-        mHomeTimeLineFragment = new HomeTimeLineFragment();
-        mNotificationsFragment = NotificationsFragment.newInstance();
-        mUserInformationFragment = UserInformationFragment.newInstance();
-        mDirectMessageFragment = DirectMessageFragment.newInstance();
-        mSearchFragment = SearchFragment.newInstance();
-        mUserStreamListener = new TencocoaUserStreamLister(mHomeTimeLineFragment, this);
 
         ctx = this;
         mBackDoubleTapHelper = new DoubleTapHelper(ctx, getString(R.string.notification_double_tap_to_exit), 1000, 500);
@@ -259,20 +258,85 @@ public class MainActivity
     }
 
     private void initializeFragments() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        if (mHomeTimeLineFragment == null) mHomeTimeLineFragment = new HomeTimeLineFragment();
+        if (mNotificationsFragment == null)
+            mNotificationsFragment = NotificationsFragment.newInstance();
+        if (mUserInformationFragment == null)
+            mUserInformationFragment = UserInformationFragment.newInstance();
+        if (mDirectMessageFragment == null)
+            mDirectMessageFragment = DirectMessageFragment.newInstance();
+        if (mSearchFragment == null) mSearchFragment = SearchFragment.newInstance();
+
+        initializeAdapters();
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
         transaction.add(R.id.MainActivityFragmentFrame, mHomeTimeLineFragment);
-        transaction.add(R.id.MainActivityFragmentFrame, mNotificationsFragment);
-        transaction.add(R.id.MainActivityFragmentFrame, mUserInformationFragment);
-        transaction.add(R.id.MainActivityFragmentFrame, mDirectMessageFragment);
-        transaction.add(R.id.MainActivityFragmentFrame, mSearchFragment);
-        transaction.hide(mNotificationsFragment);
-        transaction.hide(mUserInformationFragment);
-        transaction.hide(mSearchFragment);
-        transaction.hide(mDirectMessageFragment);
-        transaction.show(mHomeTimeLineFragment);
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    private void initializeAdapters() {
+        mHomeTimelineStreamAdapter = new UserStreamAdapter() {
+            @Override
+            public void onStatus(Status status) {
+                mHomeTimeLineFragment.onHomeTimeLineStatus(status);
+            }
+
+            @Override
+            public void onUnfavorite(User source, User target, Status unfavoritedStatus) {
+                mHomeTimeLineFragment.onUnfavorite(unfavoritedStatus);
+            }
+
+            @Override
+            public void onFavorite(User source, User target, Status favoritedStatus) {
+                mHomeTimeLineFragment.onFavorite(favoritedStatus);
+            }
+        };
+
+        mSelfInfoStreamAdapter = new UserStreamAdapter() {
+            @Override
+            public void onStatus(Status status) {
+                if (status.getUser().getId() == currentUser.getId())
+                    onTwitterAccountInformationReceived(status.getUser());
+            }
+
+            @Override
+            public void onUserProfileUpdate(User updatedUser) {
+                if (updatedUser.getId() == currentUser.getId())
+                    onTwitterAccountInformationReceived(updatedUser);
+            }
+        };
+
+        mHeadlineStreamAdapter = new UserStreamAdapter() {
+            @Override
+            public void onUnfollow(User source, User unfollowedUser) {
+                super.onUnfollow(source, unfollowedUser);
+                showUpHeadline(getString(R.string.headline_unfollowed, unfollowedUser.getName(), unfollowedUser.getScreenName()));
+            }
+
+            @Override
+            public void onUnfavorite(User source, User target, Status unfavoritedStatus) {
+                super.onUnfavorite(source, target, unfavoritedStatus);
+                showUpHeadline(getString(R.string.headline_unfavorited, source.getName(), unfavoritedStatus.getText()));
+            }
+
+            @Override
+            public void onFollow(User source, User followedUser) {
+                super.onFollow(source, followedUser);
+                showUpHeadline(getString(R.string.headline_followed, followedUser.getName(), followedUser.getScreenName()));
+            }
+
+            @Override
+            public void onFavorite(User source, User target, Status favoritedStatus) {
+                super.onFavorite(source, target, favoritedStatus);
+                showUpHeadline(getString(R.string.headline_favorited, source.getName(), favoritedStatus.getText()));
+            }
+        };
+
+        mUserStreamListener = new TencocoaUserStreamLister();
+        mUserStreamListener.addAdapter(mHomeTimelineStreamAdapter);
+        mUserStreamListener.addAdapter(mSelfInfoStreamAdapter);
+        mUserStreamListener.addAdapter(mHeadlineStreamAdapter);
     }
 
     private void startTencocoaServices() {
@@ -375,9 +439,10 @@ public class MainActivity
             @Override
             protected void onPostExecute(Void aVoid) {
                 refreshUserInformation(info);
+                mHandler.post(mHomeTimeLineFragment::clearStatuses);
             }
         };
-        task.execute();
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void autoConnectUserStream() {
@@ -469,7 +534,7 @@ public class MainActivity
                 updateUserInformation(user);
             }
         };
-        task.execute(info);
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, info);
     }
 
     private void updateUserInformation(User user) {
@@ -491,32 +556,33 @@ public class MainActivity
         favorites.setText(Integer.toString(user.getFavouritesCount()));
         friends.setText(Integer.toString(user.getFriendsCount()));
         followers.setText(Integer.toString(user.getFollowersCount()));
+        getSupportActionBar().setTitle(String.format("%s(@%s)", user.getName(), user.getScreenName()));
+    }
+
+    private void showUpHeadline(String str) {
+        mHandler.post(() -> getSupportActionBar().setTitle(str));
+        mHandler.postDelayed(() -> getSupportActionBar().setTitle(String.format("%s(@%s)", currentUser.getName(), currentUser.getScreenName())), 1000);
     }
 
     @Override
     public void onDrawerFragmentMainMenuInteraction(int action) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.hide(mHomeTimeLineFragment);
-        transaction.hide(mNotificationsFragment);
-        transaction.hide(mUserInformationFragment);
-        transaction.hide(mSearchFragment);
-        transaction.hide(mDirectMessageFragment);
         switch (action) {
             case 0:
-                transaction.show(mHomeTimeLineFragment);
+                transaction.replace(R.id.MainActivityFragmentFrame, mHomeTimeLineFragment);
                 break;
             case 1:
-                transaction.show(mNotificationsFragment);
+                transaction.replace(R.id.MainActivityFragmentFrame, mNotificationsFragment);
                 break;
             case 2:
-                transaction.show(mUserInformationFragment);
+                transaction.replace(R.id.MainActivityFragmentFrame, mUserInformationFragment);
                 break;
             case 3:
-                transaction.show(mSearchFragment);
+                transaction.replace(R.id.MainActivityFragmentFrame, mSearchFragment);
                 break;
             case 4:
-                transaction.show(mDirectMessageFragment);
+                transaction.replace(R.id.MainActivityFragmentFrame, mDirectMessageFragment);
                 break;
         }
         transaction.addToBackStack(null);
@@ -597,11 +663,11 @@ public class MainActivity
                         break;
                 }
                 realm.commitTransaction();
-                if (realm != null) realm.close();
+                realm.close();
                 return null;
             }
         };
-        task.execute();
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void showBehaviorNotification(String title, String description) {
@@ -614,7 +680,7 @@ public class MainActivity
 
     @Override
     public void onTwitterAccountInformationReceived(User info) {
-        new Handler(Looper.getMainLooper()).post(() -> {
+        mHandler.post(() -> {
             currentUser = info;
             updateUserInformation(info);
         });

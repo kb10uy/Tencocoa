@@ -96,7 +96,7 @@ public class TencocoaWritePermissionService extends Service {
                 }
             }
         };
-        task.execute(statusText);
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, statusText);
     }
 
     public void updateStatus(StatusUpdate status) {
@@ -126,7 +126,7 @@ public class TencocoaWritePermissionService extends Service {
                 }
             }
         };
-        task.execute(status);
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, status);
     }
 
     public void favoriteStatus(long id) {
@@ -156,7 +156,7 @@ public class TencocoaWritePermissionService extends Service {
                 }
             }
         };
-        task.execute(id);
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,id);
     }
 
     public void unfavoriteStatus(long id) {
@@ -178,16 +178,16 @@ public class TencocoaWritePermissionService extends Service {
             protected void onPostExecute(String result) {
                 super.onPostExecute(result);
                 if (result.equals("")) {
-                    showNotification(getString(R.string.notification_update_status_success), getString(R.string.notification_update_status_success));
+                    showNotification(getString(R.string.notification_unfavorite_status_success), getString(R.string.notification_unfavorite_status_success));
                 } else {
                     StringBuilder sb = new StringBuilder();
-                    sb.append(getString(R.string.notification_update_status_fail));
+                    sb.append(getString(R.string.notification_unfavorite_status_fail));
                     sb.append(result);
                     showNotification(sb.toString(), sb.toString());
                 }
             }
         };
-        task.execute(new Long(id));
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, id);
 
     }
 
@@ -218,7 +218,7 @@ public class TencocoaWritePermissionService extends Service {
                 }
             }
         };
-        task.execute(id);
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, id);
     }
 
     public void favrtStatus(long id) {
