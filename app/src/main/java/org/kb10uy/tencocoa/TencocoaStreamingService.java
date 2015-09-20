@@ -111,26 +111,18 @@ public class TencocoaStreamingService extends Service {
 
     public void stopCurrentUserStream() {
         if (mUserStream == null) return;
-        mUserStream.cleanUp();
-        mUserStream = null;
-        isUserStreamRunning = false;
-        showNotification(R.string.notification_streaming_userstream_finished_ticker, R.string.notification_streaming_userstream_finished_text);
-    }
-
-    public void stopCurrentUserStreamAsync() {
-        if (mUserStream == null) return;
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
                 mUserStream.cleanUp();
-                mUserStream = null;
-                isUserStreamRunning = false;
                 return null;
             }
 
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
+                mUserStream = null;
+                isUserStreamRunning = false;
                 showNotification(R.string.notification_streaming_userstream_finished_ticker, R.string.notification_streaming_userstream_finished_text);
             }
         };

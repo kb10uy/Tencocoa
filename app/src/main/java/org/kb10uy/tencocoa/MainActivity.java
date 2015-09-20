@@ -553,9 +553,9 @@ public class MainActivity
     @Override
     public void onStatusDetailAction(int type, TencocoaStatus status) {
         final long sourceId = status.getSourceStatus().getId();
-        AsyncTask<Void, Void, Realm> task = new AsyncTask<Void, Void, Realm>() {
+        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
-            protected Realm doInBackground(Void... params) {
+            protected Void doInBackground(Void... params) {
                 Realm realm = Realm.getInstance(ctx);
                 TencocoaStatusCache statusCache = realm.where(TencocoaStatusCache.class).equalTo("statusId", sourceId).findFirst();
                 realm.beginTransaction();
@@ -597,13 +597,8 @@ public class MainActivity
                         break;
                 }
                 realm.commitTransaction();
-                return realm;
-            }
-
-            @Override
-            protected void onPostExecute(Realm realm) {
-                super.onPostExecute(realm);
                 if (realm != null) realm.close();
+                return null;
             }
         };
         task.execute();
