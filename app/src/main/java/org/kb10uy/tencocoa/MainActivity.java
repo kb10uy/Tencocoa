@@ -18,6 +18,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -77,6 +78,7 @@ public class MainActivity
     private UserInformationFragment mUserInformationFragment;
     private DirectMessageFragment mDirectMessageFragment;
     private SearchFragment mSearchFragment;
+    private ActionBar mActionBar;
     private Context ctx;
 
     private TencocoaStreamingService mStreamingService;
@@ -106,17 +108,11 @@ public class MainActivity
                 R.string.general_close);
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        mActionBar = getSupportActionBar();
+        mActionBar.setDisplayHomeAsUpEnabled(true);
+        mActionBar.setDisplayShowHomeEnabled(true);
         //getSupportActionBar().setLogo(R.drawable.ic_launcher);
         //getSupportActionBar().setIcon(R.drawable.ic_launcher);
-
-        mHomeTimeLineFragment = new HomeTimeLineFragment();
-        mNotificationsFragment = NotificationsFragment.newInstance();
-        mUserInformationFragment = UserInformationFragment.newInstance();
-        mDirectMessageFragment = DirectMessageFragment.newInstance();
-        mSearchFragment = SearchFragment.newInstance();
-        mUserStreamListener = new TencocoaUserStreamLister(mHomeTimeLineFragment, this);
 
         ctx = this;
         mBackDoubleTapHelper = new DoubleTapHelper(ctx, getString(R.string.notification_double_tap_to_exit), 1000, 500);
@@ -259,18 +255,19 @@ public class MainActivity
     }
 
     private void initializeFragments() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        if (mHomeTimeLineFragment == null) mHomeTimeLineFragment = new HomeTimeLineFragment();
+        if (mNotificationsFragment == null)
+            mNotificationsFragment = NotificationsFragment.newInstance();
+        if (mUserInformationFragment == null)
+            mUserInformationFragment = UserInformationFragment.newInstance();
+        if (mDirectMessageFragment == null)
+            mDirectMessageFragment = DirectMessageFragment.newInstance();
+        if (mSearchFragment == null) mSearchFragment = SearchFragment.newInstance();
+        mUserStreamListener = new TencocoaUserStreamLister(mHomeTimeLineFragment, this);
+
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
         transaction.add(R.id.MainActivityFragmentFrame, mHomeTimeLineFragment);
-        transaction.add(R.id.MainActivityFragmentFrame, mNotificationsFragment);
-        transaction.add(R.id.MainActivityFragmentFrame, mUserInformationFragment);
-        transaction.add(R.id.MainActivityFragmentFrame, mDirectMessageFragment);
-        transaction.add(R.id.MainActivityFragmentFrame, mSearchFragment);
-        transaction.hide(mNotificationsFragment);
-        transaction.hide(mUserInformationFragment);
-        transaction.hide(mSearchFragment);
-        transaction.hide(mDirectMessageFragment);
-        transaction.show(mHomeTimeLineFragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }
@@ -491,32 +488,28 @@ public class MainActivity
         favorites.setText(Integer.toString(user.getFavouritesCount()));
         friends.setText(Integer.toString(user.getFriendsCount()));
         followers.setText(Integer.toString(user.getFollowersCount()));
+        getSupportActionBar().setTitle(String.format("%s(@%s)", user.getName(), user.getScreenName()));
     }
 
     @Override
     public void onDrawerFragmentMainMenuInteraction(int action) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.hide(mHomeTimeLineFragment);
-        transaction.hide(mNotificationsFragment);
-        transaction.hide(mUserInformationFragment);
-        transaction.hide(mSearchFragment);
-        transaction.hide(mDirectMessageFragment);
         switch (action) {
             case 0:
-                transaction.show(mHomeTimeLineFragment);
+                transaction.replace(R.id.MainActivityFragmentFrame, mHomeTimeLineFragment);
                 break;
             case 1:
-                transaction.show(mNotificationsFragment);
+                transaction.replace(R.id.MainActivityFragmentFrame, mNotificationsFragment);
                 break;
             case 2:
-                transaction.show(mUserInformationFragment);
+                transaction.replace(R.id.MainActivityFragmentFrame, mUserInformationFragment);
                 break;
             case 3:
-                transaction.show(mSearchFragment);
+                transaction.replace(R.id.MainActivityFragmentFrame, mSearchFragment);
                 break;
             case 4:
-                transaction.show(mDirectMessageFragment);
+                transaction.replace(R.id.MainActivityFragmentFrame, mDirectMessageFragment);
                 break;
         }
         transaction.addToBackStack(null);

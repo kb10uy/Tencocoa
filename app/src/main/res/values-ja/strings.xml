@@ -72,6 +72,8 @@
     <string name="notification_update_status_fail">ツイートに失敗しました。: </string>
     <string name="notification_favorite_status_success">お気に入りに成功しました。</string>
     <string name="notification_favorite_status_fail">お気に入りに失敗しました。: </string>
+    <string name="notification_unfavorite_status_success">お気に入り解除に成功しました。</string>
+    <string name="notification_unfavorite_status_fail">お気に入り解除に失敗しました。: </string>
     <string name="notification_retweet_status_success">リツイートに成功しました。</string>
     <string name="notification_retweet_status_fail">リツイートに失敗しました。: </string>
 </resources>

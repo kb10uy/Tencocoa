@@ -91,7 +91,7 @@ public class TencocoaUserStreamLister implements UserStreamListener {
 
     @Override
     public void onUserProfileUpdate(User updatedUser) {
-
+        if (updatedUser.getId() == targetId) mSelfInfoReceiver.onTwitterAccountInformationReceived(updatedUser);
     }
 
     @Override

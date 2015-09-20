@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,7 @@ import org.kb10uy.tencocoa.model.TencocoaStatus;
 import org.kb10uy.tencocoa.model.TencocoaStatusCache;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import io.realm.Realm;
 import twitter4j.Status;
@@ -38,6 +40,7 @@ public class HomeTimeLineFragment extends Fragment implements HomeTimeLineLister
     //private Pattern mViaPattern = Pattern.compile("<a href=\"(.+)\" rel=\"nofollow\">(.+)</a>");
     private TypedValue mRewteetBackgroundValue = new TypedValue();
     private Context ctx;
+    private List<TencocoaStatus> backingCache;
 
     public HomeTimeLineFragment() {
         // Required empty public constructor
@@ -61,7 +64,8 @@ public class HomeTimeLineFragment extends Fragment implements HomeTimeLineLister
         View view = inflater.inflate(R.layout.fragment_home_time_line, container, false);
         mHandler = new Handler();
         mListView = (ListView) view.findViewById(R.id.HomeTimeLineDrawerListViewTimeLine);
-        initializeAdapter();
+        mTimeLineAdapter = new GeneralReverseListAdapter<>(getActivity(), R.layout.item_status, this::generateStatusView);
+        if (backingCache != null) mTimeLineAdapter.setList(backingCache);
         mListView.setAdapter(mTimeLineAdapter);
         mListView.setOnItemClickListener((parent, view1, position, id) -> mListener.showStatusDetail(((TencocoaStatus) mTimeLineAdapter.getItem(position))));
         view.getContext().getTheme().resolveAttribute(R.attr.colorRetweetBackground, mRewteetBackgroundValue, true);
@@ -69,8 +73,11 @@ public class HomeTimeLineFragment extends Fragment implements HomeTimeLineLister
         return view;
     }
 
-    private void initializeAdapter() {
-        mTimeLineAdapter = new GeneralReverseListAdapter<>(getActivity(), R.layout.item_status, this::generateStatusView);
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        backingCache = mTimeLineAdapter.getList();
+        Log.i("Tencocoa", "HomeTimeline's view was destroyed and saved statuses.");
     }
 
     @Override
@@ -202,10 +209,10 @@ public class HomeTimeLineFragment extends Fragment implements HomeTimeLineLister
         }
     }
 
-public interface HomeTimeLineFragmentInteractionListener {
-    //public void onFragmentInteraction(Uri uri);
-    //public TencocoaStreamingService getStreamingService();
-    void showStatusDetail(TencocoaStatus status);
-}
+    public interface HomeTimeLineFragmentInteractionListener {
+        //public void onFragmentInteraction(Uri uri);
+        //public TencocoaStreamingService getStreamingService();
+        void showStatusDetail(TencocoaStatus status);
+    }
 
 }

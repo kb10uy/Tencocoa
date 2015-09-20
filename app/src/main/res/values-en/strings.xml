@@ -72,6 +72,8 @@
     <string name="notification_update_status_fail">Failed to tweet: </string>
     <string name="notification_favorite_status_success">Favorited successfully.</string>
     <string name="notification_favorite_status_fail">Failed to favorite: </string>
+    <string name="notification_unfavorite_status_success">Unfavorited successfully.</string>
+    <string name="notification_unfavorite_status_fail">Failed to unfavorite: </string>
     <string name="notification_retweet_status_success">Retweeted successfully.</string>
     <string name="notification_retweet_status_fail">Failed to retweet: </string>
 </resources>

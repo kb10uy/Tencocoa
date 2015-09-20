@@ -93,8 +93,9 @@ public class TencocoaStreamingService extends Service {
             @Override
             protected Void doInBackground(Void... params) {
                 stopCurrentUserStream();
+                mUserStreamListener = listener;
                 mUserStream = TwitterHelper.getTwitterStreamInstance(mConsumerKey, mConsumerSecret, currentUser.getAccessToken());
-                mUserStream.addListener(listener);
+                mUserStream.addListener(mUserStreamListener);
                 mUserStream.user();
                 isUserStreamRunning = true;
                 return null;
@@ -115,6 +116,7 @@ public class TencocoaStreamingService extends Service {
             @Override
             protected Void doInBackground(Void... params) {
                 mUserStream.cleanUp();
+                mUserStream.removeListener(mUserStreamListener);
                 return null;
             }
 

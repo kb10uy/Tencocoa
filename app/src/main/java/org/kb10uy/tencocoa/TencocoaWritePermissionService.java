@@ -178,10 +178,10 @@ public class TencocoaWritePermissionService extends Service {
             protected void onPostExecute(String result) {
                 super.onPostExecute(result);
                 if (result.equals("")) {
-                    showNotification(getString(R.string.notification_update_status_success), getString(R.string.notification_update_status_success));
+                    showNotification(getString(R.string.notification_unfavorite_status_success), getString(R.string.notification_unfavorite_status_success));
                 } else {
                     StringBuilder sb = new StringBuilder();
-                    sb.append(getString(R.string.notification_update_status_fail));
+                    sb.append(getString(R.string.notification_unfavorite_status_fail));
                     sb.append(result);
                     showNotification(sb.toString(), sb.toString());
                 }
