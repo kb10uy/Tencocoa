@@ -80,9 +80,7 @@ public class StatusDetailDialogFragment extends DialogFragment {
             mListener.onStatusDetailAction(ACTION_REPLY_BLANK, mTargetStatus);
             dismiss();
         });
-        view.findViewById(R.id.StatusDetailButtonOthers).setOnClickListener(v -> {
-            dismiss();
-        });
+        view.findViewById(R.id.StatusDetailButtonOthers).setOnClickListener(v -> dismiss());
 
         if (user.isProtected()) {
             view.findViewById(R.id.StatusDetailButtonRetweet).setEnabled(false);
