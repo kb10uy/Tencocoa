@@ -4,8 +4,10 @@ import android.net.Uri;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+import twitter4j.ExtendedMediaEntity;
 import twitter4j.MediaEntity;
 import twitter4j.Status;
 import twitter4j.URLEntity;
@@ -36,6 +38,10 @@ public class TencocoaStatus implements Serializable {
         medias = new ArrayList<>();
         replaceTextElements();
         fetchMediaEntities();
+    }
+
+    public List<TencocoaUriInfo> getMedias() {
+        return medias;
     }
 
     public Status getSourceStatus() {
@@ -86,7 +92,8 @@ public class TencocoaStatus implements Serializable {
 
     private void fetchMediaEntities() {
         MediaEntity[] mediaEntities = showingStatus.getMediaEntities();
-        if (mediaEntities == null) return;
+        if (mediaEntities.length == 0) return;
+        hasMedia = true;
         for (MediaEntity e : mediaEntities) {
             TencocoaUriInfo info = new TencocoaUriInfo();
             info.setType(TencocoaUriInfo.IMAGE);
@@ -98,6 +105,20 @@ public class TencocoaStatus implements Serializable {
             info.setFullImageUri(Uri.parse(mediaURLHttps + ":orig"));
             medias.add(info);
             replacedText = replacedText.replace(e.getURL(), e.getDisplayURL());
+        }
+        ExtendedMediaEntity[] extendedMediaEntities = showingStatus.getExtendedMediaEntities();
+        if (extendedMediaEntities.length <= 1) return;
+        medias.clear();
+        for (ExtendedMediaEntity x : extendedMediaEntities) {
+            TencocoaUriInfo xinfo = new TencocoaUriInfo();
+            xinfo.setType(TencocoaUriInfo.IMAGE);
+            xinfo.setEmbeddedUri(Uri.parse(x.getURL()));
+            xinfo.setDisplayUri(Uri.parse(x.getDisplayURL()));
+            xinfo.setExpandedUri(Uri.parse(x.getExpandedURL()));
+            String mediaURLHttps = x.getMediaURLHttps();
+            xinfo.setThumbnailImageUri(Uri.parse(mediaURLHttps + ":thumb"));
+            xinfo.setFullImageUri(Uri.parse(mediaURLHttps + ":orig"));
+            medias.add(xinfo);
         }
     }
 }

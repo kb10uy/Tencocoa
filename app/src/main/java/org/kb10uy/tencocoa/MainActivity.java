@@ -284,11 +284,13 @@ public class MainActivity
 
             @Override
             public void onUnfavorite(User source, User target, Status unfavoritedStatus) {
+                if (source.getId() != currentUser.getId()) return;
                 mHomeTimeLineFragment.onUnfavorite(unfavoritedStatus);
             }
 
             @Override
             public void onFavorite(User source, User target, Status favoritedStatus) {
+                if (source.getId() != currentUser.getId()) return;
                 mHomeTimeLineFragment.onFavorite(favoritedStatus);
             }
         };
@@ -311,24 +313,28 @@ public class MainActivity
             @Override
             public void onUnfollow(User source, User unfollowedUser) {
                 super.onUnfollow(source, unfollowedUser);
+                if (unfollowedUser.getId() != currentUser.getId()) return;
                 showUpHeadline(getString(R.string.headline_unfollowed, unfollowedUser.getName(), unfollowedUser.getScreenName()));
             }
 
             @Override
             public void onUnfavorite(User source, User target, Status unfavoritedStatus) {
                 super.onUnfavorite(source, target, unfavoritedStatus);
+                if (target.getId() != currentUser.getId()) return;
                 showUpHeadline(getString(R.string.headline_unfavorited, source.getName(), unfavoritedStatus.getText()));
             }
 
             @Override
             public void onFollow(User source, User followedUser) {
                 super.onFollow(source, followedUser);
+                if (followedUser.getId() != currentUser.getId()) return;
                 showUpHeadline(getString(R.string.headline_followed, followedUser.getName(), followedUser.getScreenName()));
             }
 
             @Override
             public void onFavorite(User source, User target, Status favoritedStatus) {
                 super.onFavorite(source, target, favoritedStatus);
+                if (target.getId() != currentUser.getId()) return;
                 showUpHeadline(getString(R.string.headline_favorited, source.getName(), favoritedStatus.getText()));
             }
         };

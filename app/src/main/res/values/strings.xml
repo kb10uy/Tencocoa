@@ -2,7 +2,7 @@
     <string name="app_name" translatable="false">Tencocoa</string>
 
     <string name="accounts_file_name" translatable="false">TwitterAccounts.dat</string>
-    <string name="mark_key">[private]</string>
+    <string name="mark_key" translatable="false">[private]</string>
 
     <string name="text_activity_first_setting_newapp_link" translatable="false">https://apps.twitter.com/</string>
 

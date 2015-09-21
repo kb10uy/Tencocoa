@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -22,6 +23,7 @@ import org.kb10uy.tencocoa.model.TencocoaDatabaseHelper;
 import org.kb10uy.tencocoa.model.TencocoaHelper;
 import org.kb10uy.tencocoa.model.TencocoaStatus;
 import org.kb10uy.tencocoa.model.TencocoaStatusCache;
+import org.kb10uy.tencocoa.model.TencocoaUriInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +37,7 @@ public class HomeTimeLineFragment extends Fragment {
     private HomeTimeLineFragmentInteractionListener mListener;
     private ListView mListView;
     private Handler mHandler;
+    private LayoutInflater mInflater;
     private GeneralReverseListAdapter<TencocoaStatus> mTimeLineAdapter;
     //private Pattern mViaPattern = Pattern.compile("<a href=\"(.+)\" rel=\"nofollow\">(.+)</a>");
     private TypedValue mRewteetBackgroundValue = new TypedValue();
@@ -69,6 +72,7 @@ public class HomeTimeLineFragment extends Fragment {
         mListView.setOnItemClickListener((parent, view1, position, id) -> mListener.showStatusDetail(((TencocoaStatus) mTimeLineAdapter.getItem(position))));
         view.getContext().getTheme().resolveAttribute(R.attr.colorRetweetBackground, mRewteetBackgroundValue, true);
         ctx = getActivity();
+        mInflater = inflater;
         return view;
     }
 
@@ -148,6 +152,23 @@ public class HomeTimeLineFragment extends Fragment {
             itemLayout.setBackgroundResource(R.color.tencocoa_color_transparent);
             (targetView.findViewById(R.id.StatusItemFavRtCounts)).setVisibility(View.GONE);
             (targetView.findViewById(R.id.StatusItemRetweeterFrame)).setVisibility(View.GONE);
+        }
+
+        if (status.hasMedia()) {
+            LinearLayout mlist = (LinearLayout) targetView.findViewById(R.id.StatusItemMediaList);
+            mlist.removeAllViews();
+            mlist.setVisibility(View.VISIBLE);
+            LayoutInflater inflater = (LayoutInflater) getActivity().getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            for (TencocoaUriInfo info : status.getMedias()) {
+                View av = inflater.inflate(R.layout.item_status_image, mlist, false);
+                ImageView imv = (ImageView) av.findViewById(R.id.StatusItemImageItem);
+                Glide.with(getActivity()).load(info.getThumbnailImageUri()).into(imv);
+                Log.d("Tencocoa", String.format("%sを追加したと思う…多分", info.getThumbnailImageUri()));
+                mlist.addView(av);
+            }
+            Log.d("Tencocoa", "で結局" + Integer.toString(mlist.getChildCount()));
+        } else {
+            (targetView.findViewById(R.id.StatusItemMediaList)).setVisibility(View.GONE);
         }
 
         if (user.isProtected()) {
