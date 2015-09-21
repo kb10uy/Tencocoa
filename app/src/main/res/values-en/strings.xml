@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="general_open">Open</string>
+    <string name="general_close">Close</string>
+
+    <string name="action_settings">Setting</string>
+    <string name="title_activity_settings">Setting</string>
+
+    <string name="title_activity_first_setting">API Key setting</string>
+    <string name="text_activity_first_setting">
+        Tencocoa recommends you to use your original API keys.\n
+        Unless there is any exceptional circumstances, use your ones.\n
+        Don\'t forget to set fill the "Callback URL" field with any value on Twitter App Setting.\n
+        You can use the Tencocoa default API keys instead, Most of Write-Actions will be restricted (and, you can change API keys later).
+    </string>
+
+    <string name="label_activity_first_setting_consumer_ok">Use these CK/CS</string>
+    <string name="label_activity_first_setting_consumer_use_default">Use default CK/CS</string>
+
+    <string name="title_dialog_default_keys">
+        Are you sure?\n
+        Although you can change them later, it\'s more convenient to set them here.
+    </string>
+
+    <string name="label_dialog_default_keys_ok">Sure!</string>
+    <string name="label_dialog_default_keys_cancel">Wait…</string>
+    <string name="toast_activity_first_setting_consumer_empty">At least one of the fields is blank.</string>
+
+    <string-array name="label_drawer_main_list">
+        <item>Home</item>
+        <item>Notifications</item>
+        <item>User</item>
+        <item>Direct Message</item>
+        <item>Search</item>
+    </string-array>
+
+    <string name="label_activity_main_tweets">Tweets</string>
+    <string name="label_activity_main_favorites">Favorites</string>
+    <string name="label_activity_main_friends">Followings</string>
+    <string name="label_activity_main_followers">Followers</string>
+
+    <string name="label_item_status_retweeted_by">Retweeted by</string>
+
+    <string name="label_dialog_new_status_title">New Tweet</string>
+    <string name="label_dialog_new_status_reply">Reply</string>
+    <string name="label_dialog_new_status_update">Tweet</string>
+
+    <string name="label_dialog_status_detail_fav">Favorite</string>
+    <string name="label_dialog_status_detail_unfav">Unfavorite</string>
+    <string name="label_dialog_status_detail_rt">Retweet</string>
+    <string name="label_dialog_status_detail_favrt">Fav&amp;RT</string>
+    <string name="label_dialog_status_detail_others">More…</string>
+    <string name="label_dialog_status_detail_reply">Reply</string>
+    <string name="label_dialog_status_detail_reply_blank">Blank Reply</string>
+    <string name="label_dialog_status_detail_back">Back</string>
+
+    <string name="title_activity_accounts_list">Accounts</string>
+    <string name="label_activity_accounts_list_new_account">Register New Account</string>
+    <string name="text_activity_accounts_list_success">The authentication succeeded!</string>
+    <string name="text_activity_accounts_list_failed">The authentication faild.\nPerhaps Device clock is wrong, or you don\'t set the "Callback URL" field of Twitter App?</string>
+
+    <!-- Notification テンプレート -->
+    <string name="notification_network_unavailable">The network service is unavailable.</string>
+    <string name="notification_double_tap_to_exit">Double tap to exit.</string>
+
+    <string name="notification_streaming_userstream_started_ticker">UserStream has been started</string>
+    <string name="notification_streaming_userstream_started_text">Tencocoa connected to UserStream.</string>
+    <string name="notification_streaming_userstream_finished_ticker">UserStream has been finished</string>
+    <string name="notification_streaming_userstream_finished_text">Tencocoa disconnected UserStream.</string>
+
+    <string name="notification_update_status_success">Tweeted successfully.</string>
+    <string name="notification_update_status_fail">Failed to tweet: </string>
+    <string name="notification_favorite_status_success">Favorited successfully.</string>
+    <string name="notification_favorite_status_fail">Failed to favorite: </string>
+    <string name="notification_unfavorite_status_success">Unfavorited successfully.</string>
+    <string name="notification_unfavorite_status_fail">Failed to unfavorite: </string>
+    <string name="notification_retweet_status_success">Retweeted successfully.</string>
+    <string name="notification_retweet_status_fail">Failed to retweet: </string>
+
+    <string name="headline_favorited">Faved by %1$s: %2$s</string>
+    <string name="headline_unfavorited">Unfaved by %1$s: %2$s</string>
+    <string name="headline_followed">Followed by %1$s(@%2$s)</string>
+    <string name="headline_unfollowed">Unfollowed by %1$s(@%2$s)</string>
+</resources>

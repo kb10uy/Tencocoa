@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="動作">
+    <PreferenceCategory android:title="@string/prefscreen_general">
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/preference_general_behavior_write_as_toast"
