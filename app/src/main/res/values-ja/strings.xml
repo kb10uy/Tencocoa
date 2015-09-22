@@ -54,6 +54,9 @@
     <string name="label_dialog_status_detail_reply_blank">空リプ</string>
     <string name="label_dialog_status_detail_back">戻る</string>
 
+    <string name="label_activity_image_viewer_download">ダウンロード</string>
+    <string name="label_activity_image_viewer_link">リンクをコピー</string>
+
     <string name="title_activity_accounts_list">アカウント</string>
     <string name="label_activity_accounts_list_new_account">新しいアカウント</string>
     <string name="text_activity_accounts_list_success">認証に成功しました。</string>
@@ -76,6 +79,18 @@
     <string name="notification_unfavorite_status_fail">お気に入り解除に失敗しました。: </string>
     <string name="notification_retweet_status_success">リツイートに成功しました。</string>
     <string name="notification_retweet_status_fail">リツイートに失敗しました。: </string>
+
+    <string name="popup_notification_favorited">%1$sさんにふぁぼられました</string>
+    <string name="popup_notification_unfavorited">%1$sさんにあんふぁぼられました…</string>
+    <string name="popup_notification_followed">%1$sさんにフォローされました</string>
+    <string name="popup_notification_removed">%1$sさんにリムられました…</string>
+    <string name="popup_notification_retweeted">%1$sさんにリツイートされました</string>
+    <string name="popup_notification_reply">%1$sさんからのリプライ</string>
+    <string name="popup_notification_referred">%1$sさんにツイートが参照されました</string>
+    <string name="popup_notification_favorited_retweet">%1$sさんにリツイートをふぁぼられました</string>
+    <string name="popup_notification_retweeted_retweet">%1$sさんにリツイートをリツイートされました</string>
+    <string name="popup_notification_favorited_mention">%1$sさんに自分宛てメンションをふぁぼられました</string>
+    <string name="popup_notification_retweeted_mention">%1$sさんに自分宛てメンションをリツイートされました</string>
 
     <string name="headline_favorited">%1$sさんにふぁぼられました: %2$s</string>
     <string name="headline_unfavorited">%1$sさんにあんふぁぼられました: %2$s</string>

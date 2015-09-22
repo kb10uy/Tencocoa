@@ -150,10 +150,6 @@ MIT Licenseとします。LICENSEも参照してください。
 Licensed under the Apache License 2.0
 http://www.apache.org/licenses/LICENSE-2.0
 
-### RxAndroid
-Licensed under the Apache License 2.0
-http://www.apache.org/licenses/LICENSE-2.0
-
 ### LuaJ
 The MIT License.
 LuaJの条文を入手できませんでした
@@ -223,3 +219,5 @@ http://www.apache.org/licenses/LICENSE-2.0
 > Persons, Unverified Parties or Restricted Entities, or otherwise in violation of any
 > such restrictions or regulations.
 
+### Google Material Icons
+The icons are available under the CC-BY license. 

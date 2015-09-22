@@ -24,11 +24,10 @@
     <color name="hoto_retweet_green">#409abb10</color>
     <color name="hoto_retweet_green_text">#ff5f7446</color>
 
-
     <color name="black_primary">#ff262626</color>
     <color name="black_black">#ffffffff</color>
-    <color name="black_darkgray">#ffbbbbbb</color>
-    <color name="black_white">#ff000000</color>
+    <color name="black_darkgray">#ffbfbfbf</color>
+    <color name="black_white">#ff333333</color>
     <color name="black_text_normal">#ffe2e2e2</color>
     <color name="black_text_screen_name">#ff5aba55</color>
     <color name="black_retweet_green">#40367730</color>
@@ -60,4 +59,13 @@
     <color name="witch_text_screen_name">#ffaa0f00</color>
     <color name="witch_retweet_green">#4018bb68</color>
     <color name="witch_retweet_green_text">#ff48694d</color>
+
+    <color name="tomori_primary">#ff67d1ff</color>
+    <color name="tomori_black">#ff552e30</color>
+    <color name="tomori_darkgray">#ffc5575b</color>
+    <color name="tomori_white">#ffdcd4c8</color>
+    <color name="tomori_text_normal">#ff554f4e</color>
+    <color name="tomori_text_screen_name">#ffddc070</color>
+    <color name="tomori_retweet_green">#409abb10</color>
+    <color name="tomori_retweet_green_text">#ff5f7446</color>
 </resources>
