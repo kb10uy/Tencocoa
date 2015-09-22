@@ -12,7 +12,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
@@ -284,14 +283,12 @@ public class MainActivity
 
             @Override
             public void onUnfavorite(User source, User target, Status unfavoritedStatus) {
-                if (source.getId() != currentUser.getId()) return;
-                mHomeTimeLineFragment.onUnfavorite(unfavoritedStatus);
+                mHomeTimeLineFragment.onUnfavorite(source, target, unfavoritedStatus);
             }
 
             @Override
             public void onFavorite(User source, User target, Status favoritedStatus) {
-                if (source.getId() != currentUser.getId()) return;
-                mHomeTimeLineFragment.onFavorite(favoritedStatus);
+                mHomeTimeLineFragment.onFavorite(source, target, favoritedStatus);
             }
         };
 
@@ -433,6 +430,7 @@ public class MainActivity
                 try {
                     mServiceLatch.await();
                     mStreamingService.setTargetUser(info);
+                    mHomeTimeLineFragment.setStreamingUser(info.getUserId());
                     mWritePermissionService.setTarget(mStreamingService.getTargetUserTwitterInstance(), mStreamingService.getTargetUserInformation());
                     mReadPermissionService.setTarget(mStreamingService.getTargetUserTwitterInstance(), mStreamingService.getTargetUserInformation());
                     mStreamingService.startCurrentUserStream(mUserStreamListener);
