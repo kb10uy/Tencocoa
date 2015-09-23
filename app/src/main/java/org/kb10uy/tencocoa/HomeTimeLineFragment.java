@@ -1,7 +1,11 @@
 package org.kb10uy.tencocoa;
 
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorSet;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -11,6 +15,9 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -24,6 +31,7 @@ import org.kb10uy.tencocoa.model.TencocoaHelper;
 import org.kb10uy.tencocoa.model.TencocoaStatus;
 import org.kb10uy.tencocoa.model.TencocoaStatusCache;
 import org.kb10uy.tencocoa.model.TencocoaUriInfo;
+import org.kb10uy.tencocoa.views.ImageViewerActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,8 +49,13 @@ public class HomeTimeLineFragment extends Fragment {
     private GeneralReverseListAdapter<TencocoaStatus> mTimeLineAdapter;
     //private Pattern mViaPattern = Pattern.compile("<a href=\"(.+)\" rel=\"nofollow\">(.+)</a>");
     private TypedValue mRewteetBackgroundValue = new TypedValue();
-    private Context ctx;
+    private Activity ctx;
     private List<TencocoaStatus> backingCache;
+
+    private ImageView mPopupIcon, mPopupSource;
+    private TextView mPopupCaption, mPopupDescription;
+    private LinearLayout mPopup;
+    private long currentUserId;
 
     public HomeTimeLineFragment() {
         // Required empty public constructor
@@ -70,6 +83,12 @@ public class HomeTimeLineFragment extends Fragment {
         if (backingCache != null) mTimeLineAdapter.setList(backingCache);
         mListView.setAdapter(mTimeLineAdapter);
         mListView.setOnItemClickListener((parent, view1, position, id) -> mListener.showStatusDetail(((TencocoaStatus) mTimeLineAdapter.getItem(position))));
+        mPopupIcon = (ImageView) view.findViewById(R.id.HomeTimeLineImageViewPopupIcon);
+        mPopupSource = (ImageView) view.findViewById(R.id.HomeTimeLineImageViewPopupSource);
+        mPopupCaption = (TextView) view.findViewById(R.id.HomeTimeLineTextViewCaption);
+        mPopupDescription = (TextView) view.findViewById(R.id.HomeTimeLineTextViewDescription);
+        mPopup = (LinearLayout) view.findViewById(R.id.HomeTimeLinePopup);
+
         view.getContext().getTheme().resolveAttribute(R.attr.colorRetweetBackground, mRewteetBackgroundValue, true);
         ctx = getActivity();
         mInflater = inflater;
@@ -104,12 +123,12 @@ public class HomeTimeLineFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
         try {
-            mListener = (HomeTimeLineFragmentInteractionListener) activity;
+            mListener = (HomeTimeLineFragmentInteractionListener) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
+            throw new ClassCastException(context.toString()
                     + " must implement HomeTimeLineFragmentInteractionListener");
         }
     }
@@ -163,10 +182,13 @@ public class HomeTimeLineFragment extends Fragment {
                 View av = inflater.inflate(R.layout.item_status_image, mlist, false);
                 ImageView imv = (ImageView) av.findViewById(R.id.StatusItemImageItem);
                 Glide.with(getActivity()).load(info.getThumbnailImageUri()).into(imv);
-                Log.d("Tencocoa", String.format("%sを追加したと思う…多分", info.getThumbnailImageUri()));
+<<<<<<< HEAD
+=======
+                final Uri tu = info.getFullImageUri();
+                imv.setOnClickListener((v) -> startImageViewer(tu));
+>>>>>>> feature/notification
                 mlist.addView(av);
             }
-            Log.d("Tencocoa", "で結局" + Integer.toString(mlist.getChildCount()));
         } else {
             (targetView.findViewById(R.id.StatusItemMediaList)).setVisibility(View.GONE);
         }
@@ -179,6 +201,12 @@ public class HomeTimeLineFragment extends Fragment {
         return targetView;
     }
 
+    private void startImageViewer(Uri uri) {
+        Intent intent = new Intent(getActivity(), ImageViewerActivity.class);
+        intent.putExtra("Uri", uri);
+        startActivity(intent);
+    }
+
     public void onHomeTimeLineStatus(Status status) {
         TencocoaStatus tstatus = new TencocoaStatus(status);
         Realm realm = Realm.getInstance(ctx);
@@ -189,22 +217,36 @@ public class HomeTimeLineFragment extends Fragment {
         mHandler.post(() -> mTimeLineAdapter.add(tstatus));
     }
 
-    public void onFavorite(Status status) {
-        for (TencocoaStatus ts : mTimeLineAdapter.getList()) {
-            if (ts.getShowingStatus().getId() == status.getId()) {
-                updateFavoriteStatus(ts, true);
+    public void onFavorite(User source, User target, Status status) {
+        if (source.getId() == currentUserId) {
+            for (TencocoaStatus ts : mTimeLineAdapter.getList()) {
+                if (ts.getShowingStatus().getId() == status.getId()) {
+                    updateFavoriteStatus(ts, true);
+                }
             }
+            mHandler.post(mTimeLineAdapter::notifyDataSetChanged);
         }
-        mHandler.post(mTimeLineAdapter::notifyDataSetChanged);
+        if (target.getId() == currentUserId) {
+            String caption = getString(R.string.popup_notification_favorited, source.getName());
+            String description = status.getText();
+            mHandler.post(() -> showNotificationPopup(R.drawable.tencocoa_star1, source, caption, description));
+        }
     }
 
-    public void onUnfavorite(Status status) {
-        for (TencocoaStatus ts : mTimeLineAdapter.getList()) {
-            if (ts.getShowingStatus().getId() == status.getId()) {
-                updateFavoriteStatus(ts, false);
+    public void onUnfavorite(User source, User target, Status status) {
+        if (source.getId() == currentUserId) {
+            for (TencocoaStatus ts : mTimeLineAdapter.getList()) {
+                if (ts.getShowingStatus().getId() == status.getId()) {
+                    updateFavoriteStatus(ts, false);
+                }
             }
+            mHandler.post(mTimeLineAdapter::notifyDataSetChanged);
         }
-        mHandler.post(mTimeLineAdapter::notifyDataSetChanged);
+        if (target.getId() == currentUserId) {
+            String caption = getString(R.string.popup_notification_unfavorited, source.getName());
+            String description = status.getText();
+            mHandler.post(() -> showNotificationPopup(R.drawable.tencocoa_star1, source, caption, description));
+        }
     }
 
     private void updateFavoriteStatus(TencocoaStatus status, boolean s) {
@@ -225,8 +267,22 @@ public class HomeTimeLineFragment extends Fragment {
         }
     }
 
+    private void showNotificationPopup(int iconResource, User source, String caption, String description) {
+        mPopupIcon.setImageResource(iconResource);
+        Glide.with(getActivity()).load(source.getBiggerProfileImageURLHttps()).into(mPopupSource);
+        mPopupCaption.setText(caption);
+        mPopupDescription.setText(description);
+        AnimatorSet set = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.notification_popup);
+        set.setTarget(mPopup);
+        set.start();
+    }
+
     public void clearStatuses() {
         mTimeLineAdapter.clear();
+    }
+
+    public void setStreamingUser(long user) {
+        currentUserId = user;
     }
 
     public interface HomeTimeLineFragmentInteractionListener {

@@ -54,6 +54,9 @@
     <string name="label_dialog_status_detail_reply_blank">Blank Reply</string>
     <string name="label_dialog_status_detail_back">Back</string>
 
+    <string name="label_activity_image_viewer_download">Download</string>
+    <string name="label_activity_image_viewer_link">Copy image link to Clipboard</string>
+
     <string name="title_activity_accounts_list">Accounts</string>
     <string name="label_activity_accounts_list_new_account">Register New Account</string>
     <string name="text_activity_accounts_list_success">The authentication succeeded!</string>
@@ -77,8 +80,21 @@
     <string name="notification_retweet_status_success">Retweeted successfully.</string>
     <string name="notification_retweet_status_fail">Failed to retweet: </string>
 
+    <string name="popup_notification_favorited">Favorited by %1$s</string>
+    <string name="popup_notification_unfavorited">Unfavorited by %1$s</string>
+    <string name="popup_notification_followed">followed by %1$s</string>
+    <string name="popup_notification_removed">removed by %1$s</string>
+    <string name="popup_notification_retweeted">retweeted by %1$s</string>
+    <string name="popup_notification_reply">Reply from %1$s</string>
+    <string name="popup_notification_referred">Referred my tweet by %1$s</string>
+    <string name="popup_notification_favorited_retweet">Favorited my retweet by %1$s</string>
+    <string name="popup_notification_retweeted_retweet">Retweeted my retweet by %1$s</string>
+    <string name="popup_notification_favorited_mention">Retweeted mention by %1$s</string>
+    <string name="popup_notification_retweeted_mention">Retweeted mention by %1$s</string>
+
     <string name="headline_favorited">Faved by %1$s: %2$s</string>
     <string name="headline_unfavorited">Unfaved by %1$s: %2$s</string>
     <string name="headline_followed">Followed by %1$s(@%2$s)</string>
     <string name="headline_unfollowed">Unfollowed by %1$s(@%2$s)</string>
+
 </resources>

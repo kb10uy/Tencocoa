@@ -9,5 +9,6 @@
         android:id="@+id/StatusItemImageItem"
         android:layout_margin="4dp"
         android:contentDescription="Image"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        android:clickable="true"/>
 </FrameLayout>

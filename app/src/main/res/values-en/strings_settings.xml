@@ -22,6 +22,7 @@
         <item>Hoto</item>
         <item>Komichi</item>
         <item>Witch</item>
+        <item>Tomori</item>
     </string-array>
 
     <string-array name="prefscreen_appearance_theme_list">
@@ -31,6 +32,7 @@
         <item>Hoto (Is the order a rabbit?)</item>
         <item>Komichi (Kin-iro mosaic)</item>
         <item>Witch (Puyopuyo)</item>
+        <item>Tomori(Charlotte)</item>
     </string-array>
 
     <string name="prefscreen_general">General</string>

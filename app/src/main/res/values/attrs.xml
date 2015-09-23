@@ -9,5 +9,6 @@
         <attr name="colorTextScreenName" format="color" />
         <attr name="colorRetweetBackground" format="color" />
         <attr name="colorRetweetForeground" format="color"/>
+        <attr name="drawableWhite" format="reference"/>
     </declare-styleable>
 </resources>

@@ -30,4 +30,8 @@
         <item name="android:textColor">?attr/colorRetweetForeground</item>
     </style>
 
+    <style name="TranslucentTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:background">#90000000</item>
+    </style>
+
 </resources>
