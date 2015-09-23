@@ -137,6 +137,8 @@ public class TencocoaStreamingService extends Service {
             }
         };
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        //mUserStream.shutdown();
+        //mUserStream.removeListener(mUserStreamListener);
     }
 
     public boolean isUserStreamRunning() {

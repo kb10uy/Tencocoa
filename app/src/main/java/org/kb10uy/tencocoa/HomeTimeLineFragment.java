@@ -200,7 +200,7 @@ public class HomeTimeLineFragment extends Fragment {
 
     private void startImageViewer(Uri uri) {
         Intent intent = new Intent(getActivity(), ImageViewerActivity.class);
-        intent.putExtra("Uri2", uri);
+        intent.putExtra("Uri", uri);
         startActivity(intent);
     }
 
