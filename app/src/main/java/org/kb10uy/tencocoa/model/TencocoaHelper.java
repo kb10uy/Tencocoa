@@ -41,8 +41,7 @@ public class TencocoaHelper {
     public static <T> T deserializeObjectFromFile(FileInputStream input) {
         try {
             ObjectInputStream deserializer = new ObjectInputStream(input);
-            T value = (T) deserializer.readObject();
-            return value;
+            return (T) deserializer.readObject();
         } catch (IOException e) {
             e.printStackTrace();
             return null;
