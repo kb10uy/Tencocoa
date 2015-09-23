@@ -158,4 +158,19 @@ public class TencocoaUserStreamLister implements UserStreamListener {
     public void onException(Exception ex) {
         for (UserStreamAdapter i : mAdapters) i.onException(ex);
     }
+
+    @Override
+    public void onFavoritedRetweet(User source, User target, Status favoritedRetweet) {
+        for (UserStreamAdapter i : mAdapters) i.onFavoritedRetweet(source, target, favoritedRetweet);
+    }
+
+    @Override
+    public void onQuotedTweet(User source, User target, Status quotingTweet) {
+        for (UserStreamAdapter i : mAdapters) i.onQuotedTweet(source, target, quotingTweet);
+    }
+
+    @Override
+    public void onRetweetedRetweet(User source, User target, Status retweetedStatus) {
+        for (UserStreamAdapter i : mAdapters) i.onRetweetedRetweet(source, target, retweetedStatus);
+    }
 }

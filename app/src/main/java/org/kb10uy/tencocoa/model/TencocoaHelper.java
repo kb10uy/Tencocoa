@@ -106,6 +106,9 @@ public class TencocoaHelper {
             case "Witch":
                 ctx.setTheme(R.style.Witch);
                 break;
+            case "Tomori":
+                ctx.setTheme(R.style.Tomori);
+                break;
         }
     }
 
