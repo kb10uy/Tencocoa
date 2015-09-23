@@ -182,11 +182,8 @@ public class HomeTimeLineFragment extends Fragment {
                 View av = inflater.inflate(R.layout.item_status_image, mlist, false);
                 ImageView imv = (ImageView) av.findViewById(R.id.StatusItemImageItem);
                 Glide.with(getActivity()).load(info.getThumbnailImageUri()).into(imv);
-<<<<<<< HEAD
-=======
                 final Uri tu = info.getFullImageUri();
                 imv.setOnClickListener((v) -> startImageViewer(tu));
->>>>>>> feature/notification
                 mlist.addView(av);
             }
         } else {
@@ -203,7 +200,7 @@ public class HomeTimeLineFragment extends Fragment {
 
     private void startImageViewer(Uri uri) {
         Intent intent = new Intent(getActivity(), ImageViewerActivity.class);
-        intent.putExtra("Uri", uri);
+        intent.putExtra("Uri2", uri);
         startActivity(intent);
     }
 
