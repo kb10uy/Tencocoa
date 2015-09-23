@@ -10,7 +10,6 @@
     <string name="label_activity_first_setting_consumer_secret" translatable="false">Consumer Secret</string>
 
     <string name="uri_twitter_oauth_callback" translatable="false">tencocoa://twitter-oauth-callback</string>
-    <string name="title_activity_main2">Main2Activity</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
