@@ -20,7 +20,7 @@ android {
         targetSdkVersion 23
         versionCode 22
         versionName "0.3.1 (build 22, Kbtter7.0.3.1, Dragonforce)"
-        multiDexEnabled true
+        //multiDexEnabled true
     }
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
@@ -29,10 +29,12 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    /*
     dexOptions{
         preDexLibraries false
         javaMaxHeapSize "2g"
     }
+    */
     buildTypes {
         release {
             minifyEnabled false
@@ -56,7 +58,7 @@ retrolambda {
 dependencies {
     compile 'com.android.support:appcompat-v7:23.0.1'
     compile 'com.android.support:support-v4:23.0.1'
-    compile 'com.android.support:multidex:1.0.1'
+    //compile 'com.android.support:multidex:1.0.1'
     compile 'org.twitter4j:twitter4j:4.0.4'
     compile 'org.twitter4j:twitter4j-stream:4.0.4'
     compile 'org.twitter4j:twitter4j-media-support:4.0.4'

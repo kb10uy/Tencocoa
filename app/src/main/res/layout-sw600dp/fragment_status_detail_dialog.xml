@@ -1,6 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="600dp"
+    android:layout_width="560dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     tools:context="org.kb10uy.tencocoa.StatusDetailDialogFragment">
