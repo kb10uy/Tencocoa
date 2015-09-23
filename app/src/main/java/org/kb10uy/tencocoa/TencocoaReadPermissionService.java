@@ -14,6 +14,11 @@ import android.util.Log;
 import org.kb10uy.tencocoa.model.TwitterAccountInformation;
 import org.kb10uy.tencocoa.model.TwitterHelper;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import twitter4j.Paging;
+import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.User;
@@ -83,6 +88,15 @@ public class TencocoaReadPermissionService extends Service {
             Log.d(getString(R.string.app_name), te.getErrorMessage());
         }
         return null;
+    }
+
+    public List<Status> getLatestHomeTimeline(int count) {
+        try {
+            return mTwitter.timelines().getHomeTimeline(new Paging(1, count));
+        } catch (TwitterException e) {
+            Log.d(getString(R.string.app_name), e.getErrorMessage());
+        }
+        return new ArrayList<>();
     }
 
     public void storeOAuthRequestToken(RequestToken token) {

@@ -45,6 +45,8 @@ import org.kb10uy.tencocoa.settings.SettingsActivity;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 import io.realm.Realm;
@@ -278,7 +280,7 @@ public class MainActivity
         mHomeTimelineStreamAdapter = new UserStreamAdapter() {
             @Override
             public void onStatus(Status status) {
-                mHomeTimeLineFragment.onHomeTimeLineStatus(status);
+                mHomeTimeLineFragment.onHomeTimeLineStreamingStatus(status);
             }
 
             @Override
@@ -424,16 +426,18 @@ public class MainActivity
             showToast(getString(R.string.notification_network_unavailable));
             return;
         }
-        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+        AsyncTask<Void, Void, List<Status>> task = new AsyncTask<Void, Void, List<Status>>() {
             @Override
-            protected Void doInBackground(Void... params) {
+            protected List<twitter4j.Status> doInBackground(Void... params) {
                 try {
                     mServiceLatch.await();
                     mStreamingService.setTargetUser(info);
                     mHomeTimeLineFragment.setStreamingUser(info.getUserId());
                     mWritePermissionService.setTarget(mStreamingService.getTargetUserTwitterInstance(), mStreamingService.getTargetUserInformation());
                     mReadPermissionService.setTarget(mStreamingService.getTargetUserTwitterInstance(), mStreamingService.getTargetUserInformation());
+                    List<twitter4j.Status> ret = mReadPermissionService.getLatestHomeTimeline(100);
                     mStreamingService.startCurrentUserStream(mUserStreamListener);
+                    return ret;
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -441,9 +445,11 @@ public class MainActivity
             }
 
             @Override
-            protected void onPostExecute(Void aVoid) {
+            protected void onPostExecute(List<twitter4j.Status> list) {
                 refreshUserInformation(info);
                 mHandler.post(mHomeTimeLineFragment::clearStatuses);
+                Collections.reverse(list);
+                if (list != null) mHandler.post(() -> mHomeTimeLineFragment.addRestStatuses(list));
             }
         };
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

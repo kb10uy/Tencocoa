@@ -3,6 +3,7 @@ package org.kb10uy.tencocoa.views;
 import android.app.DownloadManager;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -27,8 +28,8 @@ public class ImageViewerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_viewer);
-
-        targetUri = (Uri) savedInstanceState.getSerializable("Uri");
+        Intent intent = getIntent();
+        targetUri = Uri.parse(intent.getStringExtra("Uri"));
         mImageView = (ImageView) findViewById(R.id.ImageViewerImageView);
         mAttacher = new PhotoViewAttacher(mImageView);
         mAttacher.setZoomable(true);
@@ -51,6 +52,7 @@ public class ImageViewerActivity extends AppCompatActivity {
             String[] split = targetUri.toString().split("/");
             String filename = split[split.length - 1].split(":")[0];
             req.setDestinationInExternalFilesDir(this, Environment.DIRECTORY_DOWNLOADS, "/" + filename);
+            manager.enqueue(req);
         });
         findViewById(R.id.ImageViewerButtonCopyLink).setOnClickListener(v -> {
             ClipboardManager clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);

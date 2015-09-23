@@ -200,11 +200,11 @@ public class HomeTimeLineFragment extends Fragment {
 
     private void startImageViewer(Uri uri) {
         Intent intent = new Intent(getActivity(), ImageViewerActivity.class);
-        intent.putExtra("Uri", uri);
+        intent.putExtra("Uri", uri.toString());
         startActivity(intent);
     }
 
-    public void onHomeTimeLineStatus(Status status) {
+    public void onHomeTimeLineStreamingStatus(Status status) {
         TencocoaStatus tstatus = new TencocoaStatus(status);
         Realm realm = Realm.getInstance(ctx);
         if (TencocoaDatabaseHelper.checkFavoritedStatus(realm, tstatus.getShowingStatus().getId())) {
@@ -212,6 +212,14 @@ public class HomeTimeLineFragment extends Fragment {
         }
         realm.close();
         mHandler.post(() -> mTimeLineAdapter.add(tstatus));
+    }
+
+    public void addRestStatuses(List<Status> statuses) {
+        List<TencocoaStatus> org = mTimeLineAdapter.getList();
+        ArrayList<TencocoaStatus> ns = new ArrayList<>();
+        for (Status s : statuses) ns.add(new TencocoaStatus(s));
+        org.addAll(0, ns);
+        mHandler.post(() -> mTimeLineAdapter.setList(org));
     }
 
     public void onFavorite(User source, User target, Status status) {
