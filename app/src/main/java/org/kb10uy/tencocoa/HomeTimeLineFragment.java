@@ -163,10 +163,8 @@ public class HomeTimeLineFragment extends Fragment {
                 View av = inflater.inflate(R.layout.item_status_image, mlist, false);
                 ImageView imv = (ImageView) av.findViewById(R.id.StatusItemImageItem);
                 Glide.with(getActivity()).load(info.getThumbnailImageUri()).into(imv);
-                Log.d("Tencocoa", String.format("%sを追加したと思う…多分", info.getThumbnailImageUri()));
                 mlist.addView(av);
             }
-            Log.d("Tencocoa", "で結局" + Integer.toString(mlist.getChildCount()));
         } else {
             (targetView.findViewById(R.id.StatusItemMediaList)).setVisibility(View.GONE);
         }
