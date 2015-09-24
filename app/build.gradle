@@ -18,8 +18,8 @@ android {
         applicationId "org.kb10uy.tencocoa"
         minSdkVersion 17
         targetSdkVersion 23
-        versionCode 22
-        versionName "0.3.1 (build 22, Kbtter7.0.3.1, Dragonforce)"
+        versionCode 23
+        versionName "0.3.2 (build 23, Kbtter7.0.3.2, Dragonforce)"
         //multiDexEnabled true
     }
     packagingOptions {

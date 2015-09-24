@@ -5,14 +5,11 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import org.kb10uy.tencocoa.model.TwitterAccountInformation;
-import org.kb10uy.tencocoa.model.TwitterHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +19,6 @@ import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.User;
-import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
 
 
@@ -85,7 +81,7 @@ public class TencocoaReadPermissionService extends Service {
         try {
             return mTwitter.users().showUser(currentUser.getUserId());
         } catch (TwitterException te) {
-            Log.d(getString(R.string.app_name), te.getErrorMessage());
+            //Log.d(getString(R.string.app_name), te.getErrorMessage());
         }
         return null;
     }
@@ -94,7 +90,7 @@ public class TencocoaReadPermissionService extends Service {
         try {
             return mTwitter.timelines().getHomeTimeline(new Paging(1, count));
         } catch (TwitterException e) {
-            Log.d(getString(R.string.app_name), e.getErrorMessage());
+            //Log.d(getString(R.string.app_name), e.getErrorMessage());
         }
         return new ArrayList<>();
     }

@@ -17,6 +17,8 @@ import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 
 import org.kb10uy.tencocoa.R;
 
+import java.io.File;
+
 import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class ImageViewerActivity extends AppCompatActivity {
@@ -51,7 +53,9 @@ public class ImageViewerActivity extends AppCompatActivity {
             DownloadManager.Request req = new DownloadManager.Request(targetUri);
             String[] split = targetUri.toString().split("/");
             String filename = split[split.length - 1].split(":")[0];
-            req.setDestinationInExternalFilesDir(this, Environment.DIRECTORY_DOWNLOADS, "/" + filename);
+            String dls = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath();
+            File dest = new File(dls, filename);
+            req.setDestinationUri(Uri.fromFile(dest));
             manager.enqueue(req);
         });
         findViewById(R.id.ImageViewerButtonCopyLink).setOnClickListener(v -> {

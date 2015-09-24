@@ -20,7 +20,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -351,14 +350,14 @@ public class MainActivity
         startService(tss);
         startService(twps);
         startService(trps);
-        Log.d(getString(R.string.app_name), "Services started now");
+        //Log.d(getString(R.string.app_name), "Services started now");
     }
 
     private void stopTencocoaServices() {
         stopService(new Intent(ctx, TencocoaStreamingService.class));
         stopService(new Intent(ctx, TencocoaWritePermissionService.class));
         stopService(new Intent(ctx, TencocoaReadPermissionService.class));
-        Log.d(getString(R.string.app_name), "Services stopped now");
+        //Log.d(getString(R.string.app_name), "Services stopped now");
     }
 
     private void bindTencocoaServices() {
@@ -369,7 +368,7 @@ public class MainActivity
             mWritePermissionBound = ctx.bindService(new Intent(this, TencocoaWritePermissionService.class), mWritePermissionConnection, 0);
         if (!mReadPermissionBound)
             mReadPermissionBound = ctx.bindService(new Intent(this, TencocoaReadPermissionService.class), mReadPermissionConnection, 0);
-        Log.d(getString(R.string.app_name), "Services are now bound");
+        //Log.d(getString(R.string.app_name), "Services are now bound");
     }
 
     private void unbindTencocoaServices() {
@@ -388,7 +387,7 @@ public class MainActivity
             mReadPermissionBound = false;
             mReadPermissionService = null;
         }
-        Log.d(getString(R.string.app_name), "Services are now unbound");
+        //Log.d(getString(R.string.app_name), "Services are now unbound");
         mServiceLatch = null;
         createServiceConnections();
     }

@@ -99,7 +99,7 @@ public class HomeTimeLineFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         backingCache = mTimeLineAdapter.getList();
-        Log.i("Tencocoa", "HomeTimeline's view was destroyed and saved statuses.");
+        //Log.i("Tencocoa", "HomeTimeline's view was destroyed and saved statuses.");
     }
 
     @Override
