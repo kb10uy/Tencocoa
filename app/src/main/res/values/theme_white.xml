@@ -11,5 +11,6 @@
         <item name="colorTextScreenName">@color/white_text_screen_name</item>
         <item name="colorRetweetBackground">@color/white_retweet_green</item>
         <item name="colorRetweetForeground">@color/white_retweet_green_text</item>
+        <item name="drawableWhite">@color/white_white</item>
     </style>
 </resources>

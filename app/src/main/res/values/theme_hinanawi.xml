@@ -11,5 +11,6 @@
         <item name="colorTextScreenName">@color/hinanawi_text_screen_name</item>
         <item name="colorRetweetBackground">@color/hinanawi_retweet_green</item>
         <item name="colorRetweetForeground">@color/hinanawi_retweet_green_text</item>
+        <item name="drawableWhite">@color/hinanawi_white</item>
     </style>
 </resources>

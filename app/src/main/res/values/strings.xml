@@ -11,4 +11,7 @@
 
     <string name="uri_twitter_oauth_callback" translatable="false">tencocoa://twitter-oauth-callback</string>
 
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
 </resources>

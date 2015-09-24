@@ -12,7 +12,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
@@ -21,7 +20,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -46,6 +44,8 @@ import org.kb10uy.tencocoa.settings.SettingsActivity;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 import io.realm.Realm;
@@ -279,19 +279,17 @@ public class MainActivity
         mHomeTimelineStreamAdapter = new UserStreamAdapter() {
             @Override
             public void onStatus(Status status) {
-                mHomeTimeLineFragment.onHomeTimeLineStatus(status);
+                mHomeTimeLineFragment.onHomeTimeLineStreamingStatus(status);
             }
 
             @Override
             public void onUnfavorite(User source, User target, Status unfavoritedStatus) {
-                if (source.getId() != currentUser.getId()) return;
-                mHomeTimeLineFragment.onUnfavorite(unfavoritedStatus);
+                mHomeTimeLineFragment.onUnfavorite(source, target, unfavoritedStatus);
             }
 
             @Override
             public void onFavorite(User source, User target, Status favoritedStatus) {
-                if (source.getId() != currentUser.getId()) return;
-                mHomeTimeLineFragment.onFavorite(favoritedStatus);
+                mHomeTimeLineFragment.onFavorite(source, target, favoritedStatus);
             }
         };
 
@@ -352,14 +350,14 @@ public class MainActivity
         startService(tss);
         startService(twps);
         startService(trps);
-        Log.d(getString(R.string.app_name), "Services started now");
+        //Log.d(getString(R.string.app_name), "Services started now");
     }
 
     private void stopTencocoaServices() {
         stopService(new Intent(ctx, TencocoaStreamingService.class));
         stopService(new Intent(ctx, TencocoaWritePermissionService.class));
         stopService(new Intent(ctx, TencocoaReadPermissionService.class));
-        Log.d(getString(R.string.app_name), "Services stopped now");
+        //Log.d(getString(R.string.app_name), "Services stopped now");
     }
 
     private void bindTencocoaServices() {
@@ -370,7 +368,7 @@ public class MainActivity
             mWritePermissionBound = ctx.bindService(new Intent(this, TencocoaWritePermissionService.class), mWritePermissionConnection, 0);
         if (!mReadPermissionBound)
             mReadPermissionBound = ctx.bindService(new Intent(this, TencocoaReadPermissionService.class), mReadPermissionConnection, 0);
-        Log.d(getString(R.string.app_name), "Services are now bound");
+        //Log.d(getString(R.string.app_name), "Services are now bound");
     }
 
     private void unbindTencocoaServices() {
@@ -389,7 +387,7 @@ public class MainActivity
             mReadPermissionBound = false;
             mReadPermissionService = null;
         }
-        Log.d(getString(R.string.app_name), "Services are now unbound");
+        //Log.d(getString(R.string.app_name), "Services are now unbound");
         mServiceLatch = null;
         createServiceConnections();
     }
@@ -427,15 +425,18 @@ public class MainActivity
             showToast(getString(R.string.notification_network_unavailable));
             return;
         }
-        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+        AsyncTask<Void, Void, List<Status>> task = new AsyncTask<Void, Void, List<Status>>() {
             @Override
-            protected Void doInBackground(Void... params) {
+            protected List<twitter4j.Status> doInBackground(Void... params) {
                 try {
                     mServiceLatch.await();
                     mStreamingService.setTargetUser(info);
+                    mHomeTimeLineFragment.setStreamingUser(info.getUserId());
                     mWritePermissionService.setTarget(mStreamingService.getTargetUserTwitterInstance(), mStreamingService.getTargetUserInformation());
                     mReadPermissionService.setTarget(mStreamingService.getTargetUserTwitterInstance(), mStreamingService.getTargetUserInformation());
+                    List<twitter4j.Status> ret = mReadPermissionService.getLatestHomeTimeline(100);
                     mStreamingService.startCurrentUserStream(mUserStreamListener);
+                    return ret;
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -443,9 +444,11 @@ public class MainActivity
             }
 
             @Override
-            protected void onPostExecute(Void aVoid) {
+            protected void onPostExecute(List<twitter4j.Status> list) {
                 refreshUserInformation(info);
                 mHandler.post(mHomeTimeLineFragment::clearStatuses);
+                Collections.reverse(list);
+                if (list != null) mHandler.post(() -> mHomeTimeLineFragment.addRestStatuses(list));
             }
         };
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

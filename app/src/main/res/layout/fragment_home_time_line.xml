@@ -8,6 +8,50 @@
         android:id="@+id/HomeTimeLineDrawerListViewTimeLine"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center" />
+        android:layout_gravity="left|bottom" />
+
+    <LinearLayout
+        android:id="@+id/HomeTimeLinePopup"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginTop="-56dp"
+        android:background="?drawableWhite"
+        android:elevation="4dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_margin="4dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/tencocoa_star1"
+                android:id="@+id/HomeTimeLineImageViewPopupIcon"/>
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_margin="4dp"
+                android:id="@+id/HomeTimeLineImageViewPopupSource" />
+            <TextView
+                android:id="@+id/HomeTimeLineTextViewCaption"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:layout_marginStart="8dp"
+                android:textColor="?colorBlack"
+                android:text="@string/popup_notification_favorited"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/HomeTimeLineTextViewDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:layout_marginStart="24dp"
+            android:text="Description"/>
+    </LinearLayout>
 
 </FrameLayout>
