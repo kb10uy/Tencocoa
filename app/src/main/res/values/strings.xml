@@ -10,7 +10,7 @@
     <string name="label_activity_first_setting_consumer_secret" translatable="false">Consumer Secret</string>
 
     <string name="uri_twitter_oauth_callback" translatable="false">tencocoa://twitter-oauth-callback</string>
-
+    <string name="uri_asset_licenses" translatable="false">file:///android_asset/licenses.html</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 

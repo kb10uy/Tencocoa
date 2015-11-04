@@ -112,9 +112,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@color/tencocoa_color_overlay_favorite"
-            android:textOff="@string/label_dialog_status_detail_fav"
-            android:textOn="@string/label_dialog_status_detail_unfav" />
+            android:background="@color/tencocoa_color_overlay_favorite"/>
 
         <Button
             android:id="@+id/StatusDetailButtonFavRetweet"

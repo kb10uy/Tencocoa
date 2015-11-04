@@ -44,6 +44,7 @@
                     android:orientation="horizontal">
 
                     <ImageView
+                        android:id="@+id/StatusItemFavoriteCountMark"
                         android:layout_width="16dp"
                         android:layout_height="16dp"
                         android:layout_marginLeft="4dp"

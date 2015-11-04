@@ -46,6 +46,11 @@
             android:name=".views.ImageViewerActivity"
             android:label=""
             android:theme="@style/TranslucentTheme" />
+        <activity
+            android:name=".settings.SettingsActivity"
+            android:label="@string/title_activity_settings" />
+
+        <activity android:name=".settings.LicenseActivity" />
 
         <service
             android:name=".TencocoaStreamingService"
@@ -57,9 +62,12 @@
             android:name=".TencocoaReadPermissionService"
             android:exported="false" />
 
-        <activity
-            android:name=".settings.SettingsActivity"
-            android:label="@string/title_activity_settings" >
-        </activity>
+        <receiver android:name=".model.TencocoaBroadcastReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED" />
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
+            </intent-filter>
+        </receiver>
     </application>
+
 </manifest>
