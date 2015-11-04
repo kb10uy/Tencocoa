@@ -45,6 +45,7 @@
     <string name="label_dialog_new_status_reply">返信</string>
     <string name="label_dialog_new_status_update">ツイート</string>
 
+
     <string name="label_dialog_status_detail_fav">ふぁぼ</string>
     <string name="label_dialog_status_detail_unfav">あんふぁぼ</string>
     <string name="label_dialog_status_detail_rt">RT</string>

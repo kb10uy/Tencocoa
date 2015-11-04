@@ -21,6 +21,9 @@
     <string name="preference_login_auto_login_enabled" translatable="false">LOGIN_AUTO_LOGIN_ENABLED</string>
 
     <string name="preference_appearance_theme" translatable="false">APPEARANCE_THEME</string>
+    <string name="preference_appearance_like_string" translatable="false">APPEARANCE_LIKE_STRING</string>
+    <string name="preference_appearance_unlike_string" translatable="false">APPEARANCE_UNLIKE_STRING</string>
+    <string name="preference_appearance_like_mark" translatable="false">APPEARANCE_LIKE_MARK</string>
 
     <string name="preference_general_behavior_write_as_toast" translatable="false">GENERAL_BEHAVIOR_WRITE_AS_TOAST</string>
 

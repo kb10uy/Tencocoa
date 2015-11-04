@@ -5,5 +5,13 @@
             android:defaultValue="true"
             android:key="@string/preference_general_behavior_write_as_toast"
             android:title="@string/prefscreen_general_behavior_write_as_toast" />
+        <PreferenceScreen
+            android:title="LICENSE"
+            android:key="__LICENSE">
+            <intent
+                android:action="ANDROID.INTENT.ACTION.VIEW"
+                android:targetPackage="org.kb10uy.tencocoa"
+                android:targetClass="org.kb10uy.tencocoa.settings.LicenseActivity"/>
+        </PreferenceScreen>
     </PreferenceCategory>
 </PreferenceScreen>

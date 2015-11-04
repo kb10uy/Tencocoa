@@ -14,7 +14,6 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
-
         <activity
             android:name=".MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -25,11 +24,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".settings.FirstSettingActivity"
             android:label="@string/title_activity_first_setting" />
-
         <activity
             android:name=".AccountsListActivity"
             android:label="@string/title_activity_accounts_list"
@@ -45,15 +42,15 @@
                     android:scheme="tencocoa" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".views.ImageViewerActivity"
             android:label=""
             android:theme="@style/TranslucentTheme" />
-
         <activity
             android:name=".settings.SettingsActivity"
             android:label="@string/title_activity_settings" />
+
+        <activity android:name=".settings.LicenseActivity" />
 
         <service
             android:name=".TencocoaStreamingService"
@@ -65,11 +62,12 @@
             android:name=".TencocoaReadPermissionService"
             android:exported="false" />
 
-        <receiver android:name=".model.TencocoaBroadcastReceiver">
+        <receiver android:name=".model.TencocoaBroadcastReceiver" >
             <intent-filter>
-                <action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED"/>
-                <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>
+                <action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED" />
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
             </intent-filter>
         </receiver>
     </application>
+
 </manifest>

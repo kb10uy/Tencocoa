@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -22,6 +24,7 @@ public class StatusDetailDialogFragment extends DialogFragment {
     private StatusDetailInteractionListener mListener;
     private TencocoaStatus mTargetStatus;
     private Context ctx;
+    private SharedPreferences pref;
 
     public static StatusDetailDialogFragment newInstance(TencocoaStatus status) {
         StatusDetailDialogFragment fragment = new StatusDetailDialogFragment();
@@ -42,6 +45,7 @@ public class StatusDetailDialogFragment extends DialogFragment {
 
         dialog.getWindow().requestFeature(STYLE_NO_TITLE);
         dialog.setContentView(R.layout.fragment_status_detail_dialog);
+        setDynamicLabel(dialog);
         setStatusInfo(dialog);
         return dialog;
     }
@@ -86,6 +90,13 @@ public class StatusDetailDialogFragment extends DialogFragment {
             view.findViewById(R.id.StatusDetailButtonRetweet).setEnabled(false);
             view.findViewById(R.id.StatusDetailButtonFavRetweet).setEnabled(false);
         }
+    }
+
+    private void setDynamicLabel(Dialog dialog) {
+        pref = PreferenceManager.getDefaultSharedPreferences(ctx);
+        ToggleButton fav = (ToggleButton) dialog.findViewById(R.id.StatusDetailButtonFav);
+        fav.setTextOff(pref.getString(getString(R.string.preference_appearance_like_string), getString(R.string.label_dialog_status_detail_fav)));
+        fav.setTextOn(pref.getString(getString(R.string.preference_appearance_unlike_string), getString(R.string.label_dialog_status_detail_unfav)));
     }
 
     private void fetchStatusState() {
