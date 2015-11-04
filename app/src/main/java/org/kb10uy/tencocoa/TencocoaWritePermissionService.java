@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
@@ -14,9 +15,14 @@ import android.widget.Toast;
 import org.kb10uy.tencocoa.model.TwitterAccountInformation;
 import org.kb10uy.tencocoa.model.TwitterHelper;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import twitter4j.StatusUpdate;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
+import twitter4j.UploadedMedia;
 import twitter4j.auth.AccessToken;
 
 
@@ -30,6 +36,7 @@ public class TencocoaWritePermissionService extends Service {
     private TencocoaWritePermissionServiceBinder mBinder = new TencocoaWritePermissionServiceBinder();
     SharedPreferences pref;
     boolean showNotificationsAsToast;
+    List<Uri> mPendingMediaUris;
 
     @Override
     public void onCreate() {
@@ -37,6 +44,7 @@ public class TencocoaWritePermissionService extends Service {
         pref = PreferenceManager.getDefaultSharedPreferences(this);
         showNotificationsAsToast = pref.getBoolean(getString(R.string.preference_general_behavior_write_as_toast), true);
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        mPendingMediaUris = new ArrayList<>();
     }
 
     @Override
@@ -69,43 +77,30 @@ public class TencocoaWritePermissionService extends Service {
     }
 
     public void updateStatus(String statusText) {
-        AsyncTask<String, Void, String> task = new AsyncTask<String, Void, String>() {
-            @Override
-            protected String doInBackground(String... params) {
-                if (currentUser == null)
-                    return getString(R.string.notification_network_unavailable);
-                try {
-                    mTwitter.tweets().updateStatus(params[0]);
-                    return "";
-                } catch (TwitterException e) {
-                    e.printStackTrace();
-                    return e.getErrorMessage();
-                }
-            }
+        StatusUpdate update = new StatusUpdate(statusText);
+        updateStatus(update);
+    }
 
-            @Override
-            protected void onPostExecute(String result) {
-                super.onPostExecute(result);
-                if (result.equals("")) {
-                    showNotification(getString(R.string.notification_update_status_success), getString(R.string.notification_update_status_success));
-                } else {
-                    StringBuilder sb = new StringBuilder();
-                    sb.append(getString(R.string.notification_update_status_fail));
-                    sb.append(result);
-                    showNotification(sb.toString(), sb.toString());
-                }
-            }
-        };
-        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, statusText);
+    public void pushImages(List<Uri> uris) {
+        mPendingMediaUris.addAll(uris);
     }
 
     public void updateStatus(StatusUpdate status) {
         AsyncTask<StatusUpdate, Void, String> task = new AsyncTask<StatusUpdate, Void, String>() {
             @Override
             protected String doInBackground(StatusUpdate... params) {
-                if (currentUser == null) return null;
+                if (currentUser == null) return getString(R.string.notification_network_unavailable);
                 try {
-                    mTwitter.tweets().updateStatus(params[0]);
+                    StatusUpdate target = params[0];
+                    if (mPendingMediaUris.size() >= 0) {
+                        List<UploadedMedia> media = new ArrayList<>();
+                        for (Uri u : mPendingMediaUris) {
+                            media.add(mTwitter.uploadMedia(new File(u.toString())));
+                        }
+                        mPendingMediaUris.clear();
+                        target.setMediaIds(TwitterHelper.convertMediaIds(media));
+                    }
+                    mTwitter.tweets().updateStatus(target);
                     return "";
                 } catch (TwitterException e) {
                     e.printStackTrace();
@@ -156,7 +151,7 @@ public class TencocoaWritePermissionService extends Service {
                 }
             }
         };
-        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,id);
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, id);
     }
 
     public void unfavoriteStatus(long id) {

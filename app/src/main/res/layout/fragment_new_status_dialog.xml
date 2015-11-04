@@ -47,14 +47,28 @@
         android:ems="10"
         android:gravity="top"
         android:inputType="textMultiLine" />
-
-    <Button
-        android:id="@+id/NewStatusDialogFragmentButtonUpdateStatus"
-        android:layout_width="160dp"
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:layout_margin="4dp"
-        android:text="@string/label_dialog_new_status_update" />
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/NewStatusDialogFragmentButtonAddImage"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_margin="4dp"
+            android:text="@string/label_dialog_new_status_add_image"/>
+        <Button
+            android:id="@+id/NewStatusDialogFragmentButtonUpdateStatus"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_margin="4dp"
+            android:text="@string/label_dialog_new_status_update" />
+    </LinearLayout>
+
 
 
 </LinearLayout>
