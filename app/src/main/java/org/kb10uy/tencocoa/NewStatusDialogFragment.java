@@ -12,13 +12,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.laevatein.Laevatein;
-import com.laevatein.MimeType;
-import com.laevatein.ui.PhotoSelectionActivity;
-
 import org.kb10uy.tencocoa.model.TencocoaHelper;
 import org.kb10uy.tencocoa.model.TencocoaStatus;
-import org.kb10uy.tencocoa.views.TencocoaPhotoSelectionActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +28,6 @@ public class NewStatusDialogFragment extends DialogFragment {
     private Status replyToStatus;
     private List<Uri> mSelectedImage;
     private SharedPreferences pref;
-    private static final int LAEVATEIN_SELECTED = 0x55a;
 
     public static NewStatusDialogFragment newInstance() {
         return new NewStatusDialogFragment();
@@ -71,12 +65,7 @@ public class NewStatusDialogFragment extends DialogFragment {
             updateStatus(text);
         });
         dialog.findViewById(R.id.NewStatusDialogFragmentButtonAddImage).setOnClickListener(v -> {
-            Laevatein.from(this)
-                    .choose(MimeType.allOf())
-                    .count(0, 4)
-                    .photoSelectionActivityClass(TencocoaPhotoSelectionActivity.class)
-                    .resume(mSelectedImage)
-                    .forResult(LAEVATEIN_SELECTED);
+
         });
 
         mSelectedImage = new ArrayList<>();
@@ -100,11 +89,6 @@ public class NewStatusDialogFragment extends DialogFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case LAEVATEIN_SELECTED:
-                if (resultCode == Activity.RESULT_OK) {
-                    mSelectedImage = Laevatein.obtainResult(data);
-                }
-                break;
             default:
                 return;
         }
