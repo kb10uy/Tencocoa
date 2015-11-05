@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="128dp"
+                android:layout_height="96dp">
+    <ImageView
+        android:id="@+id/ItemMediaImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerInside"
+        android:layout_margin="4dp"/>
+    <CheckBox
+        android:id="@+id/ItemMediaSelected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"/>
+    <TextView
+        android:id="@+id/ItemMediaFileName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#80666666"
+        android:layout_margin="4dp"
+        android:layout_gravity="bottom"
+        android:text="filename"
+        style="@style/Base.TextAppearance.AppCompat.Inverse"/>
+
+</FrameLayout>

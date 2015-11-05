@@ -5,12 +5,15 @@ import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -34,6 +37,8 @@ public class MediaSelectorActivity extends AppCompatActivity
     private Handler mHandler;
     private Intent mIntent;
     private Context mContext;
+    private ContentResolver mResolver;
+    private Cursor mMediaCursor;
     private int mResultCode = 0;
     private int mMinCount = 0, mMaxCount = 1;
     private int mMinWidth = -1, mMaxWidth = -1;
@@ -70,6 +75,22 @@ public class MediaSelectorActivity extends AppCompatActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        resolveMedia();
+    }
+
+    private void resolveMedia() {
+        mResolver = getContentResolver();
+        mMediaCursor = mResolver.query(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                null,
+                null,
+                null,
+                MediaStore.Images.Media.DATE_MODIFIED);
     }
 
     @Override

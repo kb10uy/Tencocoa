@@ -1,6 +1,7 @@
 package org.kb10uy.bhavaagra;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -55,7 +56,7 @@ public class RhapsodyBuilder {
         return this;
     }
 
-    public void launch() {
+    public Intent buildIntent() {
         Intent intent = new Intent(mContext, MediaSelectorActivity.class);
         intent.putExtra(RESULT_CODE, mResultCode);
         intent.putExtra(MIN_COUNT, mMinCount);
@@ -65,6 +66,7 @@ public class RhapsodyBuilder {
         intent.putExtra(MAX_WIDTH, mMaxWidth);
         intent.putExtra(MAX_HEIGHT, mMaxHeight);
         intent.putStringArrayListExtra(PREVIOUS_LIST, toStringArrayList(mPrevious));
+        return intent;
     }
 
     static ArrayList<String> toStringArrayList(List<Uri> list) {
