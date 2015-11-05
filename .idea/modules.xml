@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Tencocoa.iml" filepath="$PROJECT_DIR$/Tencocoa.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bhavaagra/bhavaagra.iml" filepath="$PROJECT_DIR$/bhavaagra/bhavaagra.iml" />
     </modules>
   </component>
 </project>
