@@ -50,8 +50,6 @@ public class AlbumDrawerFragment extends Fragment {
             mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
             mFromSavedInstanceState = true;
         }
-
-        selectItem(mCurrentSelectedPosition);
     }
 
     @Override
@@ -84,9 +82,10 @@ public class AlbumDrawerFragment extends Fragment {
         mDrawerLayout = drawerLayout;
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         mDrawerToggle = dt;
+        mDrawerListView.setAdapter(mAlbumAdapter);
     }
 
-    private void selectItem(int position) {
+    public void selectItem(int position) {
         mCurrentSelectedPosition = position;
         if (mDrawerListView != null) {
             mDrawerListView.setItemChecked(position, true);
@@ -95,12 +94,22 @@ public class AlbumDrawerFragment extends Fragment {
             mDrawerLayout.closeDrawer(mFragmentContainerView);
         }
         if (mCallbacks != null) {
-            mCallbacks.onNavigationDrawerItemSelected(position);
+            mCallbacks.onAlbumDrawerItemSelected(position);
         }
     }
 
     @Override
     public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            mCallbacks = (NavigationDrawerCallbacks) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException("Context must implement NavigationDrawerCallbacks.");
+        }
+    }
+
+    @Override
+    public void onAttach(Activity context) {
         super.onAttach(context);
         try {
             mCallbacks = (NavigationDrawerCallbacks) context;
@@ -128,35 +137,6 @@ public class AlbumDrawerFragment extends Fragment {
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        // If the drawer is open, show the global app actions in the action bar. See also
-        // showGlobalContextActionBar, which controls the top-left area of the action bar.
-        if (mDrawerLayout != null && isDrawerOpen()) {
-            inflater.inflate(R.menu.global, menu);
-            showGlobalContextActionBar();
-        }
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-
-        if (item.getItemId() == R.id.action_example) {
-            Toast.makeText(getActivity(), "Example action.", Toast.LENGTH_SHORT).show();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * Per the navigation drawer design guidelines, updates the action bar to show the global app
-     * 'context', rather than just what's in the current screen.
-     */
     private void showGlobalContextActionBar() {
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
@@ -168,13 +148,7 @@ public class AlbumDrawerFragment extends Fragment {
         return getActivity().getActionBar();
     }
 
-    /**
-     * Callbacks interface that all activities using this fragment must implement.
-     */
-    public static interface NavigationDrawerCallbacks {
-        /**
-         * Called when an item in the navigation drawer is selected.
-         */
-        void onNavigationDrawerItemSelected(int position);
+    public interface NavigationDrawerCallbacks {
+        void onAlbumDrawerItemSelected(int position);
     }
 }

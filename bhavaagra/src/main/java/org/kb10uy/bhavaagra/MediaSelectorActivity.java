@@ -1,45 +1,48 @@
 package org.kb10uy.bhavaagra;
 
-import android.app.Activity;
-
-import android.app.ActionBar;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.ContentResolver;
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
-import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MediaSelectorActivity extends AppCompatActivity
         implements AlbumDrawerFragment.NavigationDrawerCallbacks {
 
+    private static final int CAMERA_INTENT = 0x55A;
+
     private static final String CURRENT_INTENT = "CurrentIntent";
     public static final String[] MEDIA_BUCKETS = new String[]{
             MediaStore.Images.ImageColumns._ID,
+            MediaStore.Images.ImageColumns.DISPLAY_NAME,
             MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME,
             MediaStore.Images.ImageColumns.BUCKET_ID,
             MediaStore.Images.ImageColumns.DATE_MODIFIED,
@@ -54,14 +57,18 @@ public class MediaSelectorActivity extends AppCompatActivity
     private ContentResolver mResolver;
     private Cursor mMediaCursor;
     private List<RhapsodyAlbum> mAlbums;
+    private RhapsodyAlbum mCurrentAlbum;
     private Rhapsody mCurrentRhapsody;
     private ActionBarDrawerToggle mDrawerToggle;
+    private List<Uri> mSelectedMedias;
 
     private GridView mMediaGridView;
     private DrawerLayout mDrawerLayout;
-    private android.support.v7.app.ActionBar mActionBar;
+    private ActionBar mActionBar;
 
     private GeneralListAdapter<RhapsodyAlbum> mAlbumAdapter;
+    private GeneralReverseListAdapter<RhapsodyImage> mMediaAdapter;
+    private String mAbsolutePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,27 +83,30 @@ public class MediaSelectorActivity extends AppCompatActivity
                 mDrawerLayout,
                 R.string.navigation_drawer_open,
                 R.string.navigation_drawer_close);
+        mNavigationDrawerFragment.setUp(R.id.navigation_drawer, mDrawerLayout, mDrawerToggle, mAlbumAdapter);
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         mActionBar = getSupportActionBar();
         mActionBar.setDisplayHomeAsUpEnabled(true);
         mActionBar.setDisplayShowHomeEnabled(true);
-        mDrawerLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                mDrawerToggle.syncState();
-            }
-        });
-
-        mNavigationDrawerFragment.setUp(R.id.navigation_drawer, mDrawerLayout, mDrawerToggle, mAlbumAdapter);
         mTitle = getTitle();
         mMediaGridView = (GridView) findViewById(R.id.MediaSelectorGridView);
+        mMediaGridView.setAdapter(mMediaAdapter);
         mIntent = getIntent();
         applyIntent();
     }
 
     private void applyIntent() {
         mCurrentRhapsody = (Rhapsody) mIntent.getSerializableExtra(RhapsodyBuilder.INTENT_RHAPSODY);
+        mSelectedMedias = mIntent.getParcelableArrayListExtra(RhapsodyBuilder.INTENT_RHAPSODY_RESUME);
+        if (mSelectedMedias == null) mSelectedMedias = new ArrayList<>();
+        refreshSelectionState();
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        mDrawerToggle.syncState();
     }
 
     @Override
@@ -120,7 +130,8 @@ public class MediaSelectorActivity extends AppCompatActivity
                 MediaStore.Images.Media.DATE_MODIFIED);
         if (!mMediaCursor.moveToFirst()) return;
         mAlbums = new ArrayList<>();
-        mAlbumAdapter.setList(mAlbums);
+        RhapsodyAlbum allAlbum = new RhapsodyAlbum(getString(R.string.drawer_all_media), -1);
+        mAlbums.add(allAlbum);
         MEDIA_LOOP:
         do {
             long id = mMediaCursor.getLong(mMediaCursor.getColumnIndex(MediaStore.Images.ImageColumns._ID));
@@ -130,21 +141,25 @@ public class MediaSelectorActivity extends AppCompatActivity
             if (mCurrentRhapsody.getMinHeight() != Rhapsody.UNLIMITED && mCurrentRhapsody.getMinHeight() > height) continue;
             if (mCurrentRhapsody.getMaxWidth() != Rhapsody.UNLIMITED && mCurrentRhapsody.getMaxWidth() < width) continue;
             if (mCurrentRhapsody.getMaxHeight() != Rhapsody.UNLIMITED && mCurrentRhapsody.getMaxHeight() < height) continue;
-            long bucketId = mMediaCursor.getLong(mMediaCursor.getColumnIndex(MediaStore.Images.ImageColumns.BUCKET_ID));
+            Uri uri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
+            String dname = mMediaCursor.getString(mMediaCursor.getColumnIndex(MediaStore.Images.ImageColumns.DISPLAY_NAME));
+            allAlbum.add(new RhapsodyImage(uri, dname, RhapsodyImage.SOURCE_STORAGE));
 
+            long bucketId = mMediaCursor.getLong(mMediaCursor.getColumnIndex(MediaStore.Images.ImageColumns.BUCKET_ID));
             for (RhapsodyAlbum album : mAlbums) {
                 if (album.getAlbumBucketId() != bucketId) continue;
-                Uri uri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
-                album.add(new RhapsodyImage(uri, RhapsodyImage.SOURCE_STORAGE));
+
+                album.add(new RhapsodyImage(uri, dname, RhapsodyImage.SOURCE_STORAGE));
                 continue MEDIA_LOOP;
             }
             String bucketName = mMediaCursor.getString(mMediaCursor.getColumnIndex(MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME));
             RhapsodyAlbum newAlbum = new RhapsodyAlbum(bucketName, bucketId);
-            Uri uri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
-            newAlbum.add(new RhapsodyImage(uri, RhapsodyImage.SOURCE_STORAGE));
+            newAlbum.add(new RhapsodyImage(uri, dname, RhapsodyImage.SOURCE_STORAGE));
             mAlbums.add(newAlbum);
         } while (mMediaCursor.moveToNext());
+        mAlbumAdapter.setList(mAlbums);
         mAlbumAdapter.notifyDataSetChanged();
+        initializeMediaGrid();
     }
 
     private void initializeAdapters() {
@@ -158,24 +173,126 @@ public class MediaSelectorActivity extends AppCompatActivity
                 return targetView;
             }
         });
+
+        mMediaAdapter = new GeneralReverseListAdapter<>(this, R.layout.item_media, new GeneralListAdapterViewGenerator<RhapsodyImage>() {
+            @Override
+            public View generateView(View targetView, RhapsodyImage item) {
+                targetView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onClickImage(v);
+                    }
+                });
+                targetView.setTag(item);
+                CheckBox chk = (CheckBox) targetView.findViewById(R.id.ItemMediaSelected);
+                chk.setChecked(false);
+                for (Uri u : mSelectedMedias) {
+                    if (u.equals(item.getImageUri())) {
+                        chk.setChecked(true);
+                        break;
+                    }
+                }
+                ImageView imageView = (ImageView) targetView.findViewById(R.id.ItemMediaImage);
+                Glide.with(ctx).load(item.getImageUri()).into(imageView);
+                ((TextView) targetView.findViewById(R.id.ItemMediaFileName)).setText(item.getDisplayName());
+                return targetView;
+            }
+        });
+    }
+
+    private void onClickImage(View v) {
+        CheckBox chk = (CheckBox) v.findViewById(R.id.ItemMediaSelected);
+        RhapsodyImage img = (RhapsodyImage) v.getTag();
+        if (!chk.isChecked()) {
+            chk.setChecked(true);
+            mSelectedMedias.add(img.getImageUri());
+        } else {
+            chk.setChecked(false);
+            mSelectedMedias.remove(img.getImageUri());
+        }
+        refreshSelectionState();
+    }
+
+    private void refreshSelectionState() {
+
+    }
+
+    private void initializeMediaGrid() {
+        if (mAlbums.size() == 0) return;
+        mNavigationDrawerFragment.selectItem(0);
     }
 
     @Override
-    public void onNavigationDrawerItemSelected(int position) {
-        // update the main content by replacing fragments
-
+    public void onAlbumDrawerItemSelected(int position) {
+        mCurrentAlbum = mAlbums.get(position);
+        mMediaAdapter.setList(mCurrentAlbum.getList());
+        mMediaAdapter.notifyDataSetChanged();
+        setTitle(mCurrentAlbum.getAlbumName());
     }
 
-    public void onSectionAttached(int number) {
-        switch (number) {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.media_selector, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        //なぜAndroid library projectでswitchが使えないのか
+        int i = item.getItemId();
+        if (i == R.id.action_camera) {
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, buildDateTimeImageUri());
+            startActivityForResult(intent, CAMERA_INTENT);
+            return true;
+        } else if (i == R.id.action_uri) {
+
+            return true;
+        } else if (i == R.id.action_cancel) {
+            setResult(RESULT_CANCELED);
+            finish();
+            return true;
+        } else if (i == R.id.action_ok) {
+            Intent result = new Intent();
+            result.putParcelableArrayListExtra(RhapsodyBuilder.INTENT_RHAPSODY, (ArrayList<Uri>) mSelectedMedias);
+            setResult(RESULT_OK, result);
+            finish();
+            return true;
         }
+        return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 
-    public void restoreActionBar() {
-        ActionBar actionBar = getActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(mTitle);
+    private Uri buildDateTimeImageUri() {
+        // http://blog.starrow.net/2012/03/android-intent.html
+        Date now = new Date(System.currentTimeMillis());
+        SimpleDateFormat dft = new SimpleDateFormat("'IMG'_yyyyMMdd_HHmmss");
+        String mCameraFileName = dft.format(now) + ".jpg";
+        String fullPath = Environment.getExternalStorageDirectory().toString();
+        fullPath += mCurrentRhapsody.getCameraImagePath();
+        mAbsolutePath = fullPath;
+        return Uri.fromFile(new File(fullPath, mCameraFileName));
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // http://shinbashi.hatenablog.com/entry/2013/06/23/141128
+        //ファッキン エクスペリア
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case CAMERA_INTENT:
+                if (resultCode == RESULT_OK) {
+                    MediaScannerConnection.scanFile(this, new String[]{mAbsolutePath}, new String[]{"image/jpeg"}, null);
+                    Toast.makeText(this, R.string.camera_succeed, Toast.LENGTH_SHORT).show();
+                    mAlbums.clear();
+                    mAlbumAdapter.notifyDataSetChanged();
+                    resolveMedia();
+                } else {
+                    Toast.makeText(this, R.string.camera_fail, Toast.LENGTH_SHORT).show();
+                }
+                return;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }

@@ -33,5 +33,9 @@ public class RhapsodyAlbum {
     public void add(RhapsodyImage image) {
         mMediaList.add(image);
     }
+
+    public List<RhapsodyImage> getList() {
+        return mMediaList;
+    }
 }
 

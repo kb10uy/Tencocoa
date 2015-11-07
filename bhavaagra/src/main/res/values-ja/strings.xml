@@ -2,7 +2,18 @@
 <resources>
     <string name="title_activity_media_selector">画像を選択</string>
     <string name="drawer_album">アルバム</string>
+    <string name="drawer_other">その他</string>
     <string name="drawer_selected">選択済みの画像</string>
-    <string name="drawer_camera">カメラ</string>
-    <string name="drawer_uri">URI</string>
+    <string name="menu_camera">カメラ起動</string>
+    <string name="menu_uri">URI直接入力</string>
+    <string name="drawer_all_media">全ての画像</string>
+
+    <string name="camera_succeed">撮影に成功しました。</string>
+    <string name="camera_fail">撮影に失敗しました。相性か気まぐれです。</string>
+
+    <string name="message_need_more">あと%1$d枚必要です</string>
+    <string name="message_rest">あと%1$d枚選択可能です</string>
+    <string name="message_max">これ以上選択できません</string>
+    <string name="message_cancel">キャンセル</string>
+    <string name="message_ok">OK</string>
 </resources>

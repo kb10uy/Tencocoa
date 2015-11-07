@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import org.kb10uy.bhavaagra.BhavaAgra;
+import org.kb10uy.bhavaagra.Rhapsody;
 import org.kb10uy.tencocoa.model.TencocoaHelper;
 import org.kb10uy.tencocoa.model.TencocoaStatus;
 
@@ -25,6 +26,7 @@ import twitter4j.StatusUpdate;
 
 public class NewStatusDialogFragment extends DialogFragment {
 
+    public static final int INTENT_CAMERA = 0x105;
     private NewStatusDialogFragmentInteractionListener mListener;
     private Status replyToStatus;
     private List<Uri> mSelectedImage;
@@ -66,7 +68,16 @@ public class NewStatusDialogFragment extends DialogFragment {
             updateStatus(text);
         });
         dialog.findViewById(R.id.NewStatusDialogFragmentButtonAddImage).setOnClickListener(v -> {
-            startActivityForResult(BhavaAgra.from(getContext(), 1).buildIntent(), 1);
+            startActivityForResult(
+                    BhavaAgra
+                            .from(getActivity())
+                            .cameraPath(Rhapsody.CAMERA_DCIM + getString(R.string.uri_camera_suffix))
+                            .count(0, 4)
+                            .maxQuality(2048, 2048)
+                            .resume(mSelectedImage)
+                            .build(),
+                    INTENT_CAMERA
+            );
         });
 
         mSelectedImage = new ArrayList<>();
@@ -90,8 +101,13 @@ public class NewStatusDialogFragment extends DialogFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            default:
+            case INTENT_CAMERA:
+                if (resultCode == Activity.RESULT_OK) {
+                    mSelectedImage = BhavaAgra.parse(data);
+                }
                 return;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
         }
     }
 

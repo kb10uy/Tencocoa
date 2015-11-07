@@ -6,10 +6,12 @@ public final class RhapsodyImage {
     public static final int SOURCE_STORAGE = 1;
     public static final int SOURCE_INTERNET = 2;
     private Uri mImageUri;
+    private String mDisplayName;
     private int mSourceType;
 
-    RhapsodyImage(Uri uri, int type) {
+    RhapsodyImage(Uri uri, String dname, int type) {
         mImageUri = uri;
+        mDisplayName = dname;
         mSourceType = type;
     }
 
@@ -19,5 +21,9 @@ public final class RhapsodyImage {
 
     public int getSourceType() {
         return mSourceType;
+    }
+
+    public String getDisplayName() {
+        return mDisplayName;
     }
 }

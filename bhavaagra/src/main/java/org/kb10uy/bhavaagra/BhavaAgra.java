@@ -7,11 +7,11 @@ import android.net.Uri;
 import java.util.List;
 
 public final class BhavaAgra {
-    public static RhapsodyBuilder from(Context context, int result) {
-        return new RhapsodyBuilder(context, result);
+    public static RhapsodyBuilder from(Context context) {
+        return new RhapsodyBuilder(context);
     }
 
     public static List<Uri> parse(Intent intent) {
-        return null;
+        return intent.getParcelableArrayListExtra(RhapsodyBuilder.INTENT_RHAPSODY);
     }
 }
