@@ -9,7 +9,7 @@ import android.widget.BaseAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GeneralListAdapter<T> extends BaseAdapter {
+class GeneralListAdapter<T> extends BaseAdapter {
 
     Context context;
     LayoutInflater inflater;

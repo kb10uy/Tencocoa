@@ -241,16 +241,19 @@ public class MainActivity
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        switch (keyCode) {
-            case KeyEvent.KEYCODE_BACK:
-                boolean fin = mBackDoubleTapHelper.onTap();
-                if (fin) {
-                    finish();
-                }
-                return fin;
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        int kc = event.getKeyCode();
+        if (event.getAction()==KeyEvent.ACTION_DOWN) {
+            switch (kc) {
+                case KeyEvent.KEYCODE_BACK:
+                    boolean fin = mBackDoubleTapHelper.onTap();
+                    if (fin) {
+                        finish();
+                    }
+                    return fin;
+            }
         }
-        return super.onKeyDown(keyCode, event);
+        return super.dispatchKeyEvent(event);
     }
 
     private void checkTheme() {

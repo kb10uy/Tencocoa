@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.kb10uy.bhavaagra.BhavaAgra;
 import org.kb10uy.tencocoa.model.TencocoaHelper;
 import org.kb10uy.tencocoa.model.TencocoaStatus;
 
@@ -65,7 +66,7 @@ public class NewStatusDialogFragment extends DialogFragment {
             updateStatus(text);
         });
         dialog.findViewById(R.id.NewStatusDialogFragmentButtonAddImage).setOnClickListener(v -> {
-
+            startActivityForResult(BhavaAgra.from(getContext(), 1).buildIntent(), 1);
         });
 
         mSelectedImage = new ArrayList<>();

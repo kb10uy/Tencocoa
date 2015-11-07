@@ -1,21 +1,24 @@
 <LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="200dp"
     android:layout_height="600dp"
-    android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:orientation="vertical">
+
     <TextView
+        style="@style/Base.TextAppearance.AppCompat.Large"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/drawer_album"
-        style="@style/Base.TextAppearance.AppCompat.Large"
-        android:layout_margin="4dp"/>
-    <ListView xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:choiceMode="singleChoice"
-              android:divider="@android:color/transparent"
-              android:dividerHeight="0dp"
-              tools:context="org.kb10uy.bhavaagra.NavigationDrawerFragment"/>
+        android:layout_margin="4dp"
+        android:text="@string/drawer_album"/>
+
+    <ListView
+        android:id="@+id/DrawerListViewAlbums"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:choiceMode="singleChoice"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"
+        tools:context="org.kb10uy.bhavaagra.NavigationDrawerFragment"/>
 </LinearLayout>
 
