@@ -43,6 +43,7 @@
 
     <string name="label_dialog_new_status_title">New Tweet</string>
     <string name="label_dialog_new_status_reply">Reply</string>
+    <string name="label_dialog_new_status_add_image">Add image(s)</string>
     <string name="label_dialog_new_status_update">Tweet</string>
 
 

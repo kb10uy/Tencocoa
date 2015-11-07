@@ -2,14 +2,23 @@ package org.kb10uy.tencocoa;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.DialogFragment;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.support.v4.app.DialogFragment;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.kb10uy.bhavaagra.BhavaAgra;
+import org.kb10uy.bhavaagra.Rhapsody;
 import org.kb10uy.tencocoa.model.TencocoaHelper;
 import org.kb10uy.tencocoa.model.TencocoaStatus;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import twitter4j.Status;
 import twitter4j.StatusUpdate;
@@ -17,8 +26,11 @@ import twitter4j.StatusUpdate;
 
 public class NewStatusDialogFragment extends DialogFragment {
 
+    public static final int INTENT_CAMERA = 0x105;
     private NewStatusDialogFragmentInteractionListener mListener;
     private Status replyToStatus;
+    private List<Uri> mSelectedImage;
+    private SharedPreferences pref;
 
     public static NewStatusDialogFragment newInstance() {
         return new NewStatusDialogFragment();
@@ -41,18 +53,34 @@ public class NewStatusDialogFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
     }
 
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        pref = PreferenceManager.getDefaultSharedPreferences(getContext());
         final Dialog dialog = new Dialog(getActivity());
         dialog.getWindow().requestFeature(STYLE_NO_TITLE);
         dialog.setContentView(R.layout.fragment_new_status_dialog);
         EditText teStatus = (EditText) dialog.findViewById(R.id.NewStatusDialogFragmentStatusText);
+
         dialog.findViewById(R.id.NewStatusDialogFragmentButtonUpdateStatus).setOnClickListener(v -> {
             String text = teStatus.getText().toString();
             dismiss();
             updateStatus(text);
         });
+        dialog.findViewById(R.id.NewStatusDialogFragmentButtonAddImage).setOnClickListener(v -> {
+            startActivityForResult(
+                    BhavaAgra
+                            .from(getActivity())
+                            .cameraPath(Rhapsody.CAMERA_DCIM + getString(R.string.uri_camera_suffix))
+                            .count(0, 4)
+                            .maxQuality(2048, 2048)
+                            .resume(mSelectedImage)
+                            .build(),
+                    INTENT_CAMERA
+            );
+        });
 
+        mSelectedImage = new ArrayList<>();
         Bundle arguments = getArguments();
         if (arguments == null) return dialog;
         Status reply = (Status) arguments.getSerializable("ReplyTo");
@@ -69,14 +97,28 @@ public class NewStatusDialogFragment extends DialogFragment {
         return dialog;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case INTENT_CAMERA:
+                if (resultCode == Activity.RESULT_OK) {
+                    mSelectedImage = BhavaAgra.parse(data);
+                }
+                return;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
     public void updateStatus(String text) {
         if (mListener == null) return;
         if (replyToStatus != null) {
             StatusUpdate update = new StatusUpdate(text);
             update.inReplyToStatusId(replyToStatus.getId());
-            mListener.applyUpdateStatus(update);
+            mListener.applyUpdateStatus(update, mSelectedImage);
         } else {
-            mListener.applyUpdateStatus(text);
+            mListener.applyUpdateStatus(text, mSelectedImage);
         }
     }
 
@@ -98,9 +140,9 @@ public class NewStatusDialogFragment extends DialogFragment {
     }
 
     public interface NewStatusDialogFragmentInteractionListener {
-        void applyUpdateStatus(String status);
+        void applyUpdateStatus(String status, List<Uri> mediaUris);
 
-        void applyUpdateStatus(StatusUpdate status);
+        void applyUpdateStatus(StatusUpdate status, List<Uri> mediaUris);
     }
 
 }

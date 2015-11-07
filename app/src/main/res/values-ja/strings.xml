@@ -43,6 +43,7 @@
 
     <string name="label_dialog_new_status_title">新しいツイート</string>
     <string name="label_dialog_new_status_reply">返信</string>
+    <string name="label_dialog_new_status_add_image">画像を追加</string>
     <string name="label_dialog_new_status_update">ツイート</string>
 
 

@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -224,7 +225,7 @@ public class MainActivity
         switch (id) {
             case R.id.action_main_new_status:
                 NewStatusDialogFragment dialog = NewStatusDialogFragment.newInstance();
-                dialog.show(getFragmentManager(), "NewStatus");
+                dialog.show(getSupportFragmentManager(), "NewStatus");
                 break;
             case R.id.action_main_accounts:
                 Intent intent = new Intent(this, AccountsListActivity.class);
@@ -240,16 +241,19 @@ public class MainActivity
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        switch (keyCode) {
-            case KeyEvent.KEYCODE_BACK:
-                boolean fin = mBackDoubleTapHelper.onTap();
-                if (fin) {
-                    finish();
-                }
-                return fin;
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        int kc = event.getKeyCode();
+        if (event.getAction()==KeyEvent.ACTION_DOWN) {
+            switch (kc) {
+                case KeyEvent.KEYCODE_BACK:
+                    boolean fin = mBackDoubleTapHelper.onTap();
+                    if (fin) {
+                        finish();
+                    }
+                    return fin;
+            }
         }
-        return super.onKeyDown(keyCode, event);
+        return super.dispatchKeyEvent(event);
     }
 
     private void checkTheme() {
@@ -610,12 +614,14 @@ public class MainActivity
     }
 
     @Override
-    public void applyUpdateStatus(String status) {
+    public void applyUpdateStatus(String status, List<Uri> mediaUris) {
+        mWritePermissionService.pushImages(mediaUris);
         mWritePermissionService.updateStatus(status);
     }
 
     @Override
-    public void applyUpdateStatus(StatusUpdate status) {
+    public void applyUpdateStatus(StatusUpdate status, List<Uri> mediaUris) {
+        mWritePermissionService.pushImages(mediaUris);
         mWritePermissionService.updateStatus(status);
     }
 
@@ -663,7 +669,7 @@ public class MainActivity
                         break;
                     case StatusDetailDialogFragment.ACTION_REPLY:
                         NewStatusDialogFragment dialog = NewStatusDialogFragment.newInstance(status);
-                        dialog.show(getFragmentManager(), "NewStatus");
+                        dialog.show(getSupportFragmentManager(), "NewStatus");
                         break;
                     case StatusDetailDialogFragment.ACTION_REPLY_BLANK:
                         StatusUpdate update = new StatusUpdate(TencocoaHelper.createReplyTemplate(status));
