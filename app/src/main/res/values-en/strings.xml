@@ -43,7 +43,10 @@
 
     <string name="label_dialog_new_status_title">New Tweet</string>
     <string name="label_dialog_new_status_reply">Reply</string>
+    <string name="label_dialog_new_status_add_image">Add image(s)</string>
     <string name="label_dialog_new_status_update">Tweet</string>
+
+
 
     <string name="label_dialog_status_detail_fav">Favorite</string>
     <string name="label_dialog_status_detail_unfav">Unfavorite</string>
@@ -70,6 +73,7 @@
     <string name="notification_streaming_userstream_started_text">Tencocoa connected to UserStream.</string>
     <string name="notification_streaming_userstream_finished_ticker">UserStream has been finished</string>
     <string name="notification_streaming_userstream_finished_text">Tencocoa disconnected UserStream.</string>
+    <string name="notification_download_finished_ticker">Downloaded image successfully.</string>
 
     <string name="notification_update_status_success">Tweeted successfully.</string>
     <string name="notification_update_status_fail">Failed to tweet: </string>

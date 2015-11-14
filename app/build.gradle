@@ -1,3 +1,22 @@
+/*
+alpha Dragonforce
+beta Bamiyan
+1.x Hinanawi
+2.x Hoto
+3.x Nagae
+4.x Kafu
+5.x Reiuji
+6.x Tedeza
+7.x Yakumo
+8.x Kirima
+9.x Ibuki
+10.x Ujimatsu
+*/
+def VERSION_MAJOR = 0
+def VERSION_MINOR = 3
+def VERSION_PATCH = 3
+def VERSION_NAME = 'Dragonforce'
+
 repositories {
     mavenCentral()
     jcenter()
@@ -9,18 +28,13 @@ repositories {
 apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
 
-
 android {
     compileSdkVersion 23
-    buildToolsVersion "21.1.2"
-
+    buildToolsVersion "23.0.1"
     defaultConfig {
         applicationId "org.kb10uy.tencocoa"
         minSdkVersion 17
         targetSdkVersion 23
-        versionCode 23
-        versionName "0.3.2 (build 23, Kbtter7.0.3.2, Dragonforce)"
-        //multiDexEnabled true
     }
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
@@ -47,6 +61,31 @@ android {
         // but continue the build even when errors are found:
         abortOnError false
     }
+
+    //setup version info
+    def versionPropsFile = file('version.properties')
+    if (versionPropsFile.canRead()) {
+        def Properties versionProps = new Properties()
+        versionProps.load(new FileInputStream(versionPropsFile))
+        def code = versionProps['VERSION_CODE'].toInteger() + 1
+        versionProps['VERSION_CODE'] = code.toString()
+        versionProps.store(versionPropsFile.newWriter(), null)
+
+        def major = VERSION_MAJOR
+        def minor = VERSION_MINOR
+        def patch = VERSION_PATCH
+        def name = VERSION_NAME
+
+        def version = sprintf('%d.%d.%d', major, minor, patch)
+
+        defaultConfig {
+            versionCode code
+            versionName sprintf('%s (build %d, %s)', version, code, name)
+            //multiDexEnabled true
+        }
+    } else {
+        throw new GradleException('Could not read version.properties!')
+    }
 }
 
 retrolambda {
@@ -54,17 +93,18 @@ retrolambda {
     oldJdk System.getenv("JAVA7_HOME")
 }
 
-
 dependencies {
-    compile 'com.android.support:appcompat-v7:23.0.1'
-    compile 'com.android.support:support-v4:23.0.1'
+    compile project(':bhavaagra')
+
+    compile 'com.android.support:appcompat-v7:23.1.0'
+    compile 'com.android.support:support-v4:23.1.0'
     //compile 'com.android.support:multidex:1.0.1'
     compile 'org.twitter4j:twitter4j:4.0.4'
     compile 'org.twitter4j:twitter4j-stream:4.0.4'
     compile 'org.twitter4j:twitter4j-media-support:4.0.4'
     compile 'org.twitter4j:twitter4j-http2-support:4.0.4'
     compile 'com.google.guava:guava:18.0'
-    compile 'io.realm:realm-android:0.82.2'
+    compile 'io.realm:realm-android:0.84.0'
     compile 'joda-time:joda-time:2.8'
     compile 'org.luaj:luaj-jse:3.0.1'
     compile 'com.github.bumptech.glide:glide:3.6.0'

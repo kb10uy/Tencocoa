@@ -9,9 +9,9 @@
     <string name="label_activity_first_setting_consumer_key" translatable="false">Consumer Key</string>
     <string name="label_activity_first_setting_consumer_secret" translatable="false">Consumer Secret</string>
 
-    <string name="uri_twitter_oauth_callback" translatable="false">tencocoa://twitter-oauth-callback</string>
+    <string name="uri_camera_suffix" translatable="false">/Tencocoa</string>
 
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="uri_twitter_oauth_callback" translatable="false">tencocoa://twitter-oauth-callback</string>
+    <string name="uri_asset_licenses" translatable="false">file:///android_asset/licenses.html</string>
 
 </resources>

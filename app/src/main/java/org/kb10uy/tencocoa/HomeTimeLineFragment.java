@@ -5,9 +5,14 @@ import android.animation.AnimatorSet;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -56,6 +61,8 @@ public class HomeTimeLineFragment extends Fragment {
     private TextView mPopupCaption, mPopupDescription;
     private LinearLayout mPopup;
     private long currentUserId;
+    private SharedPreferences pref;
+    private Drawable mFavoriteIcon;
 
     public HomeTimeLineFragment() {
         // Required empty public constructor
@@ -76,6 +83,10 @@ public class HomeTimeLineFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        ctx = getActivity();
+        pref = PreferenceManager.getDefaultSharedPreferences(ctx);
+        mInflater = inflater;
+        getFavoriteIcon();
         View view = inflater.inflate(R.layout.fragment_home_time_line, container, false);
         mHandler = new Handler();
         mListView = (ListView) view.findViewById(R.id.HomeTimeLineDrawerListViewTimeLine);
@@ -90,8 +101,7 @@ public class HomeTimeLineFragment extends Fragment {
         mPopup = (LinearLayout) view.findViewById(R.id.HomeTimeLinePopup);
 
         view.getContext().getTheme().resolveAttribute(R.attr.colorRetweetBackground, mRewteetBackgroundValue, true);
-        ctx = getActivity();
-        mInflater = inflater;
+
         return view;
     }
 
@@ -139,12 +149,20 @@ public class HomeTimeLineFragment extends Fragment {
         mListener = null;
     }
 
+    private void getFavoriteIcon() {
+        int index = Integer.parseInt(pref.getString(getString(R.string.preference_appearance_like_mark), "20"));
+        TypedArray icons = getResources().obtainTypedArray(R.array.favorite_icons);
+        mFavoriteIcon = icons.getDrawable(index);
+    }
+
     private View generateStatusView(View targetView, TencocoaStatus status) {
         Status sourceStatus = status.getShowingStatus();
         User user = sourceStatus.getUser();
         View itemLayout = targetView.findViewById(R.id.StatusItemLayout);
         View privateMark = targetView.findViewById(R.id.StatusItemUserPrivateMark);
 
+        ((ImageView) targetView.findViewById(R.id.StatusItemFavoriteCountMark)).setImageDrawable(mFavoriteIcon);
+        ((ImageView) targetView.findViewById(R.id.StatusItemFavorited)).setImageDrawable(mFavoriteIcon);
         ((TextView) targetView.findViewById(R.id.StatusItemUserName)).setText(user.getName());
         ((TextView) targetView.findViewById(R.id.StatusItemUserScreenName)).setText(user.getScreenName());
         ((TextView) targetView.findViewById(R.id.StatusItemStatusText)).setText(status.getReplacedText());

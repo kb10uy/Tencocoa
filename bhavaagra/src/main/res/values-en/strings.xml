@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_activity_media_selector">Select Media(s)</string>
+    <string name="drawer_album">Albums</string>
+    <string name="drawer_selected">Selected Media(s)</string>
+    <string name="menu_camera">Camera</string>
+    <string name="menu_uri">From URI</string>
+    <string name="drawer_all_media">All images</string>
+
+    <string name="camera_succeed">Took a picture successfully.</string>
+    <string name="camera_fail">Failed to take a picture. This is hardly my fault.</string>
+
+    <string name="message_need_more">You have to select %1$d more item(s).</string>
+    <string name="message_rest">You can select %1$d more item(s).</string>
+    <string name="message_max">You can\'t select any more item!</string>
+    <string name="message_cancel">Cancel</string>
+    <string name="message_ok">OK</string>
+</resources>

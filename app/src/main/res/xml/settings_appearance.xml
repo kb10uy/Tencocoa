@@ -8,5 +8,29 @@
             android:summary="@string/prefscreen_appearance_theme_summary"
             android:title="@string/prefscreen_appearance_theme">
         </ListPreference>
+
+        <ListPreference
+            android:entries="@array/prefscreen_appearance_fav_list"
+            android:entryValues="@array/prefscreen_appearance_fav_list"
+            android:key="@string/preference_appearance_like_string"
+            android:summary="@string/prefscreen_appearance_like_summary"
+            android:title="@string/prefscreen_appearance_like">
+        </ListPreference>
+
+        <ListPreference
+            android:entries="@array/prefscreen_appearance_unfav_list"
+            android:entryValues="@array/prefscreen_appearance_unfav_list"
+            android:key="@string/preference_appearance_unlike_string"
+            android:summary=""
+            android:title="@string/prefscreen_appearance_unlike">
+        </ListPreference>
+
+        <ListPreference
+            android:entries="@array/prefscreen_appearance_favorite_icons"
+            android:entryValues="@array/favorite_icons_index"
+            android:key="@string/preference_appearance_like_mark"
+            android:summary="@string/prefscreen_appearance_like_icon_summary"
+            android:title="@string/prefscreen_appearance_like_icon">
+        </ListPreference>
     </PreferenceCategory>
 </PreferenceScreen>

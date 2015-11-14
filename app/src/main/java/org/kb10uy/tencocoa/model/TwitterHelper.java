@@ -1,5 +1,6 @@
 package org.kb10uy.tencocoa.model;
 
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -8,6 +9,7 @@ import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 import twitter4j.TwitterStream;
 import twitter4j.TwitterStreamFactory;
+import twitter4j.UploadedMedia;
 import twitter4j.auth.AccessToken;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
@@ -39,6 +41,14 @@ public final class TwitterHelper {
                 .build();
         TwitterStream tw = new TwitterStreamFactory(tencocoaConfig).getInstance();
         return tw;
+    }
+
+    public static long[] convertMediaIds(List<UploadedMedia> media) {
+        long[] result = new long[media.size()];
+        for (int i = 0; i < media.size(); i++) {
+            result[i]=media.get(i).getMediaId();
+        }
+        return result;
     }
 
 }

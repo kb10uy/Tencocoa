@@ -15,6 +15,12 @@
     <string name="prefscreen_appearance_summary">Change about appearance of Tencocoa.</string>
     <string name="prefscreen_appearance_theme">Theme</string>
     <string name="prefscreen_appearance_theme_summary">Change AppTheme(require relaunch).</string>
+    <string name="prefscreen_appearance_like">Like Style</string>
+    <string name="prefscreen_appearance_like_summary">Do you hate "LIKE"?</string>
+    <string name="prefscreen_appearance_unlike">Unlike Style</string>
+    <string name="prefscreen_appearance_like_icon">Like Icon</string>
+    <string name="prefscreen_appearance_like_icon_summary">Do you hate the heart icon?</string>
+
     <string-array name="prefscreen_appearance_theme_value_list">
         <item>Black</item>
         <item>White</item>
@@ -33,6 +39,106 @@
         <item>Komichi (Kin-iro mosaic)</item>
         <item>Witch (Puyopuyo)</item>
         <item>Tomori(Charlotte)</item>
+    </string-array>
+
+    <string-array name="prefscreen_appearance_fav_list">
+        <item>Like</item>
+        <item>Favorite</item>
+        <item>And so?</item>
+        <item>I don\'t care!</item>
+        <item>Like!</item>
+        <item>Like very much!</item>
+        <item>lol</item>
+        <item>I see.</item>
+        <item>I agree</item>
+        <item>I know</item>
+        <item>Fappable</item>
+        <item>Fuck!</item>
+        <item>Sucks so much</item>
+    </string-array>
+
+    <string-array name="prefscreen_appearance_unfav_list">
+        <item>Unlike</item>
+        <item>Unfavorite</item>
+        <item>Oh I see.</item>
+        <item>Oh Interesting!</item>
+        <item>Don\'t like</item>
+        <item>JUST Don\'t like!</item>
+        <item>No comment</item>
+        <item>Hum…</item>
+        <item>Can\'t Understand</item>
+        <item>I\'ve never heard</item>
+        <item>Unfappable</item>
+        <item>Love you!</item>
+        <item>Goodness everywhere</item>
+    </string-array>
+
+    <string-array name="prefscreen_appearance_favorite_icons">
+        <item>Angry 1</item>
+        <item>Angry 2</item>
+        <item>Angry 3</item>
+        <item>Smile 1</item>
+        <item>Smile 2</item>
+        <item>Smile 3</item>
+        <item>Smile 4</item>
+        <item>Cry</item>
+        <item>Surprised</item>
+        <item>Munk</item>
+        <item>Devil</item>
+        <item>Sun</item>
+        <item>Moon</item>
+        <item>Oni</item>
+        <item>OK 1</item>
+        <item>OK 2</item>
+        <item>NG 1</item>
+        <item>NG 2</item>
+        <item>Pin 1</item>
+        <item>Pin 2</item>
+        <item>Red Heart</item>
+        <item>Blue Heart</item>
+        <item>Green Heart</item>
+        <item>Yellow Heart</item>
+        <item>Purple Heart</item>
+        <item>Vib Heart</item>
+        <item>Thumbs Up</item>
+        <item>Thumbs Down</item>
+        <item>Punch</item>
+        <item>Good</item>
+        <item>Par</item>
+        <item>Clap</item>
+        <item>Rock</item>
+        <item>Scissor</item>
+        <item>Paper</item>
+        <item>PointingRight</item>
+        <item>Star</item>
+        <item>ShootingStar</item>
+        <item>Won\'t See</item>
+        <item>Won\'t Tell</item>
+        <item>Won\'t Listen</item>
+        <item>Apple</item>
+        <item>Orange</item>
+        <item>Tomato</item>
+        <item>Sushi</item>
+        <item>Fried Shrimp</item>
+        <item>Naruto(not the boy, but a kind of Japanese food.)</item>
+        <item>Hamburger</item>
+        <item>Flag</item>
+        <item>Checker Flag</item>
+        <item>Poop</item>
+        <item>Fire</item>
+        <item>Drug</item>
+        <item>Bomb</item>
+        <item>Bulb</item>
+        <item>Clip</item>
+        <item>Arrow</item>
+        <item>Hanamaru</item>
+        <item>to9</item>
+        <item>F</item>
+        <item>M</item>
+        <item>Ka(able)</item>
+        <item>Kin(forbid)</item>
+        <item>Toku(benefit)</item>
+        <item>Ribbon</item>
     </string-array>
 
     <string name="prefscreen_general">General</string>

@@ -15,6 +15,13 @@
     <string name="prefscreen_appearance_summary">見た目の設定を変更します</string>
     <string name="prefscreen_appearance_theme">テーマ</string>
     <string name="prefscreen_appearance_theme_summary">テーマを変更します(反映には再起動が必要です)</string>
+
+    <string name="prefscreen_appearance_like">Likeの表示</string>
+    <string name="prefscreen_appearance_like_summary">いいね！が許せない？</string>
+    <string name="prefscreen_appearance_unlike">Unlikeの表示</string>
+    <string name="prefscreen_appearance_like_icon">Likeのアイコン</string>
+    <string name="prefscreen_appearance_like_icon_summary">ハートマークも許せない？</string>
+
     <string-array name="prefscreen_appearance_theme_value_list">
         <item>Black</item>
         <item>White</item>
@@ -33,6 +40,106 @@
         <item>小路</item>
         <item>ウィッチ</item>
         <item>友利</item>
+    </string-array>
+
+    <string-array name="prefscreen_appearance_fav_list">
+        <item>いいね！</item>
+        <item>ふぁぼ</item>
+        <item>で？</item>
+        <item>どうでもいいね！</item>
+        <item>すき</item>
+        <item>ほんとすこ</item>
+        <item>草</item>
+        <item>ふーん</item>
+        <item>わかる</item>
+        <item>知ってた</item>
+        <item>シコ</item>
+        <item>死ね</item>
+        <item>そびえ立つクソ</item>
+    </string-array>
+
+    <string-array name="prefscreen_appearance_unfav_list">
+        <item>そんなによくないね…</item>
+        <item>あんふぁぼ</item>
+        <item>なるほどね</item>
+        <item>やっぱ気になる</item>
+        <item>きらい</item>
+        <item>ほんときらい</item>
+        <item>空リプ</item>
+        <item>ほへー</item>
+        <item>わからない</item>
+        <item>初耳だ</item>
+        <item>萎え</item>
+        <item>愛してる</item>
+        <item>良さの塊</item>
+    </string-array>
+
+    <string-array name="prefscreen_appearance_favorite_icons">
+        <item>怒りマーク</item>
+        <item>うーん</item>
+        <item>むっ</item>
+        <item>うふふ</item>
+        <item>ははっ</item>
+        <item>ﾌﾋﾋw</item>
+        <item>あぁ＾～いいっすね～</item>
+        <item>いやぁ～</item>
+        <item>おっ</item>
+        <item>ムンク</item>
+        <item>悪魔</item>
+        <item>太陽</item>
+        <item>月</item>
+        <item>鬼</item>
+        <item>OK</item>
+        <item>マルッ</item>
+        <item>NG</item>
+        <item>ダメッ</item>
+        <item>ピン1</item>
+        <item>ピン2</item>
+        <item>ハート赤</item>
+        <item>ハート青</item>
+        <item>ハート緑</item>
+        <item>ハート黄色</item>
+        <item>ハート紫</item>
+        <item>ハート震え</item>
+        <item>サムズアップ</item>
+        <item>サムズダウン</item>
+        <item>パンチ</item>
+        <item>グッド</item>
+        <item>パァ(例の顔文字)</item>
+        <item>拍手</item>
+        <item>グー</item>
+        <item>チョキ</item>
+        <item>パー</item>
+        <item>右</item>
+        <item>星</item>
+        <item>流星</item>
+        <item>見ざる</item>
+        <item>言わざる</item>
+        <item>聞かざる</item>
+        <item>りんご</item>
+        <item>オレンジ</item>
+        <item>トマト</item>
+        <item>寿司</item>
+        <item>エビフライ</item>
+        <item>なると</item>
+        <item>ハンバーガー</item>
+        <item>旗</item>
+        <item>チェッカーフラッグ</item>
+        <item>ウンチ</item>
+        <item>炎</item>
+        <item>薬</item>
+        <item>爆弾</item>
+        <item>電球</item>
+        <item>クリップ</item>
+        <item>的と矢</item>
+        <item>ハナマル</item>
+        <item>マルキュウ</item>
+        <item>F</item>
+        <item>M</item>
+        <item>可</item>
+        <item>禁</item>
+        <item>得</item>
+        <item>リボン</item>
     </string-array>
 
     <string name="prefscreen_general">一般</string>
