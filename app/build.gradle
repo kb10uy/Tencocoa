@@ -14,7 +14,7 @@ beta Bamiyan
 */
 def VERSION_MAJOR = 0
 def VERSION_MINOR = 3
-def VERSION_PATCH = 3
+def VERSION_PATCH = 4
 def VERSION_NAME = 'Dragonforce'
 
 repositories {
