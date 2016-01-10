@@ -75,6 +75,7 @@
     <string name="notification_streaming_userstream_finished_text">Tencocoa disconnected UserStream.</string>
     <string name="notification_download_finished_ticker">Downloaded image successfully.</string>
 
+    <string name="notification_update_status_sending">Sending your tweet...</string>
     <string name="notification_update_status_success">Tweeted successfully.</string>
     <string name="notification_update_status_fail">Failed to tweet: </string>
     <string name="notification_favorite_status_success">Favorited successfully.</string>

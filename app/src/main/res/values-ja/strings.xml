@@ -74,6 +74,7 @@
     <string name="notification_streaming_userstream_finished_text">UserStreamから切断しました。</string>
     <string name="notification_download_finished_ticker">画像のダウンロードが終了しました。</string>
 
+    <string name="notification_update_status_sending">ツイートを送信しています…</string>
     <string name="notification_update_status_success">ツイートに成功しました。</string>
     <string name="notification_update_status_fail">ツイートに失敗しました。: </string>
     <string name="notification_favorite_status_success">お気に入りに成功しました。</string>

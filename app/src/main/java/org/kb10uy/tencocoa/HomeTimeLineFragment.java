@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
+import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -101,6 +102,16 @@ public class HomeTimeLineFragment extends Fragment {
         mPopup = (LinearLayout) view.findViewById(R.id.HomeTimeLinePopup);
 
         view.getContext().getTheme().resolveAttribute(R.attr.colorRetweetBackground, mRewteetBackgroundValue, true);
+        mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        });
 
         return view;
     }
@@ -229,7 +240,16 @@ public class HomeTimeLineFragment extends Fragment {
             tstatus.favorite();
         }
         realm.close();
-        mHandler.post(() -> mTimeLineAdapter.add(tstatus));
+        int prevCount = mTimeLineAdapter.getCount();
+        int y = mListView.getChildAt(0).getTop();
+        int item = mListView.getFirstVisiblePosition();
+
+        mHandler.post(() -> {
+            mTimeLineAdapter.add(tstatus);
+            if (item != 0 || y != 0) {
+                mListView.setSelectionFromTop(item + 1, y);
+            }
+        });
     }
 
     public void addRestStatuses(List<Status> statuses) {
