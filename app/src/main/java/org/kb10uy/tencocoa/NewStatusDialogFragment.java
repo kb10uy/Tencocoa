@@ -2,15 +2,24 @@ package org.kb10uy.tencocoa;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.twitter.Extractor;
 
 import org.kb10uy.bhavaagra.BhavaAgra;
 import org.kb10uy.bhavaagra.Rhapsody;
@@ -31,6 +40,10 @@ public class NewStatusDialogFragment extends DialogFragment {
     private Status replyToStatus;
     private List<Uri> mSelectedImage;
     private SharedPreferences pref;
+    private LinearLayout mImagesLinearLayout;
+    private String mCurrentText = "";
+    private EditText mStatusText;
+    private TextView mTextLength;
 
     public static NewStatusDialogFragment newInstance() {
         return new NewStatusDialogFragment();
@@ -60,10 +73,12 @@ public class NewStatusDialogFragment extends DialogFragment {
         final Dialog dialog = new Dialog(getActivity());
         dialog.getWindow().requestFeature(STYLE_NO_TITLE);
         dialog.setContentView(R.layout.fragment_new_status_dialog);
-        EditText teStatus = (EditText) dialog.findViewById(R.id.NewStatusDialogFragmentStatusText);
+        mStatusText = (EditText) dialog.findViewById(R.id.NewStatusDialogFragmentStatusText);
+        mTextLength = (TextView) dialog.findViewById(R.id.NewStatusDialogFragmentLengthText);
+        mImagesLinearLayout = (LinearLayout) dialog.findViewById(R.id.NewStatusDialogFragmentImages);
 
         dialog.findViewById(R.id.NewStatusDialogFragmentButtonUpdateStatus).setOnClickListener(v -> {
-            String text = teStatus.getText().toString();
+            String text = mStatusText.getText().toString();
             dismiss();
             updateStatus(text);
         });
@@ -80,6 +95,24 @@ public class NewStatusDialogFragment extends DialogFragment {
             );
         });
 
+        mStatusText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mCurrentText = mStatusText.getText().toString();
+                recalculateLength(mCurrentText);
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
         mSelectedImage = new ArrayList<>();
         Bundle arguments = getArguments();
         if (arguments == null) return dialog;
@@ -87,13 +120,15 @@ public class NewStatusDialogFragment extends DialogFragment {
         if (reply != null) {
             replyToStatus = reply;
             String template = TencocoaHelper.createReplyTemplate(new TencocoaStatus(reply));
-            teStatus.setText(template);
-            teStatus.setSelection(template.length());
+            mStatusText.setText(template);
+            mStatusText.setSelection(template.length());
             ((TextView) dialog.findViewById(R.id.NewStatusDialogFragmentTitle)).setText(getString(R.string.label_dialog_new_status_reply));
             ((TextView) dialog.findViewById(R.id.NewStatusDialogFragmentReplyUserName)).setText(reply.getUser().getName());
             ((TextView) dialog.findViewById(R.id.NewStatusDialogFragmentReplyText)).setText(reply.getText());
             dialog.findViewById(R.id.NewStatusDialogFragmentReply).setVisibility(View.VISIBLE);
         }
+
+        recalculateLength("");
         return dialog;
     }
 
@@ -104,6 +139,7 @@ public class NewStatusDialogFragment extends DialogFragment {
             case INTENT_CAMERA:
                 if (resultCode == Activity.RESULT_OK) {
                     mSelectedImage = BhavaAgra.parse(data);
+                    updateImageList();
                 }
                 return;
             default:
@@ -137,6 +173,43 @@ public class NewStatusDialogFragment extends DialogFragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+
+    private void updateImageList() {
+        if (mSelectedImage.size() == 0) {
+            mImagesLinearLayout.setVisibility(View.GONE);
+            mCurrentText = mStatusText.getText().toString();
+            recalculateLength(mCurrentText);
+            return;
+        }
+
+        mImagesLinearLayout.setVisibility(View.VISIBLE);
+        mImagesLinearLayout.removeAllViews();
+        LayoutInflater inflater = (LayoutInflater) getActivity().getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        for (Uri uri : mSelectedImage) {
+            View av = inflater.inflate(R.layout.item_status_image, mImagesLinearLayout, false);
+            ImageView imv = (ImageView) av.findViewById(R.id.StatusItemImageItem);
+            Glide.with(getActivity()).load(uri).into(imv);
+            mImagesLinearLayout.addView(av);
+        }
+        mCurrentText = mStatusText.getText().toString();
+        recalculateLength(mCurrentText);
+    }
+
+    private void recalculateLength(String s) {
+        int rawLength = s.trim().length();
+        Extractor ext = new Extractor();
+        List<String> urls = ext.extractURLs(s);
+        for (String u : urls) rawLength -= (u.length() - 23);
+        if (mSelectedImage.size() != 0) rawLength += 25;
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(rawLength);
+        sb.append("/");
+        sb.append(140);
+
+        mTextLength.setText(sb.toString());
     }
 
     public interface NewStatusDialogFragmentInteractionListener {

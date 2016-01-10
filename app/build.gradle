@@ -13,9 +13,9 @@ beta Bamiyan
 10.x Ujimatsu
 */
 def VERSION_MAJOR = 0
-def VERSION_MINOR = 3
-def VERSION_PATCH = 3
-def VERSION_NAME = 'Dragonforce'
+def VERSION_MINOR = 4
+def VERSION_PATCH = 0
+def VERSION_NAME = 'Bamiyan'
 
 repositories {
     mavenCentral()
@@ -96,13 +96,14 @@ retrolambda {
 dependencies {
     compile project(':bhavaagra')
 
-    compile 'com.android.support:appcompat-v7:23.1.0'
-    compile 'com.android.support:support-v4:23.1.0'
+    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.android.support:support-v4:23.1.1'
     //compile 'com.android.support:multidex:1.0.1'
     compile 'org.twitter4j:twitter4j:4.0.4'
     compile 'org.twitter4j:twitter4j-stream:4.0.4'
     compile 'org.twitter4j:twitter4j-media-support:4.0.4'
     compile 'org.twitter4j:twitter4j-http2-support:4.0.4'
+    compile 'com.twitter:twitter-text:1.6.1'
     compile 'com.google.guava:guava:18.0'
     compile 'io.realm:realm-android:0.84.0'
     compile 'joda-time:joda-time:2.8'

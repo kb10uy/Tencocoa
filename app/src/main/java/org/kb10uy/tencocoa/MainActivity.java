@@ -97,6 +97,7 @@ public class MainActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        PreferenceManager.setDefaultValues(this, R.xml.settings_default, true);
         pref = PreferenceManager.getDefaultSharedPreferences(this);
         checkTheme();
         super.onCreate(savedInstanceState);
@@ -243,7 +244,7 @@ public class MainActivity
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         int kc = event.getKeyCode();
-        if (event.getAction()==KeyEvent.ACTION_DOWN) {
+        if (event.getAction() == KeyEvent.ACTION_DOWN) {
             switch (kc) {
                 case KeyEvent.KEYCODE_BACK:
                     boolean fin = mBackDoubleTapHelper.onTap();
