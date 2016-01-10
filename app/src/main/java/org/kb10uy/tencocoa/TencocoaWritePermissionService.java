@@ -3,13 +3,16 @@ package org.kb10uy.tencocoa;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.Service;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.widget.Toast;
 
 import org.kb10uy.tencocoa.model.TwitterAccountInformation;
@@ -95,23 +98,37 @@ public class TencocoaWritePermissionService extends Service {
                     if (mPendingMediaUris.size() >= 0) {
                         List<UploadedMedia> media = new ArrayList<>();
                         for (Uri u : mPendingMediaUris) {
-                            media.add(mTwitter.uploadMedia(new File(u.toString())));
+                            String path = "";
+                            if (u.getScheme().equals("content")) {
+                                ContentResolver contentResolver = getApplicationContext().getContentResolver();
+                                Cursor cursor = contentResolver.query(u, new String[]{MediaStore.MediaColumns.DATA}, null, null, null);
+                                if (cursor != null) {
+                                    cursor.moveToFirst();
+                                    path = cursor.getString(0);
+                                    cursor.close();
+                                }
+                            } else {
+                                path = u.getPath();
+                            }
+                            media.add(mTwitter.uploadMedia(new File(path)));
                         }
                         mPendingMediaUris.clear();
-                        target.setMediaIds(TwitterHelper.convertMediaIds(media));
+                        long[] ids = TwitterHelper.convertMediaIds(media);
+                        target.setMediaIds(ids);
                     }
                     mTwitter.tweets().updateStatus(target);
                     return "";
                 } catch (TwitterException e) {
                     e.printStackTrace();
-                    return e.getErrorMessage();
+                    mPendingMediaUris.clear();
+                    return e.getMessage();
                 }
             }
 
             @Override
             protected void onPostExecute(String result) {
                 super.onPostExecute(result);
-                if (result.equals("")) {
+                if (result != null && result.equals("")) {
                     showNotification(getString(R.string.notification_update_status_success), getString(R.string.notification_update_status_success));
                 } else {
                     StringBuilder sb = new StringBuilder();

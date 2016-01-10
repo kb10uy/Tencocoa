@@ -74,6 +74,7 @@
     <string name="notification_streaming_userstream_finished_text">UserStreamから切断しました。</string>
     <string name="notification_download_finished_ticker">画像のダウンロードが終了しました。</string>
 
+    <string name="notification_update_status_sending">ツイートを送信しています…</string>
     <string name="notification_update_status_success">ツイートに成功しました。</string>
     <string name="notification_update_status_fail">ツイートに失敗しました。: </string>
     <string name="notification_favorite_status_success">お気に入りに成功しました。</string>
@@ -94,6 +95,8 @@
     <string name="popup_notification_retweeted_retweet">%1$sさんにリツイートをリツイートされました</string>
     <string name="popup_notification_favorited_mention">%1$sさんに自分宛てメンションをふぁぼられました</string>
     <string name="popup_notification_retweeted_mention">%1$sさんに自分宛てメンションをリツイートされました</string>
+
+    <string name="popup_update_count">%1$d件の新着ツイート</string>
 
     <string name="headline_favorited">%1$sさんにふぁぼられました: %2$s</string>
     <string name="headline_unfavorited">%1$sさんにあんふぁぼられました: %2$s</string>

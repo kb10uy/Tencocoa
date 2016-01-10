@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/prefscreen_general">
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/preference_general_behavior_write_as_toast"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/prefscreen_appearance">
+        <ListPreference
+            android:entries="@array/prefscreen_appearance_theme_list"
+            android:entryValues="@array/prefscreen_appearance_theme_value_list"
+            android:defaultValue="Black"
+            android:key="@string/preference_appearance_theme">
+        </ListPreference>
+
+        <ListPreference
+            android:defaultValue="いいね！"
+            android:entries="@array/prefscreen_appearance_fav_list"
+            android:entryValues="@array/prefscreen_appearance_fav_list"
+            android:key="@string/preference_appearance_like_string">
+        </ListPreference>
+
+        <ListPreference
+            android:defaultValue="そんなによくないね…"
+            android:entries="@array/prefscreen_appearance_unfav_list"
+            android:entryValues="@array/prefscreen_appearance_unfav_list"
+            android:key="@string/preference_appearance_unlike_string">
+        </ListPreference>
+
+        <ListPreference
+            android:defaultValue="20"
+            android:entries="@array/prefscreen_appearance_favorite_icons"
+            android:entryValues="@array/favorite_icons_index"
+            android:key="@string/preference_appearance_like_mark">
+        </ListPreference>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/prefscreen_twitter_api_key">
+        <EditTextPreference
+            android:defaultValue=""
+            android:key="@string/preference_twitter_consumer_key"/>
+        <EditTextPreference
+            android:defaultValue=""
+            android:key="@string/preference_twitter_consumer_secret"/>
+    </PreferenceCategory>
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/preference_login_auto_login_enabled"/>
+</PreferenceScreen>

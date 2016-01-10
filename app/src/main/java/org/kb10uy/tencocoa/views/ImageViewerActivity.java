@@ -36,13 +36,17 @@ public class ImageViewerActivity extends AppCompatActivity {
         mAttacher = new PhotoViewAttacher(mImageView);
         mAttacher.setZoomable(true);
         mAttacher.setMaximumScale(4);
-        Glide.with(this).load(targetUri).into(new GlideDrawableImageViewTarget(mImageView) {
-            @Override
-            public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
-                super.onResourceReady(resource, animation);
-                mAttacher.update();
-            }
-        });
+        Glide
+                .with(this)
+                .load(targetUri)
+                /*.placeholder(R.drawable.placeholder)*/
+                .into(new GlideDrawableImageViewTarget(mImageView) {
+                    @Override
+                    public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
+                        super.onResourceReady(resource, animation);
+                        mAttacher.update();
+                    }
+                });
 
         setListeners();
     }
