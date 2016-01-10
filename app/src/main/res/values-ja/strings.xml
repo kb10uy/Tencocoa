@@ -96,6 +96,8 @@
     <string name="popup_notification_favorited_mention">%1$sさんに自分宛てメンションをふぁぼられました</string>
     <string name="popup_notification_retweeted_mention">%1$sさんに自分宛てメンションをリツイートされました</string>
 
+    <string name="popup_update_count">%1$d件の新着ツイート</string>
+
     <string name="headline_favorited">%1$sさんにふぁぼられました: %2$s</string>
     <string name="headline_unfavorited">%1$sさんにあんふぁぼられました: %2$s</string>
     <string name="headline_followed">%1$s(@%2$s)さんにフォローされました</string>

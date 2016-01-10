@@ -97,6 +97,8 @@
     <string name="popup_notification_favorited_mention">Retweeted mention by %1$s</string>
     <string name="popup_notification_retweeted_mention">Retweeted mention by %1$s</string>
 
+    <string name="popup_update_count">%1$d件 new tweets</string>
+
     <string name="headline_favorited">Faved by %1$s: %2$s</string>
     <string name="headline_unfavorited">Unfaved by %1$s: %2$s</string>
     <string name="headline_followed">Followed by %1$s(@%2$s)</string>

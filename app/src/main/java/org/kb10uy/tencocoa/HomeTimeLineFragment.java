@@ -64,6 +64,10 @@ public class HomeTimeLineFragment extends Fragment {
     private long currentUserId;
     private SharedPreferences pref;
     private Drawable mFavoriteIcon;
+    private LinearLayout mUpdatePopup;
+    private TextView mUpdatePopupText;
+    private boolean mHasNewTweet = false;
+    private int mRestNewTweet = 0, mLastTotal = 0;
 
     public HomeTimeLineFragment() {
         // Required empty public constructor
@@ -100,6 +104,8 @@ public class HomeTimeLineFragment extends Fragment {
         mPopupCaption = (TextView) view.findViewById(R.id.HomeTimeLineTextViewCaption);
         mPopupDescription = (TextView) view.findViewById(R.id.HomeTimeLineTextViewDescription);
         mPopup = (LinearLayout) view.findViewById(R.id.HomeTimeLinePopup);
+        mUpdatePopupText = (TextView) view.findViewById(R.id.HomeTimeLineUpdatePopupText);
+        mUpdatePopup = (LinearLayout) view.findViewById(R.id.HomeTimeLineUpdatePopup);
 
         view.getContext().getTheme().resolveAttribute(R.attr.colorRetweetBackground, mRewteetBackgroundValue, true);
         mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -109,7 +115,13 @@ public class HomeTimeLineFragment extends Fragment {
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
+                if (firstVisibleItem < mRestNewTweet) {
+                    rewriteNewTweets(--mRestNewTweet);
+                    if (mRestNewTweet == 0) {
+                        popdownNewTweets();
+                        mHasNewTweet = false;
+                    }
+                }
             }
         });
 
@@ -247,6 +259,12 @@ public class HomeTimeLineFragment extends Fragment {
         mHandler.post(() -> {
             mTimeLineAdapter.add(tstatus);
             if (item != 0 || y != 0) {
+                if (!mHasNewTweet) {
+                    mHasNewTweet = true;
+                    popupNewTweets();
+                    mRestNewTweet = 0;
+                }
+                rewriteNewTweets(++mRestNewTweet);
                 mListView.setSelectionFromTop(item + 1, y);
             }
         });
@@ -318,6 +336,22 @@ public class HomeTimeLineFragment extends Fragment {
         AnimatorSet set = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.notification_popup);
         set.setTarget(mPopup);
         set.start();
+    }
+
+    private void popupNewTweets() {
+        AnimatorSet set = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.new_tweet_popup);
+        set.setTarget(mUpdatePopup);
+        set.start();
+    }
+
+    private void popdownNewTweets() {
+        AnimatorSet set = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.new_tweet_popdown);
+        set.setTarget(mUpdatePopup);
+        set.start();
+    }
+
+    private void rewriteNewTweets(int count) {
+        mUpdatePopupText.setText(getString(R.string.popup_update_count, count));
     }
 
     public void clearStatuses() {

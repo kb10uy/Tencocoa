@@ -13,9 +13,9 @@ beta Bamiyan
 10.x Ujimatsu
 */
 def VERSION_MAJOR = 0
-def VERSION_MINOR = 3
-def VERSION_PATCH = 4
-def VERSION_NAME = 'Dragonforce'
+def VERSION_MINOR = 4
+def VERSION_PATCH = 0
+def VERSION_NAME = 'Bamiyan'
 
 repositories {
     mavenCentral()
