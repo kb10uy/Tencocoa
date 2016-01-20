@@ -11,8 +11,14 @@ import twitter4j.URLEntity;
 public final class TencocoaUriResolver {
 
     private static final TencocoaUriResolverInfo[] imageResolvers = {
+            new TencocoaUriResolverInfo("http://d250g2.com", "http://d250g2.com/d250g2.jpg", "http://d250g2.com/d250g2.jpg"),
             new TencocoaUriResolverInfo("^(https?://)(?:www\\.)?gyazo\\.com/(\\w+)(?:\\.png)?(?:\\?.*)?$", "$1i.gyazo.com/$2.png", "$1i.gyazo.com/$2.png"),
+            new TencocoaUriResolverInfo("^(http://instagr.am/p/(\\w+))$", "$1/media?size=m", "$1/media?size=l"),
+            new TencocoaUriResolverInfo("^http://www\\.nico\\.ms/im(\\d+)$", "http://lohas.nicoseiga.jp/img/$1l", "http://seiga.nicovideo.jp/image/source?id=$1"),
+            new TencocoaUriResolverInfo("^http://www\\.nico\\.ms/(?:\\w+)?(\\d+)$", "http://tn-skr2.smilevideo.jp/smile?i=$1", "http://tn-skr2.smilevideo.jp/smile?i=$1"),
             new TencocoaUriResolverInfo("^http://www\\.nicovideo\\.jp/watch/(?:\\w+)?(\\d+)$", "http://tn-skr2.smilevideo.jp/smile?i=$1", "http://tn-skr2.smilevideo.jp/smile?i=$1"),
+            new TencocoaUriResolverInfo("^http://600eur.gochiusa.net$", "http://600eur.gochiusa.net/tori/600eur.png", "http://600eur.gochiusa.net/tori/600eur.png"),
+            new TencocoaUriResolverInfo("^http://totori.dip.jp$", "http://totoridipjp-cdn.c.sakurastorage.jp/imgs/totori_vita.jpg", "http://totoridipjp-cdn.c.sakurastorage.jp/imgs/totori_vita.jpg"),
     };
 
     private static final TencocoaUriResolverInfo[] videoResolvers = {

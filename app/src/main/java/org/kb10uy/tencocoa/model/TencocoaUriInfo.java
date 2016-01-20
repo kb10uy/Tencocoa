@@ -4,10 +4,10 @@ import android.net.Uri;
 
 public class TencocoaUriInfo {
     public static final int NORMAL = 1;
-    public static final int IMAGE = 1;
-    public static final int VIDEO = 1;
-    public static final int TEXT = 1;
-    public static final int OTHER = 1;
+    public static final int IMAGE = 2;
+    public static final int VIDEO = 3;
+    public static final int TEXT = 4;
+    public static final int OTHER = 5;
 
     private int type;
 

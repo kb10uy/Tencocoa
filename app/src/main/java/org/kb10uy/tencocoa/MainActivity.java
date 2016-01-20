@@ -571,6 +571,9 @@ public class MainActivity
         friends.setText(Integer.toString(user.getFriendsCount()));
         followers.setText(Integer.toString(user.getFollowersCount()));
         getSupportActionBar().setTitle(String.format("%s(@%s)", user.getName(), user.getScreenName()));
+
+        //userflagment
+        mUserInformationFragment.updateInformation(currentUser);
     }
 
     private void showUpHeadline(String str) {

@@ -73,6 +73,8 @@ public class NewStatusDialogFragment extends DialogFragment {
         final Dialog dialog = new Dialog(getActivity());
         dialog.getWindow().requestFeature(STYLE_NO_TITLE);
         dialog.setContentView(R.layout.fragment_new_status_dialog);
+        dialog.setCanceledOnTouchOutside(false);
+
         mStatusText = (EditText) dialog.findViewById(R.id.NewStatusDialogFragmentStatusText);
         mTextLength = (TextView) dialog.findViewById(R.id.NewStatusDialogFragmentLengthText);
         mImagesLinearLayout = (LinearLayout) dialog.findViewById(R.id.NewStatusDialogFragmentImages);

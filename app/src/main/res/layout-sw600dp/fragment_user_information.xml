@@ -7,53 +7,60 @@
 
     <!-- TODO: Update blank fragment layout -->
     <ImageView
+        android:id="@+id/UserInformationImageViewHeader"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:scaleType="centerCrop"
+        android:layout_height="180dp"
         android:adjustViewBounds="true"
-        android:id="@+id/UserInformationImageViewHeader"/>
+        android:scaleType="centerCrop"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="?colorBlack">
+        android:background="?colorBlack"
+        android:orientation="horizontal">
+
         <ImageView
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:layout_margin="8dp"
-            android:id="@+id/UserInformationImageViewProfile"/>
+            android:id="@+id/UserInformationImageViewProfile"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_margin="8dp"/>
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_gravity="center_vertical">
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical">
+
             <TextView
+                android:id="@+id/UserInformationTextViewName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
-                android:textSize="24sp"
+                android:text="UserName"
                 android:textColor="?colorWhite"
-                android:id="@+id/UserInformationTextViewName"
-                android:text="UserName"/>
+                android:textSize="32sp"/>
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="4dp"
                     android:layout_marginTop="2dp"
-                    android:textSize="16sp"
+                    android:text="\@"
                     android:textColor="?colorTextScreenName"
-                    android:text="\@"/>
+                    android:textSize="20sp"/>
+
                 <TextView
+                    android:id="@+id/UserInformationTextViewScreenName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:textSize="20sp"
+                    android:text="ScreenName"
                     android:textColor="?colorTextScreenName"
-                    android:id="@+id/UserInformationTextViewScreenName"
-                    android:text="ScreenName"/>
+                    android:textSize="20sp"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
@@ -81,7 +88,7 @@
                     android:layout_margin="4dp"
                     android:text="12345678"
                     android:textColor="?colorBlack"
-                    android:textSize="20sp"/>
+                    android:textSize="28sp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -89,7 +96,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_margin="4dp"
                     android:text="@string/label_activity_main_tweets"
-                    android:textSize="16sp"/>
+                    android:textSize="20sp"/>
             </LinearLayout>
 
             <LinearLayout
@@ -104,7 +111,7 @@
                     android:layout_margin="4dp"
                     android:text="12345678"
                     android:textColor="?colorBlack"
-                    android:textSize="20sp"/>
+                    android:textSize="28sp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -112,7 +119,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_margin="4dp"
                     android:text="@string/label_activity_main_favorites"
-                    android:textSize="16sp"/>
+                    android:textSize="20sp"/>
             </LinearLayout>
 
             <LinearLayout
@@ -127,7 +134,7 @@
                     android:layout_margin="4dp"
                     android:text="12345678"
                     android:textColor="?colorBlack"
-                    android:textSize="20sp"/>
+                    android:textSize="28sp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -135,7 +142,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_margin="4dp"
                     android:text="@string/label_activity_main_friends"
-                    android:textSize="16sp"/>
+                    android:textSize="20sp"/>
             </LinearLayout>
 
             <LinearLayout
@@ -150,7 +157,7 @@
                     android:layout_margin="4dp"
                     android:text="12345678"
                     android:textColor="?colorBlack"
-                    android:textSize="20sp"/>
+                    android:textSize="28sp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -158,7 +165,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_margin="4dp"
                     android:text="@string/label_activity_main_followers"
-                    android:textSize="16sp"/>
+                    android:textSize="20sp"/>
             </LinearLayout>
         </LinearLayout>
 
@@ -171,12 +178,13 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
+                android:textSize="20sp"
                 android:layout_margin="4dp"
                 android:id="@+id/UserInformationTextViewDescription"
                 android:text="説明Description説明Description説明Description説明Description説明Description説明Description説明Description"/>
         </LinearLayout>
     </LinearLayout>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -38,6 +38,7 @@ public class TencocoaStatus implements Serializable {
         medias = new ArrayList<>();
         replaceTextElements();
         fetchMediaEntities();
+        fetchExternalMedias();
     }
 
     public List<TencocoaUriInfo> getMedias() {
@@ -119,6 +120,19 @@ public class TencocoaStatus implements Serializable {
             xinfo.setThumbnailImageUri(Uri.parse(mediaURLHttps + ":thumb"));
             xinfo.setFullImageUri(Uri.parse(mediaURLHttps + ":orig"));
             medias.add(xinfo);
+        }
+    }
+
+    private void fetchExternalMedias() {
+        URLEntity[] uris = showingStatus.getURLEntities();
+        for (URLEntity e : uris) {
+            TencocoaUriInfo info = TencocoaUriResolver.resolveUri(e);
+            switch (info.getType()) {
+                case TencocoaUriInfo.IMAGE:
+                case TencocoaUriInfo.VIDEO:
+                    medias.add(info);
+                    break;
+            }
         }
     }
 }
