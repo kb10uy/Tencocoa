@@ -1,17 +1,21 @@
 package org.kb10uy.bhavaagra;
 
+import android.Manifest;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -49,6 +53,9 @@ public class MediaSelectorActivity extends AppCompatActivity
             MediaStore.Images.ImageColumns.WIDTH,
             MediaStore.Images.ImageColumns.HEIGHT,
     };
+    private static final int PERMISSION_REQUEST_READ_STORAGE = 0x4550;
+    private static final int PERMISSION_REQUEST_CAMERA = 0x4551;
+
 
     private AlbumDrawerFragment mNavigationDrawerFragment;
     private CharSequence mTitle;
@@ -117,6 +124,12 @@ public class MediaSelectorActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_READ_STORAGE);
+                return;
+            }
+        }
         resolveMedia();
     }
 
@@ -242,9 +255,11 @@ public class MediaSelectorActivity extends AppCompatActivity
         //なぜAndroid library projectでswitchが使えないのか
         int i = item.getItemId();
         if (i == R.id.action_camera) {
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, buildDateTimeImageUri());
-            startActivityForResult(intent, CAMERA_INTENT);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISSION_REQUEST_CAMERA);
+                return false;
+            }
+            startCamera();
             return true;
         } else if (i == R.id.action_uri) {
 
@@ -261,6 +276,14 @@ public class MediaSelectorActivity extends AppCompatActivity
             return true;
         }
         return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
+    }
+
+    private void startCamera() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.addCategory(Intent.CATEGORY_DEFAULT);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, buildDateTimeImageUri());
+        startActivityForResult(intent, CAMERA_INTENT);
+
     }
 
     private Uri buildDateTimeImageUri() {
@@ -293,6 +316,35 @@ public class MediaSelectorActivity extends AppCompatActivity
                 return;
             default:
                 super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[], @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_REQUEST_READ_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    resolveMedia();
+                } else {
+
+                    // @// TODO
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+
+            case PERMISSION_REQUEST_CAMERA: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    startCamera();
+                } else {
+                    // @// TODO: permission denied
+                }
+            }
+
         }
     }
 }
