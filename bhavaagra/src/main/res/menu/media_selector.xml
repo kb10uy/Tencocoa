@@ -8,7 +8,7 @@
           compat:showAsAction="ifRoom"/>
     <item android:id="@+id/action_uri"
           android:title="@string/menu_uri"
-          android:icon="@android:drawable/ic_menu_edit"
+          android:icon="@drawable/ic_edit_white_24dp"
           compat:showAsAction="ifRoom"/>
 
     <item android:id="@+id/action_cancel"
@@ -17,6 +17,6 @@
           compat:showAsAction="always|withText"/>
     <item android:id="@+id/action_ok"
           android:title="@string/message_ok"
-          android:icon="@android:drawable/ic_menu_send"
+          android:icon="@drawable/ic_send_white_24dp"
           compat:showAsAction="always|withText"/>
 </menu>
