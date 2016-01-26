@@ -561,8 +561,8 @@ public class MainActivity
         TextView friends = (TextView) mDrawerLayout.findViewById(R.id.MainDrawerTextViewFriends);
         TextView followers = (TextView) mDrawerLayout.findViewById(R.id.MainDrawerTextViewFollowers);
 
-        Glide.with(ctx).load(user.getBiggerProfileImageURLHttps()).into(profile);
-        Glide.with(ctx).load(user.getProfileBannerMobileURL()).into(header);
+        Glide.with(ctx).load(user.getOriginalProfileImageURLHttps()).into(profile);
+        Glide.with(ctx).load(user.getProfileBannerMobileRetinaURL()).into(header);
 
         userName.setText(user.getName());
         screenName.setText(user.getScreenName());
