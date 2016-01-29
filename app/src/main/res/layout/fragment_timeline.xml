@@ -2,16 +2,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="org.kb10uy.tencocoa.HomeTimeLineFragment">
+    tools:context="org.kb10uy.tencocoa.TimeLineFragment">
 
     <ListView
-        android:id="@+id/HomeTimeLineDrawerListViewTimeLine"
+        android:id="@+id/TimelineDrawerListViewTimeLine"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="left|bottom" />
 
     <LinearLayout
-        android:id="@+id/HomeTimeLinePopup"
+        android:id="@+id/TimelinePopup"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_marginTop="-56dp"
@@ -29,14 +29,14 @@
                 android:layout_margin="4dp"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/tencocoa_star1"
-                android:id="@+id/HomeTimeLineImageViewPopupIcon"/>
+                android:id="@+id/TimelineImageViewPopupIcon"/>
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_margin="4dp"
-                android:id="@+id/HomeTimeLineImageViewPopupSource" />
+                android:id="@+id/TimelineImageViewPopupSource" />
             <TextView
-                android:id="@+id/HomeTimeLineTextViewCaption"
+                android:id="@+id/TimelineTextViewCaption"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
@@ -46,7 +46,7 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/HomeTimeLineTextViewDescription"
+            android:id="@+id/TimelineTextViewDescription"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
@@ -55,7 +55,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/HomeTimeLineUpdatePopup"
+        android:id="@+id/TimelineUpdatePopup"
         android:layout_width="200dp"
         android:layout_height="32dp"
         android:layout_marginTop="-40dp"
@@ -64,7 +64,7 @@
         android:layout_gravity="center_horizontal"
         android:orientation="vertical">
         <TextView
-            android:id="@+id/HomeTimeLineUpdatePopupText"
+            android:id="@+id/TimelineUpdatePopupText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

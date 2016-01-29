@@ -61,7 +61,7 @@ public class MainActivity
         extends AppCompatActivity
         implements MainDrawerFragment.OnDrawerFragmentInteractionListener,
         NewStatusDialogFragment.NewStatusDialogFragmentInteractionListener,
-        HomeTimeLineFragment.HomeTimeLineFragmentInteractionListener,
+        HomeTimeLineFragment.TimelineFragmentInteractionListener,
         StatusDetailDialogFragment.StatusDetailInteractionListener,
         TwitterAccountInformationReceiver {
 
@@ -284,7 +284,7 @@ public class MainActivity
         mHomeTimelineStreamAdapter = new UserStreamAdapter() {
             @Override
             public void onStatus(Status status) {
-                mHomeTimeLineFragment.onHomeTimeLineStreamingStatus(status);
+                mHomeTimeLineFragment.onStreamingStatus(status);
             }
 
             @Override
