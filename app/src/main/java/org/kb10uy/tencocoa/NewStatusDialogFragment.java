@@ -13,6 +13,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -44,6 +45,7 @@ public class NewStatusDialogFragment extends DialogFragment {
     private String mCurrentText = "";
     private EditText mStatusText;
     private TextView mTextLength;
+    private Button mSendButton;
 
     public static NewStatusDialogFragment newInstance() {
         return new NewStatusDialogFragment();
@@ -78,8 +80,9 @@ public class NewStatusDialogFragment extends DialogFragment {
         mStatusText = (EditText) dialog.findViewById(R.id.NewStatusDialogFragmentStatusText);
         mTextLength = (TextView) dialog.findViewById(R.id.NewStatusDialogFragmentLengthText);
         mImagesLinearLayout = (LinearLayout) dialog.findViewById(R.id.NewStatusDialogFragmentImages);
+        mSendButton = (Button) dialog.findViewById(R.id.NewStatusDialogFragmentButtonUpdateStatus);
 
-        dialog.findViewById(R.id.NewStatusDialogFragmentButtonUpdateStatus).setOnClickListener(v -> {
+        mSendButton.setOnClickListener(v -> {
             String text = mStatusText.getText().toString();
             dismiss();
             updateStatus(text);
@@ -210,8 +213,8 @@ public class NewStatusDialogFragment extends DialogFragment {
         sb.append(rawLength);
         sb.append("/");
         sb.append(140);
-
         mTextLength.setText(sb.toString());
+        mSendButton.setEnabled(rawLength <= 140);
     }
 
     public interface NewStatusDialogFragmentInteractionListener {
