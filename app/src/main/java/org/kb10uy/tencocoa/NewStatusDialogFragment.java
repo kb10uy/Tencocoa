@@ -214,7 +214,7 @@ public class NewStatusDialogFragment extends DialogFragment {
         sb.append("/");
         sb.append(140);
         mTextLength.setText(sb.toString());
-        mSendButton.setEnabled(rawLength <= 140);
+        mSendButton.setEnabled(rawLength <= 140 && rawLength != 0);
     }
 
     public interface NewStatusDialogFragmentInteractionListener {
