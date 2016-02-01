@@ -34,6 +34,7 @@
         <item>Search</item>
     </string-array>
 
+    <string name="label_activity_main_summary">Summary</string>
     <string name="label_activity_main_tweets">Tweets</string>
     <string name="label_activity_main_favorites">Favorites</string>
     <string name="label_activity_main_friends">Followings</string>

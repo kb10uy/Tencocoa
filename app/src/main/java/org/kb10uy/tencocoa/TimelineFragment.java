@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -40,7 +41,8 @@ import io.realm.Realm;
 import twitter4j.Status;
 import twitter4j.User;
 
-public class TimelineFragment extends Fragment {
+public class TimelineFragment extends Fragment
+        implements SwipeRefreshLayout.OnRefreshListener {
 
     private TimelineFragmentInteractionListener mListener;
     private ListView mListView;
@@ -60,6 +62,7 @@ public class TimelineFragment extends Fragment {
     private Drawable mFavoriteIcon;
     private LinearLayout mUpdatePopup;
     private TextView mUpdatePopupText;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private boolean mHasNewTweet = false;
     private int mRestNewTweet = 0, mLastTotal = 0;
 
@@ -100,6 +103,7 @@ public class TimelineFragment extends Fragment {
         mPopup = (LinearLayout) view.findViewById(R.id.TimelinePopup);
         mUpdatePopupText = (TextView) view.findViewById(R.id.TimelineUpdatePopupText);
         mUpdatePopup = (LinearLayout) view.findViewById(R.id.TimelineUpdatePopup);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.TimelineSwipeRefreshView);
 
         view.getContext().getTheme().resolveAttribute(R.attr.colorRetweetBackground, mRewteetBackgroundValue, true);
         mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -118,6 +122,10 @@ public class TimelineFragment extends Fragment {
                 }
             }
         });
+        TypedValue primary = new TypedValue();
+        getContext().getTheme().resolveAttribute(R.attr.colorPrimary, primary, true);
+        mSwipeRefreshLayout.setColorSchemeResources(primary.resourceId);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
 
         return view;
     }
@@ -170,6 +178,11 @@ public class TimelineFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onRefresh() {
+        mHandler.postDelayed(() -> mSwipeRefreshLayout.setRefreshing(false), 2000);
     }
 
     public void clearStatuses() {

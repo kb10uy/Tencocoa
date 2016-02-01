@@ -34,6 +34,7 @@
         <item>検索</item>
     </string-array>
 
+    <string name="label_activity_main_summary">ユーザー情報</string>
     <string name="label_activity_main_tweets">ツイート</string>
     <string name="label_activity_main_favorites">ふぁぼ</string>
     <string name="label_activity_main_friends">フォロー</string>
