@@ -5,9 +5,6 @@ The hopeful &amp; extreme twitter client for Android.
 Android用のKbtterです。機能的にはKbtter4みたいな感じです。  
 Tencocoaという名前は言わずもがな比那名居「**天子**」と保登「**心愛**」から。
 
-## Travis CI
-* master: [![Build Status](https://travis-ci.org/kb10uy/Tencocoa.svg?branch=master)](https://travis-ci.org/kb10uy/Tencocoa)
-* develop: [![Build Status](https://travis-ci.org/kb10uy/Tencocoa.svg?branch=develop)](https://travis-ci.org/kb10uy/Tencocoa)
 
 ## 対応バージョン
 **Android 4.2(API 17)以降**
