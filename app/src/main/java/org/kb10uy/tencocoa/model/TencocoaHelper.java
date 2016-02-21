@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 
+import com.google.common.primitives.Ints;
+
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.kb10uy.tencocoa.R;
@@ -20,11 +22,13 @@ import java.util.Date;
 import java.util.Locale;
 
 import twitter4j.Status;
+import twitter4j.TwitterException;
 import twitter4j.User;
 import twitter4j.UserMentionEntity;
 
 public class TencocoaHelper {
     public static final char numberSuffixes[] = new char[]{' ', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'};
+    public static final int translatedErrors[] = new int[]{32, 34, 64, 68, 88, 89, 92, 130, 131, 135, 161, 179, 185, 187, 215, 226, 231, 251, 261, 271, 272, 354};
     private static SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault());
 
     public static boolean serializeObjectToFile(Serializable object, FileOutputStream output) {
@@ -133,5 +137,10 @@ public class TencocoaHelper {
                 return null;
             }
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    public static String getTwitterErrorMessage(Context ctx, TwitterException ex) {
+        if (Ints.contains(translatedErrors, ex.getErrorCode())) return ctx.getString(ctx.getResources().getIdentifier("text", "string", ctx.getPackageName()));
+        return ex.getErrorMessage();
     }
 }

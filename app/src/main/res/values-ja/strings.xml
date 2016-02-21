@@ -103,4 +103,28 @@
     <string name="headline_unfavorited">%1$sさんにあんふぁぼられました: %2$s</string>
     <string name="headline_followed">%1$s(@%2$s)さんにフォローされました</string>
     <string name="headline_unfollowed">%1$s(@%2$s)さんにリムられました</string>
+
+    <string name="notification_twitter_failed">操作に失敗しました。: </string>
+    <string name="twitter_error_32">認証できませんでした。</string>
+    <string name="twitter_error_34">お探しのツイート・ユーザーは見つかりません。</string>
+    <string name="twitter_error_64">このアカウントは凍結されています。</string>
+    <string name="twitter_error_68">v1 APIはもうすでに使用されていません。</string>
+    <string name="twitter_error_88">API制限に達しました。しばらく待ってからもう一度操作してください。</string>
+    <string name="twitter_error_89">トークンが不正です。</string>
+    <string name="twitter_error_92">SSLのみ許可されています。</string>
+    <string name="twitter_error_130">Twitterは現在過負荷状態です。</string>
+    <string name="twitter_error_131">Twitter内部で不明なエラーが発生しました。</string>
+    <string name="twitter_error_135">認証できませんでした。端末の時刻がおかしいかもしれません。</string>
+    <string name="twitter_error_161">フォロー制限に達しています。</string>
+    <string name="twitter_error_179">このツイートを見ることはできません。</string>
+    <string name="twitter_error_185">今日はこれ以上ツイートできません。</string>
+    <string name="twitter_error_187">ツイート内容が重複しています。</string>
+    <string name="twitter_error_215">認証情報が不正です。</string>
+    <string name="twitter_error_226">Twitterが自動化を検出しました。</string>
+    <string name="twitter_error_231">ログインしてください。</string>
+    <string name="twitter_error_251">このエンドポイントは使用できません。</string>
+    <string name="twitter_error_261">現在のAPIキーでWrite操作ができません。</string>
+    <string name="twitter_error_271">自分自身をミュートすることはできません。</string>
+    <string name="twitter_error_272">そのアカウントをミュートしていません。</string>
+    <string name="twitter_error_354">DMの文字数制限に達しています。</string>
 </resources>

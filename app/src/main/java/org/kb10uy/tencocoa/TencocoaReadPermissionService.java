@@ -8,7 +8,10 @@ import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.widget.Toast;
 
+import org.kb10uy.tencocoa.model.TencocoaHelper;
+import org.kb10uy.tencocoa.model.TencocoaRequestListener;
 import org.kb10uy.tencocoa.model.TwitterAccountInformation;
 
 import java.util.ArrayList;
@@ -31,6 +34,7 @@ public class TencocoaReadPermissionService extends Service {
     private NotificationManager mNotificationManager;
     private TencocoaReadPermissionServiceBinder mBinder = new TencocoaReadPermissionServiceBinder();
     private RequestToken storedToken;
+    private List<TencocoaRequestListener> mRequestListeners = new ArrayList<>();
 
     @Override
     public void onCreate() {
@@ -81,7 +85,7 @@ public class TencocoaReadPermissionService extends Service {
         try {
             return mTwitter.users().showUser(currentUser.getUserId());
         } catch (TwitterException te) {
-            //Log.d(getString(R.string.app_name), te.getErrorMessage());
+            Toast.makeText(this, getString(R.string.notification_twitter_failed) + TencocoaHelper.getTwitterErrorMessage(this, te), Toast.LENGTH_LONG).show();
         }
         return null;
     }
@@ -90,9 +94,43 @@ public class TencocoaReadPermissionService extends Service {
         try {
             return mTwitter.timelines().getHomeTimeline(new Paging(1, count));
         } catch (TwitterException e) {
-            //Log.d(getString(R.string.app_name), e.getErrorMessage());
+            Toast.makeText(this, getString(R.string.notification_twitter_failed) + TencocoaHelper.getTwitterErrorMessage(this, e), Toast.LENGTH_LONG).show();
         }
         return new ArrayList<>();
+    }
+
+    public List<Status> getTargetUserTimeline(int count) {
+        try {
+            return mTwitter.getUserTimeline(new Paging(1, count));
+        } catch (TwitterException e) {
+            Toast.makeText(this, getString(R.string.notification_twitter_failed) + TencocoaHelper.getTwitterErrorMessage(this, e), Toast.LENGTH_LONG).show();
+        }
+        return new ArrayList<>();
+    }
+
+    public void addRequestListener(TencocoaRequestListener listener) {
+        mRequestListeners.add(listener);
+    }
+
+    public void removeRequestListener(TencocoaRequestListener listener) {
+        mRequestListeners.remove(listener);
+    }
+
+    public void requestUserInformation(String screenName) {
+        try {
+            User user = mTwitter.users().showUser(screenName);
+            for (TencocoaRequestListener l : mRequestListeners) l.onUserInformationRequest(user);
+        } catch (TwitterException e) {
+            Toast.makeText(this, getString(R.string.notification_twitter_failed) + TencocoaHelper.getTwitterErrorMessage(this, e), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void requestStatusSearch(String keyword) {
+
+    }
+
+    public void requestUserSearch(String keyword) {
+
     }
 
     public void storeOAuthRequestToken(RequestToken token) {
