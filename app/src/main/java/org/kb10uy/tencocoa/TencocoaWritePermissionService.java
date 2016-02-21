@@ -26,6 +26,7 @@ import twitter4j.StatusUpdate;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.UploadedMedia;
+import twitter4j.User;
 import twitter4j.auth.AccessToken;
 
 

@@ -191,6 +191,50 @@
                         android:layout_margin="4dp"
                         android:text="説明Description説明Description説明Description説明Description説明Description説明Description説明Description"
                         android:textSize="16sp"/>
+
+                    <LinearLayout
+                        android:id="@+id/UserInformationLink"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_link_white_24dp"
+                            android:tint="#FF808080"/>
+
+                        <TextView
+                            android:id="@+id/UserInformationTextViewLink"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="4dp"
+                            android:text="http://tencocoa.kb10uy.org"
+                            android:autoLink="web"
+                            android:textSize="12sp"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/UserInformationLocation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_location_on_white_24dp"
+                            android:tint="#FF808080"/>
+
+                        <TextView
+                            android:id="@+id/UserInformationTextViewLocation"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="4dp"
+                            android:text="Somewhere in this world"
+                            android:textSize="12sp"/>
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

@@ -35,6 +35,7 @@ import org.kb10uy.tencocoa.model.TencocoaStatusCache;
 import org.kb10uy.tencocoa.model.TencocoaUriInfo;
 import org.kb10uy.tencocoa.views.ImageViewerActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
@@ -189,7 +190,7 @@ public class TimelineFragment extends Fragment
         mTimeLineAdapter.clear();
     }
 
-    public void setStreamingUser(long user) {
+    public void setSourceUser(long user) {
         currentUserId = user;
     }
 
@@ -248,6 +249,14 @@ public class TimelineFragment extends Fragment
             String description = status.getText();
             mHandler.post(() -> showNotificationPopup(R.drawable.tencocoa_star1, source, caption, description));
         }
+    }
+
+    public void addRestStatuses(List<Status> statuses) {
+        List<TencocoaStatus> org = getTimelineAdapter().getList();
+        ArrayList<TencocoaStatus> ns = new ArrayList<>();
+        for (Status s : statuses) ns.add(new TencocoaStatus(s));
+        org.addAll(0, ns);
+        sendToHandler(() -> getTimelineAdapter().setList(org));
     }
 
     protected View generateStatusView(View targetView, TencocoaStatus status) {

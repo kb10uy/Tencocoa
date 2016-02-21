@@ -1,9 +1,7 @@
 package org.kb10uy.tencocoa;
 
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
@@ -12,7 +10,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
@@ -20,7 +17,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.common.base.Strings;
 
 import org.kb10uy.tencocoa.model.DoubleTapHelper;
 import org.kb10uy.tencocoa.model.TencocoaHelper;
@@ -47,7 +44,6 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 
 import io.realm.Realm;
 import twitter4j.Status;
@@ -58,7 +54,7 @@ import twitter4j.UserStreamAdapter;
 
 
 public class MainActivity
-        extends AppCompatActivity
+        extends ServiceProviderActivity
         implements MainDrawerFragment.OnDrawerFragmentInteractionListener,
         NewStatusDialogFragment.NewStatusDialogFragmentInteractionListener,
         HomeTimeLineFragment.TimelineFragmentInteractionListener,
@@ -83,15 +79,9 @@ public class MainActivity
     private Context ctx;
     private Handler mHandler;
 
-    private TencocoaStreamingService mStreamingService;
-    private TencocoaWritePermissionService mWritePermissionService;
-    private TencocoaReadPermissionService mReadPermissionService;
-    private ServiceConnection mStreamingConnection, mWritePermissionConnection, mReadPermissionConnection;
     private TencocoaUserStreamLister mUserStreamListener;
     private UserStreamAdapter mHomeTimelineStreamAdapter, mSelfInfoStreamAdapter, mHeadlineStreamAdapter;
-    private CountDownLatch mServiceLatch;
     private DoubleTapHelper mBackDoubleTapHelper;
-    private boolean mStreamingBound, mWritePermissionBound, mReadPermissionBound;
     private boolean mIsRestoring, mAutoConnectTried,
             mHasShownFirstAccountActivity;
 
@@ -122,8 +112,7 @@ public class MainActivity
         ctx = this;
         mBackDoubleTapHelper = new DoubleTapHelper(ctx, getString(R.string.notification_double_tap_to_exit), 1000, 500);
 
-        startTencocoaServices();
-        createServiceConnections();
+        startServices();
         initializeFragments();
     }
 
@@ -132,7 +121,7 @@ public class MainActivity
         super.onStart();
         mConnectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
 
-        bindTencocoaServices();
+        bindServices();
         initializeTwitter();
     }
 
@@ -178,7 +167,7 @@ public class MainActivity
     @Override
     protected void onStop() {
         super.onStop();
-        unbindTencocoaServices();
+        unbindServices();
     }
 
     @Override
@@ -193,7 +182,7 @@ public class MainActivity
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_CANCELED) return;
         final TwitterAccountInformation info = (TwitterAccountInformation) data.getSerializableExtra("Information");
-        bindTencocoaServices();
+        bindServices();
         switch (requestCode) {
             case TencocoaRequestCodes.AccountSelect:
                 if (resultCode == RESULT_OK) {
@@ -348,62 +337,13 @@ public class MainActivity
         mUserStreamListener.addAdapter(mHeadlineStreamAdapter);
     }
 
-    private void startTencocoaServices() {
-        Intent tss = new Intent(ctx, TencocoaStreamingService.class);
-        Intent twps = new Intent(ctx, TencocoaWritePermissionService.class);
-        Intent trps = new Intent(ctx, TencocoaReadPermissionService.class);
-        startService(tss);
-        startService(twps);
-        startService(trps);
-        //Log.d(getString(R.string.app_name), "Services started now");
-    }
-
-    private void stopTencocoaServices() {
-        stopService(new Intent(ctx, TencocoaStreamingService.class));
-        stopService(new Intent(ctx, TencocoaWritePermissionService.class));
-        stopService(new Intent(ctx, TencocoaReadPermissionService.class));
-        //Log.d(getString(R.string.app_name), "Services stopped now");
-    }
-
-    private void bindTencocoaServices() {
-        if (mServiceLatch == null) mServiceLatch = new CountDownLatch(3);
-        if (!mStreamingBound)
-            mStreamingBound = ctx.bindService(new Intent(this, TencocoaStreamingService.class), mStreamingConnection, 0);
-        if (!mWritePermissionBound)
-            mWritePermissionBound = ctx.bindService(new Intent(this, TencocoaWritePermissionService.class), mWritePermissionConnection, 0);
-        if (!mReadPermissionBound)
-            mReadPermissionBound = ctx.bindService(new Intent(this, TencocoaReadPermissionService.class), mReadPermissionConnection, 0);
-        //Log.d(getString(R.string.app_name), "Services are now bound");
-    }
-
-    private void unbindTencocoaServices() {
-        if (mStreamingBound) {
-            ctx.unbindService(mStreamingConnection);
-            mStreamingBound = false;
-            mStreamingService = null;
-        }
-        if (mWritePermissionBound) {
-            ctx.unbindService(mWritePermissionConnection);
-            mWritePermissionBound = false;
-            mWritePermissionService = null;
-        }
-        if (mReadPermissionBound) {
-            ctx.unbindService(mReadPermissionConnection);
-            mReadPermissionBound = false;
-            mReadPermissionService = null;
-        }
-        //Log.d(getString(R.string.app_name), "Services are now unbound");
-        mServiceLatch = null;
-        createServiceConnections();
-    }
-
     void onInitializeTencocoa() {
         checkTwitterApiKeys();
         initialized = true;
     }
 
     private void onExitTencocoa() {
-        stopTencocoaServices();
+        stopServices();
     }
 
 
@@ -434,13 +374,13 @@ public class MainActivity
             @Override
             protected List<twitter4j.Status> doInBackground(Void... params) {
                 try {
-                    mServiceLatch.await();
-                    mStreamingService.setTargetUser(info);
-                    mHomeTimeLineFragment.setStreamingUser(info.getUserId());
-                    mWritePermissionService.setTarget(mStreamingService.getTargetUserTwitterInstance(), mStreamingService.getTargetUserInformation());
-                    mReadPermissionService.setTarget(mStreamingService.getTargetUserTwitterInstance(), mStreamingService.getTargetUserInformation());
-                    List<twitter4j.Status> ret = mReadPermissionService.getLatestHomeTimeline(100);
-                    mStreamingService.startCurrentUserStream(mUserStreamListener);
+                    waitAllServiceConnection();
+                    StreamingService.setTargetUser(info);
+                    mHomeTimeLineFragment.setSourceUser(info.getUserId());
+                    WritePermissionService.setTarget(StreamingService.getTargetUserTwitterInstance(), StreamingService.getTargetUserInformation());
+                    ReadPermissionService.setTarget(StreamingService.getTargetUserTwitterInstance(), StreamingService.getTargetUserInformation());
+                    List<twitter4j.Status> ret = ReadPermissionService.getLatestHomeTimeline(100);
+                    StreamingService.startCurrentUserStream(mUserStreamListener);
                     return ret;
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -460,7 +400,7 @@ public class MainActivity
     }
 
     private void autoConnectUserStream() {
-        if (mStreamingService.isUserStreamRunning()) return;
+        if (StreamingService.isUserStreamRunning()) return;
         if (pref.getInt(getString(R.string.preference_twitter_accounts_count), 0) > pref.getInt(getString(R.string.preference_twitter_accounts_auto_number), 0)) {
             TwitterAccountInformation i = null;
             try {
@@ -476,50 +416,7 @@ public class MainActivity
         }
     }
 
-    private void createServiceConnections() {
-        mStreamingConnection = new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                mStreamingService = ((TencocoaStreamingService.TencocoaStreamingServiceBinder) service).getService();
-                mServiceLatch.countDown();
-                onStreamingServiceConnected();
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-                mStreamingService = null;
-                mStreamingBound = false;
-            }
-        };
-        mWritePermissionConnection = new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                mWritePermissionService = ((TencocoaWritePermissionService.TencocoaWritePermissionServiceBinder) service).getService();
-                mServiceLatch.countDown();
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-                mWritePermissionService = null;
-                mWritePermissionBound = false;
-            }
-        };
-        mReadPermissionConnection = new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                mReadPermissionService = ((TencocoaReadPermissionService.TencocoaReadPermissionServiceBinder) service).getService();
-                mServiceLatch.countDown();
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-                mReadPermissionService = null;
-                mReadPermissionBound = false;
-            }
-        };
-    }
-
-    private void onStreamingServiceConnected() {
+    protected void onStreamingServiceConnected() {
         //mHomeTimeLineFragment.start(mStreamingService);
         if (!mAutoConnectTried) {
             mAutoConnectTried = true;
@@ -537,8 +434,8 @@ public class MainActivity
         AsyncTask<TwitterAccountInformation, Void, User> task = new AsyncTask<TwitterAccountInformation, Void, User>() {
             @Override
             protected User doInBackground(TwitterAccountInformation... params) {
-                if (mReadPermissionService == null) return null;
-                return mReadPermissionService.getTargetUser();
+                if (ReadPermissionService == null) return null;
+                return ReadPermissionService.getTargetUser();
             }
 
             @Override
@@ -561,15 +458,15 @@ public class MainActivity
         TextView friends = (TextView) mDrawerLayout.findViewById(R.id.MainDrawerTextViewFriends);
         TextView followers = (TextView) mDrawerLayout.findViewById(R.id.MainDrawerTextViewFollowers);
 
-        Glide.with(ctx).load(user.getOriginalProfileImageURLHttps()).into(profile);
-        Glide.with(ctx).load(user.getProfileBannerMobileRetinaURL()).into(header);
-
+        if (!Strings.isNullOrEmpty(user.getProfileBannerURL())) Glide.with(ctx).load(user.getProfileBannerURL()).into(header);
+        if (!Strings.isNullOrEmpty(user.getBiggerProfileImageURLHttps())) Glide.with(ctx).load(user.getBiggerProfileImageURLHttps()).into(profile);
         userName.setText(user.getName());
         screenName.setText(user.getScreenName());
-        statuses.setText(Integer.toString(user.getStatusesCount()));
-        favorites.setText(Integer.toString(user.getFavouritesCount()));
-        friends.setText(Integer.toString(user.getFriendsCount()));
-        followers.setText(Integer.toString(user.getFollowersCount()));
+
+        if (user.getStatusesCount() != -1)  statuses.setText(Integer.toString(user.getStatusesCount()));
+        if (user.getFavouritesCount() != -1)favorites.setText(Integer.toString(user.getFavouritesCount()));
+        if (user.getFriendsCount() != -1)   friends.setText(Integer.toString(user.getFriendsCount()));
+        if (user.getFollowersCount() != -1) followers.setText(Integer.toString(user.getFollowersCount()));
         getSupportActionBar().setTitle(String.format("%s(@%s)", user.getName(), user.getScreenName()));
 
         //userflagment
@@ -619,14 +516,14 @@ public class MainActivity
 
     @Override
     public void applyUpdateStatus(String status, List<Uri> mediaUris) {
-        mWritePermissionService.pushImages(mediaUris);
-        mWritePermissionService.updateStatus(status);
+        WritePermissionService.pushImages(mediaUris);
+        WritePermissionService.updateStatus(status);
     }
 
     @Override
     public void applyUpdateStatus(StatusUpdate status, List<Uri> mediaUris) {
-        mWritePermissionService.pushImages(mediaUris);
-        mWritePermissionService.updateStatus(status);
+        WritePermissionService.pushImages(mediaUris);
+        WritePermissionService.updateStatus(status);
     }
 
     @Override
@@ -651,23 +548,23 @@ public class MainActivity
 
                 switch (type) {
                     case StatusDetailDialogFragment.ACTION_FAVORITE:
-                        mWritePermissionService.favoriteStatus(sourceId);
+                        WritePermissionService.favoriteStatus(sourceId);
                         statusCache.setIsFavorited(true);
                         break;
                     case StatusDetailDialogFragment.ACTION_UNFAVORITE:
-                        mWritePermissionService.unfavoriteStatus(sourceId);
+                        WritePermissionService.unfavoriteStatus(sourceId);
                         statusCache.setIsFavorited(false);
                         break;
                     case StatusDetailDialogFragment.ACTION_RETWEET:
-                        mWritePermissionService.retweetStatus(sourceId);
+                        WritePermissionService.retweetStatus(sourceId);
                         statusCache.setIsRetweeted(true);
                         break;
                     case StatusDetailDialogFragment.ACTION_UNRETWEET:
                         statusCache.setIsRetweeted(false);
                         break;
                     case StatusDetailDialogFragment.ACTION_FAVORITE_AND_RETWEET:
-                        mWritePermissionService.favoriteStatus(sourceId);
-                        mWritePermissionService.retweetStatus(sourceId);
+                        WritePermissionService.favoriteStatus(sourceId);
+                        WritePermissionService.retweetStatus(sourceId);
                         statusCache.setIsRetweeted(true);
                         statusCache.setIsFavorited(true);
                         break;
@@ -678,7 +575,7 @@ public class MainActivity
                     case StatusDetailDialogFragment.ACTION_REPLY_BLANK:
                         StatusUpdate update = new StatusUpdate(TencocoaHelper.createReplyTemplate(status));
                         update.setInReplyToStatusId(status.getShowingStatus().getId());
-                        mWritePermissionService.updateStatus(update);
+                        WritePermissionService.updateStatus(update);
                         break;
                 }
                 realm.commitTransaction();

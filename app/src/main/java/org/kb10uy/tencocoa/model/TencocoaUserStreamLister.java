@@ -13,7 +13,7 @@ import twitter4j.UserStreamAdapter;
 import twitter4j.UserStreamListener;
 
 public class TencocoaUserStreamLister implements UserStreamListener {
-    List<UserStreamAdapter> mAdapters;
+    protected List<UserStreamAdapter> mAdapters;
 
     public TencocoaUserStreamLister() {
         mAdapters = new ArrayList<>();
