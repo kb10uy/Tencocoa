@@ -1,6 +1,5 @@
 # Tencocoa for Android (a.k.a. Kbtter7)
 The hopeful &amp; extreme twitter client for Android.  
-[![Build Status](https://travis-ci.org/kb10uy/Tencocoa.svg?branch=master)](https://travis-ci.org/kb10uy/Tencocoa)
 
 ## 概要
 Android用のKbtterです。機能的にはKbtter4みたいな感じです。  
