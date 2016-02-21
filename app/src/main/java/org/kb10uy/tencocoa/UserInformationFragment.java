@@ -112,6 +112,7 @@ public class UserInformationFragment extends Fragment {
             uifspa.mSummary = titleSummary;
             uifspa.mSummaryFragment = new UserInformationSummaryFragment();
             uifspa.mStatusesFragment = new UserInformationStatusesFragment();
+            uifspa.mSummaryFragment.setProvider(mProvider);
             //uifspa.mStatusesFragment.setProvider(mProvider);
             return uifspa;
         }
@@ -273,6 +274,10 @@ public class UserInformationFragment extends Fragment {
             super.onDetach();
             mContext = null;
             //mListener = null;
+        }
+
+        public void setProvider(TencocoaServiceProvider p) {
+            mProvider = p;
         }
     }
 
