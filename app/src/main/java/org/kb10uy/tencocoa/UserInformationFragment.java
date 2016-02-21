@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +24,7 @@ public class UserInformationFragment extends Fragment {
     private Context mContext;
     private SharedPreferences mPreference;
     private ViewPager mViewPager;
-    private UserInformationFragmentStatePagerAdapter mAdapter;
+    private UserInformationFragmentPagerAdapter mAdapter;
     private User currentUser;
 
 
@@ -38,17 +38,22 @@ public class UserInformationFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mContext = getActivity();
         mPreference = PreferenceManager.getDefaultSharedPreferences(mContext);
         View view = inflater.inflate(R.layout.fragment_user_information, container, false);
-        mAdapter = UserInformationFragmentStatePagerAdapter.newInstance(
-                getFragmentManager(),
+        mViewPager = (ViewPager) view.findViewById(R.id.UserInformationViewPager);
+        mAdapter = UserInformationFragmentPagerAdapter.newInstance(
+                getChildFragmentManager(),
                 getString(R.string.label_activity_main_summary),
                 getString(R.string.label_activity_main_tweets));
-        mViewPager = (ViewPager) view.findViewById(R.id.UserInformationViewPager);
         mViewPager.setAdapter(mAdapter);
         if (currentUser!=null) mAdapter.updateInformation(currentUser);
 
@@ -71,24 +76,26 @@ public class UserInformationFragment extends Fragment {
         mContext = null;
     }
 
-    public static final class UserInformationFragmentStatePagerAdapter extends FragmentStatePagerAdapter {
+    public static final class UserInformationFragmentPagerAdapter extends FragmentPagerAdapter {
 
         private String mSummary, mStatuses;
         private UserInformationSummaryFragment mSummaryFragment;
         private UserInformationStatusesFragment mStatusesFragment;
 
-        public UserInformationFragmentStatePagerAdapter(FragmentManager fm) {
+        public UserInformationFragmentPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
-        public static UserInformationFragmentStatePagerAdapter newInstance(FragmentManager fm, String titleSummary, String titleStatuses) {
-            UserInformationFragmentStatePagerAdapter uifspa = new UserInformationFragmentStatePagerAdapter(fm);
+        public static UserInformationFragmentPagerAdapter newInstance(FragmentManager fm, String titleSummary, String titleStatuses) {
+            UserInformationFragmentPagerAdapter uifspa = new UserInformationFragmentPagerAdapter(fm);
             uifspa.mStatuses = titleStatuses;
             uifspa.mSummary = titleSummary;
             uifspa.mSummaryFragment = new UserInformationSummaryFragment();
             uifspa.mStatusesFragment = new UserInformationStatusesFragment();
             return uifspa;
         }
+
+
 
         @Override
         public Fragment getItem(int position) {
