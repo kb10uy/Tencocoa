@@ -21,9 +21,11 @@ Tencocoaという名前は言わずもがな比那名居「**天子**」と保�
 * shibafu
 * otack
 * karno
-* wakamesoba
-* mumei
+* wakamesoba98
+* mumei_himazin
 * java_shit
+* hnle0
+* lindwurm
 * ほか多数
 
 ## ライセンス
