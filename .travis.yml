@@ -4,3 +4,8 @@ android:
     - android-23
     - build-tools-23.0.1
     - sys-img-armeabi-v7a-android-21
+    - extra-android-m2repository
+    - platform-tools
+
+script:
+  - ./gradlew assembleDebug test
