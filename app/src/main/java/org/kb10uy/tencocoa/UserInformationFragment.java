@@ -198,7 +198,7 @@ public class UserInformationFragment extends Fragment {
         public void updateInformation(User user) {
             currentUser = user;
             if (mContext == null || currentUser == null) return;
-            if (!Strings.isNullOrEmpty(user.getProfileBannerURL())) Glide.with(mContext).load(user.getProfileBannerURL()).into(mImageViewHeader);
+            if (!Strings.isNullOrEmpty(user.getProfileBannerURL())) Glide.with(mContext).load(user.getProfileBannerURL() + "/1500x500").into(mImageViewHeader);
             if (!Strings.isNullOrEmpty(user.getBiggerProfileImageURLHttps())) Glide.with(mContext).load(user.getBiggerProfileImageURLHttps()).into(mImageViewProfile);
             mTextViewName.setText(user.getName());
             mTextViewScreenName.setText(user.getScreenName());

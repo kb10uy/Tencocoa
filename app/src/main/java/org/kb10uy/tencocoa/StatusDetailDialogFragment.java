@@ -16,12 +16,14 @@ import com.bumptech.glide.Glide;
 
 import org.kb10uy.tencocoa.model.TencocoaHelper;
 import org.kb10uy.tencocoa.model.TencocoaStatus;
+import org.kb10uy.tencocoa.model.TwitterAccountInformationReceiver;
 
 import twitter4j.User;
 
 
 public class StatusDetailDialogFragment extends DialogFragment {
     private StatusDetailInteractionListener mListener;
+    private TwitterAccountInformationReceiver mReceiver;
     private TencocoaStatus mTargetStatus;
     private Context ctx;
     private SharedPreferences pref;
@@ -86,10 +88,12 @@ public class StatusDetailDialogFragment extends DialogFragment {
         });
         view.findViewById(R.id.StatusDetailButtonOthers).setOnClickListener(v -> dismiss());
 
-        if (user.isProtected()) {
+        if (user.isProtected() && user.getId() != mReceiver.getTargetAccountId()) {
+            //セルフRT時代の到来だ
             view.findViewById(R.id.StatusDetailButtonRetweet).setEnabled(false);
             view.findViewById(R.id.StatusDetailButtonFavRetweet).setEnabled(false);
         }
+
     }
 
     private void setDynamicLabel(Dialog dialog) {
@@ -120,6 +124,7 @@ public class StatusDetailDialogFragment extends DialogFragment {
 
         try {
             mListener = (StatusDetailInteractionListener) activity;
+            mReceiver = (TwitterAccountInformationReceiver) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement StatusDetailInteractionListener");

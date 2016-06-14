@@ -586,6 +586,7 @@ public class MainActivity
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+
     private void showBehaviorNotification(String title, String description) {
 
     }
